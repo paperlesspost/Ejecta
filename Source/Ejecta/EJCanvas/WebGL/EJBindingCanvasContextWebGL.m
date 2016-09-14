@@ -731,7 +731,7 @@ EJ_BIND_FUNCTION(getParameter, ctx, argc, argv) {
 	switch( pname ) {
 		// Float32Array (with 0 elements)
 		case GL_COMPRESSED_TEXTURE_FORMATS:
-			ret = JSObjectMakeTypedArray(ctx, kJSTypedArrayTypeFloat32Array, 0);
+            ret = JSObjectMakeTypedArray(ctx, kJSTypedArrayTypeFloat32Array, 0, nil);
 			break;
 			
 		// Float32Array (with 2 elements) 

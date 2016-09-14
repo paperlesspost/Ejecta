@@ -16,19 +16,6 @@
 @constant     kJSTypedArrayTypeFloat64Array         Float64Array
 @constant     kJSTypedArrayTypeArrayBuffer          ArrayBuffer
 */
-typedef enum {
-	kJSTypedArrayTypeNone = 0,
-	kJSTypedArrayTypeInt8Array = 1,
-	kJSTypedArrayTypeInt16Array = 2,
-	kJSTypedArrayTypeInt32Array = 3,
-	kJSTypedArrayTypeUint8Array = 4,
-	kJSTypedArrayTypeUint8ClampedArray = 5,
-	kJSTypedArrayTypeUint16Array = 6,
-	kJSTypedArrayTypeUint32Array = 7,
-	kJSTypedArrayTypeFloat32Array = 8,
-	kJSTypedArrayTypeFloat64Array = 9,
-	kJSTypedArrayTypeArrayBuffer = 10
-} JSTypedArrayType;
 
 /*!
 @function
@@ -45,16 +32,6 @@ void JSContextPrepareTypedArrayAPI(JSContextRef ctx);
 @result             A value of type JSTypedArrayType that identifies value's Typed Array type
 */
 JSTypedArrayType JSObjectGetTypedArrayType(JSContextRef ctx, JSObjectRef object);
-
-/*!
-@function
-@abstract           Creates an empty JavaScript Typed Array with the given number of elements
-@param ctx          The execution context to use.
-@param arrayType    A value of type JSTypedArrayType identifying the type of array you want to create
-@param numElements  The number of elements for the array.
-@result             A JSObjectRef that is a Typed Array or NULL if there was an error
-*/
-JSObjectRef JSObjectMakeTypedArray(JSContextRef ctx, JSTypedArrayType arrayType, size_t numElements);
 
 /*!
 @function

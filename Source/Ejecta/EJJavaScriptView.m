@@ -59,6 +59,7 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 
 -(void)awakeFromNib {
     [self setupWithAppFolder:EJECTA_DEFAULT_APP_FOLDER];
+    [super awakeFromNib];
 }
 
 -(void)setupWithAppFolder:(NSString*)folder {

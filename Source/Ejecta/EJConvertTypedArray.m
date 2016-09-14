@@ -286,25 +286,13 @@ JSTypedArrayType JSObjectGetTypedArrayType(JSContextRef ctx, JSObjectRef object)
 }
 
 
-JSObjectRef JSObjectMakeTypedArray(JSContextRef ctx, JSTypedArrayType arrayType, size_t numElements) {
-	JSObjectRef jsConstructor = GetConstructor(ctx, arrayType);
-	if( !jsConstructor ) {
-		return NULL;
-	}
-	
-	JSValueRef jsNumElements = MakeInt32(ctx, (int)numElements);
-	return JSObjectCallAsConstructor(ctx, jsConstructor, 1, (JSValueRef[]){jsNumElements}, NULL);
-}
-
-
 JSObjectRef JSObjectMakeTypedArrayWithData(JSContextRef ctx, JSTypedArrayType arrayType, NSData *data) {
 	if( arrayType <= kJSTypedArrayTypeNone || arrayType > kJSTypedArrayTypeArrayBuffer ) {
 		return NULL;
 	}
 	
 	size_t numElements = data.length / TypeInfo[arrayType].elementSize;
-	
-	JSObjectRef array = JSObjectMakeTypedArray(ctx, arrayType, numElements);
+    JSObjectRef array = JSObjectMakeTypedArray(ctx, arrayType, numElements, nil);
 	JSObjectSetTypedArrayData(ctx, array, data);
 	return array;
 }
