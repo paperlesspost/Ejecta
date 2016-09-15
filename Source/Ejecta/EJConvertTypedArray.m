@@ -128,13 +128,13 @@ static JSValueRef GetPropertyNamed(JSContextRef ctx, JSObjectRef object, const c
 // Shorthand to get the Constructor for the given JSTypedArrayType
 
 static JSObjectRef GetConstructor(JSContextRef ctx, JSTypedArrayType type) {
-	if( type <= kJSTypedArrayTypeNone || type > kJSTypedArrayTypeArrayBuffer ) {
-		return NULL;
-	}
-	
-	const char *constructorName = TypeInfo[type].constructorName;
-	JSObjectRef global = JSContextGetGlobalObject(ctx);
-	return (JSObjectRef)GetPropertyNamed(ctx, global, constructorName);
+    if( type == kJSTypedArrayTypeNone || type == kJSTypedArrayTypeArrayBuffer ) {
+        return NULL;
+    }
+    
+    const char *constructorName = TypeInfo[type].constructorName;
+    JSObjectRef global = JSContextGetGlobalObject(ctx);
+    return (JSObjectRef)GetPropertyNamed(ctx, global, constructorName);
 }
 
 
@@ -258,13 +258,13 @@ void JSContextPrepareTypedArrayAPI(JSContextRef ctx) {
 	// Install the __ejTypedArrayType property on each Typed Array prototype
 	JSStringRef jsTypeName = JSStringCreateWithUTF8CString("__ejTypedArrayType");
 	
-	for( int type = kJSTypedArrayTypeInt8Array; type <= kJSTypedArrayTypeArrayBuffer; type++ ) {
-		JSObjectRef jsConstructor = GetConstructor(ctx, type);
-		JSObjectRef jsPrototype = (JSObjectRef)GetPropertyNamed(ctx, jsConstructor, "prototype");
-		
-		JSValueRef jsType = MakeInt32(ctx, type);
-		JSObjectSetProperty(ctx, jsPrototype, jsTypeName, jsType, attributes, NULL);
-	}
+    for( int type = kJSTypedArrayTypeInt8Array; type < kJSTypedArrayTypeArrayBuffer; type++ ) {
+        JSObjectRef jsConstructor = GetConstructor(ctx, type);
+        JSObjectRef jsPrototype = (JSObjectRef)GetPropertyNamed(ctx, jsConstructor, "prototype");
+        
+        JSValueRef jsType = MakeInt32(ctx, type);
+        JSObjectSetProperty(ctx, jsPrototype, jsTypeName, jsType, attributes, NULL);
+    }
 	
 	JSStringRelease(jsTypeName);
 	
