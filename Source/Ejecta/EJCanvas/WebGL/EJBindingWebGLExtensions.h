@@ -1,3 +1,9 @@
+// This files hosts various WebGL extensions that can be directly mapped to
+// OpenGL extensions provided by iOS.
+
+// To register an extension, it must be inserted into the EJWebGLExtensions
+// array.
+
 #import <Foundation/Foundation.h>
 #import "EJBindingBase.h"
 #import "EJBindingWebGLObjects.h"
@@ -40,5 +46,11 @@ extern const int EJWebGLExtensionsCount;
 @end;
 
 @interface EJBindingWebGLExtensionOES_vertex_array_object : EJBindingWebGLExtension
+@end;
+
+@interface EJBindingWebGLExtensionANGLE_instanced_arrays : EJBindingWebGLExtension
+@end;
+
+@interface EJBindingWebGLExtensionOES_element_index_uint : EJBindingWebGLExtension
 @end;
 

@@ -1,3 +1,11 @@
+// Instead of the indices that OpenGL returns for its create* functions, WebGL
+// returns an object for each created object. This ensures that textures,
+// buffers and shaders that are not currently bound can be correctly garbage
+// collected.
+
+// This files provides thin binding wrappers for each type of these OpenGL
+// indices.
+
 #import "EJBindingBase.h"
 #import "EJBindingCanvasContextWebGL.h"
 #import "EJTexture.h"
@@ -8,7 +16,7 @@
 }
 - (id)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContext index:(GLuint)index;
 - (void)invalidate;
-+ (GLuint)indexFromJSValue:(JSValueRef)value;
++ (GLint)indexFromJSValue:(JSValueRef)value;
 + (EJBindingWebGLObject *)webGLObjectFromJSValue:(JSValueRef)value;
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx
 	scriptView:(EJJavaScriptView *)scriptView

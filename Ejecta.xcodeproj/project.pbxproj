@@ -40,14 +40,13 @@
 		B64CE666166682700087CF94 /* EJOpenALBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE61B166682700087CF94 /* EJOpenALBuffer.m */; };
 		B64CE667166682700087CF94 /* EJSharedOpenALManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE61D166682700087CF94 /* EJSharedOpenALManager.m */; };
 		B64CE668166682700087CF94 /* EJBindingBase.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE61F166682700087CF94 /* EJBindingBase.m */; };
-		B64CE669166682700087CF94 /* EJBindingEjectaCore.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE621166682700087CF94 /* EJBindingEjectaCore.m */; };
+		B64CE669166682700087CF94 /* EJBindingGlobalUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE621166682700087CF94 /* EJBindingGlobalUtils.m */; };
 		B64CE66A166682700087CF94 /* EJBindingEventedBase.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE623166682700087CF94 /* EJBindingEventedBase.m */; };
 		B64CE66B166682700087CF94 /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE626166682700087CF94 /* EAGLView.m */; };
 		B64CE66D166682700087CF94 /* EJBindingImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE62A166682700087CF94 /* EJBindingImage.m */; };
 		B64CE675166682700087CF94 /* EJTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE63C166682700087CF94 /* EJTexture.m */; };
 		B64CE676166682700087CF94 /* EJConvert.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE63E166682700087CF94 /* EJConvert.m */; };
 		B64CE678166682700087CF94 /* EJTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE641166682700087CF94 /* EJTimer.m */; };
-		B64CE67A166682700087CF94 /* EJBindingAdBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE646166682700087CF94 /* EJBindingAdBanner.m */; };
 		B64CE67B166682700087CF94 /* EJBindingGameCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE648166682700087CF94 /* EJBindingGameCenter.m */; };
 		B64CE67C166682700087CF94 /* EJBindingHttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE64A166682700087CF94 /* EJBindingHttpRequest.m */; };
 		B64CE67D166682700087CF94 /* EJBindingLocalStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE64C166682700087CF94 /* EJBindingLocalStorage.m */; };
@@ -103,8 +102,6 @@
 		B6F1154D167A7D17001F1324 /* EJBindingCanvasContextWebGL.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F1154C167A7D17001F1324 /* EJBindingCanvasContextWebGL.m */; };
 		B6F11550167A7DA1001F1324 /* EJCanvasContextWebGL.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F1154F167A7DA1001F1324 /* EJCanvasContextWebGL.m */; };
 		B6F11556167BD59D001F1324 /* EJBindingWebGLObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F11555167BD59B001F1324 /* EJBindingWebGLObjects.m */; };
-		B6F455CA1C00D52C002A8EAC /* EJConvertTypedArray.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F455C91C00D52C002A8EAC /* EJConvertTypedArray.m */; };
-		B6F455CB1C00D52C002A8EAC /* EJConvertTypedArray.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F455C91C00D52C002A8EAC /* EJConvertTypedArray.m */; };
 		B6F463A41636C3FB00FC89C1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F463A31636C3FA00FC89C1 /* SystemConfiguration.framework */; };
 		B6F629D116F353C800F16BAC /* EJBindingCanvasStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F629D016F353C700F16BAC /* EJBindingCanvasStyle.m */; };
 		B6F714891BCF126A0082A90F /* LaunchScreen-Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = B637065F1A27C15200F42B90 /* LaunchScreen-Logo.png */; };
@@ -119,7 +116,7 @@
 		B6F714981BCF126A0082A90F /* EJOpenALBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE61B166682700087CF94 /* EJOpenALBuffer.m */; };
 		B6F714991BCF126A0082A90F /* EJSharedOpenALManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE61D166682700087CF94 /* EJSharedOpenALManager.m */; };
 		B6F7149A1BCF126A0082A90F /* EJBindingBase.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE61F166682700087CF94 /* EJBindingBase.m */; };
-		B6F7149B1BCF126A0082A90F /* EJBindingEjectaCore.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE621166682700087CF94 /* EJBindingEjectaCore.m */; };
+		B6F7149B1BCF126A0082A90F /* EJBindingGlobalUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE621166682700087CF94 /* EJBindingGlobalUtils.m */; };
 		B6F7149C1BCF126A0082A90F /* EJBindingEventedBase.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE623166682700087CF94 /* EJBindingEventedBase.m */; };
 		B6F7149D1BCF126A0082A90F /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE626166682700087CF94 /* EAGLView.m */; };
 		B6F7149E1BCF126A0082A90F /* EJBindingImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B64CE62A166682700087CF94 /* EJBindingImage.m */; };
@@ -225,7 +222,6 @@
 		B63D256916E8DF33007E6034 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B63D256B16E8DFAB007E6034 /* EJBindingWebSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EJBindingWebSocket.h; sourceTree = "<group>"; };
 		B63D256C16E8DFAB007E6034 /* EJBindingWebSocket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EJBindingWebSocket.m; sourceTree = "<group>"; };
-		B6468005188AB3260087F098 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JavaScriptCore.framework; sourceTree = "<group>"; };
 		B64C87A716B80F400097CD5B /* EJGLProgram2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EJGLProgram2D.h; sourceTree = "<group>"; };
 		B64C87A816B80F410097CD5B /* EJGLProgram2D.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EJGLProgram2D.m; sourceTree = "<group>"; };
 		B64C87A916B80F450097CD5B /* EJGLProgram2DRadialGradient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EJGLProgram2DRadialGradient.h; sourceTree = "<group>"; };
@@ -245,8 +241,8 @@
 		B64CE61D166682700087CF94 /* EJSharedOpenALManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJSharedOpenALManager.m; sourceTree = "<group>"; };
 		B64CE61E166682700087CF94 /* EJBindingBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingBase.h; sourceTree = "<group>"; };
 		B64CE61F166682700087CF94 /* EJBindingBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJBindingBase.m; sourceTree = "<group>"; };
-		B64CE620166682700087CF94 /* EJBindingEjectaCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingEjectaCore.h; sourceTree = "<group>"; };
-		B64CE621166682700087CF94 /* EJBindingEjectaCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJBindingEjectaCore.m; sourceTree = "<group>"; };
+		B64CE620166682700087CF94 /* EJBindingGlobalUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingGlobalUtils.h; sourceTree = "<group>"; };
+		B64CE621166682700087CF94 /* EJBindingGlobalUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJBindingGlobalUtils.m; sourceTree = "<group>"; };
 		B64CE622166682700087CF94 /* EJBindingEventedBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingEventedBase.h; sourceTree = "<group>"; };
 		B64CE623166682700087CF94 /* EJBindingEventedBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJBindingEventedBase.m; sourceTree = "<group>"; };
 		B64CE625166682700087CF94 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
@@ -261,8 +257,6 @@
 		B64CE63F166682700087CF94 /* Ejecta.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Ejecta.js; sourceTree = "<group>"; };
 		B64CE640166682700087CF94 /* EJTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJTimer.h; sourceTree = "<group>"; };
 		B64CE641166682700087CF94 /* EJTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJTimer.m; sourceTree = "<group>"; };
-		B64CE645166682700087CF94 /* EJBindingAdBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingAdBanner.h; sourceTree = "<group>"; };
-		B64CE646166682700087CF94 /* EJBindingAdBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = EJBindingAdBanner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B64CE647166682700087CF94 /* EJBindingGameCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingGameCenter.h; sourceTree = "<group>"; };
 		B64CE648166682700087CF94 /* EJBindingGameCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJBindingGameCenter.m; sourceTree = "<group>"; };
 		B64CE649166682700087CF94 /* EJBindingHttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingHttpRequest.h; sourceTree = "<group>"; };
@@ -358,8 +352,6 @@
 		B6F1154F167A7DA1001F1324 /* EJCanvasContextWebGL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EJCanvasContextWebGL.m; path = WebGL/EJCanvasContextWebGL.m; sourceTree = "<group>"; };
 		B6F11554167BD599001F1324 /* EJBindingWebGLObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EJBindingWebGLObjects.h; path = WebGL/EJBindingWebGLObjects.h; sourceTree = "<group>"; };
 		B6F11555167BD59B001F1324 /* EJBindingWebGLObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EJBindingWebGLObjects.m; path = WebGL/EJBindingWebGLObjects.m; sourceTree = "<group>"; };
-		B6F455C81C00D52C002A8EAC /* EJConvertTypedArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJConvertTypedArray.h; sourceTree = "<group>"; };
-		B6F455C91C00D52C002A8EAC /* EJConvertTypedArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJConvertTypedArray.m; sourceTree = "<group>"; };
 		B6F463A31636C3FA00FC89C1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B6F629CF16F353C600F16BAC /* EJBindingCanvasStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJBindingCanvasStyle.h; sourceTree = "<group>"; };
 		B6F629D016F353C700F16BAC /* EJBindingCanvasStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJBindingCanvasStyle.m; sourceTree = "<group>"; };
@@ -521,14 +513,12 @@
 				B64CE61F166682700087CF94 /* EJBindingBase.m */,
 				B64CE622166682700087CF94 /* EJBindingEventedBase.h */,
 				B64CE623166682700087CF94 /* EJBindingEventedBase.m */,
-				B64CE620166682700087CF94 /* EJBindingEjectaCore.h */,
-				B64CE621166682700087CF94 /* EJBindingEjectaCore.m */,
+				B64CE620166682700087CF94 /* EJBindingGlobalUtils.h */,
+				B64CE621166682700087CF94 /* EJBindingGlobalUtils.m */,
 				B6E314E31BC7D1BF00D024C3 /* EJBindingVideo.h */,
 				B6E314E41BC7D1BF00D024C3 /* EJBindingVideo.m */,
 				B64CE63D166682700087CF94 /* EJConvert.h */,
 				B64CE63E166682700087CF94 /* EJConvert.m */,
-				B6F455C81C00D52C002A8EAC /* EJConvertTypedArray.h */,
-				B6F455C91C00D52C002A8EAC /* EJConvertTypedArray.m */,
 				B64CE640166682700087CF94 /* EJTimer.h */,
 				B64CE641166682700087CF94 /* EJTimer.m */,
 				B64CE63F166682700087CF94 /* Ejecta.js */,
@@ -542,8 +532,8 @@
 			isa = PBXGroup;
 			children = (
 				B64CE618166682700087CF94 /* EJBindingAudio.h */,
-				B64CE613166682700087CF94 /* EJAudioSource.h */,
 				B64CE619166682700087CF94 /* EJBindingAudio.m */,
+				B64CE613166682700087CF94 /* EJAudioSource.h */,
 				B64CE614166682700087CF94 /* EJAudioSourceAVAudio.h */,
 				B64CE615166682700087CF94 /* EJAudioSourceAVAudio.m */,
 				B64CE616166682700087CF94 /* EJAudioSourceOpenAL.h */,
@@ -592,8 +582,6 @@
 				3EBC19BD16CECE190036F9F3 /* EJBindingKeyInput.m */,
 				B6F115181677F086001F1324 /* EJBindingDeviceMotion.h */,
 				B6F115191677F088001F1324 /* EJBindingDeviceMotion.m */,
-				B64CE645166682700087CF94 /* EJBindingAdBanner.h */,
-				B64CE646166682700087CF94 /* EJBindingAdBanner.m */,
 				B64CE647166682700087CF94 /* EJBindingGameCenter.h */,
 				B64CE648166682700087CF94 /* EJBindingGameCenter.m */,
 				B64CE649166682700087CF94 /* EJBindingHttpRequest.h */,
@@ -617,7 +605,6 @@
 		B64CE652166682700087CF94 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				B6468005188AB3260087F098 /* JavaScriptCore.framework */,
 				B63D255C16E8DE23007E6034 /* SocketRocket */,
 			);
 			path = lib;
@@ -830,7 +817,6 @@
 			files = (
 				B630048916C1A2390036D8D4 /* EJBindingTextMetrics.m in Sources */,
 				B64C87AC16B81BAA0097CD5B /* EJGLProgram2D.m in Sources */,
-				B6F455CA1C00D52C002A8EAC /* EJConvertTypedArray.m in Sources */,
 				B64C87AE16B81BAA0097CD5B /* EJGLProgram2DRadialGradient.m in Sources */,
 				B64CE662166682700087CF94 /* EJAppViewController.m in Sources */,
 				B64CE663166682700087CF94 /* EJAudioSourceAVAudio.m in Sources */,
@@ -840,14 +826,13 @@
 				B64CE667166682700087CF94 /* EJSharedOpenALManager.m in Sources */,
 				B6B41FA21BF25A7F0075C00F /* EJBindingGamepadProvider.m in Sources */,
 				B64CE668166682700087CF94 /* EJBindingBase.m in Sources */,
-				B64CE669166682700087CF94 /* EJBindingEjectaCore.m in Sources */,
+				B64CE669166682700087CF94 /* EJBindingGlobalUtils.m in Sources */,
 				B64CE66A166682700087CF94 /* EJBindingEventedBase.m in Sources */,
 				B64CE66B166682700087CF94 /* EAGLView.m in Sources */,
 				B64CE66D166682700087CF94 /* EJBindingImage.m in Sources */,
 				B64CE675166682700087CF94 /* EJTexture.m in Sources */,
 				B64CE676166682700087CF94 /* EJConvert.m in Sources */,
 				B64CE678166682700087CF94 /* EJTimer.m in Sources */,
-				B64CE67A166682700087CF94 /* EJBindingAdBanner.m in Sources */,
 				B64CE67B166682700087CF94 /* EJBindingGameCenter.m in Sources */,
 				B64CE67C166682700087CF94 /* EJBindingHttpRequest.m in Sources */,
 				33BE9DE2186817D900E0D16E /* EJBindingImagePicker.m in Sources */,
@@ -910,13 +895,12 @@
 				B6F714941BCF126A0082A90F /* EJAppViewController.m in Sources */,
 				B6F714951BCF126A0082A90F /* EJAudioSourceAVAudio.m in Sources */,
 				B6F714961BCF126A0082A90F /* EJAudioSourceOpenAL.m in Sources */,
-				B6F455CB1C00D52C002A8EAC /* EJConvertTypedArray.m in Sources */,
 				B6F714971BCF126A0082A90F /* EJBindingAudio.m in Sources */,
 				B6F714981BCF126A0082A90F /* EJOpenALBuffer.m in Sources */,
 				B6F714991BCF126A0082A90F /* EJSharedOpenALManager.m in Sources */,
 				B6B41FA31BF25A7F0075C00F /* EJBindingGamepadProvider.m in Sources */,
 				B6F7149A1BCF126A0082A90F /* EJBindingBase.m in Sources */,
-				B6F7149B1BCF126A0082A90F /* EJBindingEjectaCore.m in Sources */,
+				B6F7149B1BCF126A0082A90F /* EJBindingGlobalUtils.m in Sources */,
 				B6F7149C1BCF126A0082A90F /* EJBindingEventedBase.m in Sources */,
 				B6F7149D1BCF126A0082A90F /* EAGLView.m in Sources */,
 				B6F7149E1BCF126A0082A90F /* EJBindingImage.m in Sources */,
@@ -980,11 +964,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -998,7 +978,7 @@
 					"\"$(SRCROOT)/Source/lib\"",
 				);
 				OTHER_CFLAGS = "-DDEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.ejecta;
+				PRODUCT_BUNDLE_IDENTIFIER = org.phoboslab.ejecta;
 				PRODUCT_NAME = Ejecta;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1011,11 +991,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -1025,7 +1001,7 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/Source/lib\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.ejecta;
+				PRODUCT_BUNDLE_IDENTIFIER = org.phoboslab.ejecta;
 				PRODUCT_NAME = Ejecta;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -1040,9 +1016,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1071,9 +1044,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/Prefix.pch;
@@ -1101,13 +1071,10 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -1136,13 +1103,10 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_NO_COMMON_BLOCKS = YES;
