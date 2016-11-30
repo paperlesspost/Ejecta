@@ -2,7 +2,7 @@
 
 @implementation EJBindingTouchInput
 
-- (id)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super initWithContext:ctxp argc:argc argv:argv] ) {
 		if( argc > 0 ) {
 			jsTouchTarget = argv[0];
@@ -59,7 +59,9 @@
 	[super dealloc];
 }
 
-- (void)triggerEvent:(NSString *)name all:(NSSet *)all changed:(NSSet *)changed remaining:(NSSet *)remaining {
+- (void)triggerEvent:(NSString *)name timestamp:(NSTimeInterval)timestamp
+	all:(NSSet *)all changed:(NSSet *)changed remaining:(NSSet *)remaining
+{
 	JSContextRef ctx = scriptView.jsGlobalContext;
 	
 	NSUInteger remainingCount = MIN(remaining.count, EJ_TOUCH_INPUT_MAX_TOUCHES);
@@ -111,7 +113,8 @@
 		if( poolIndex >= touchesInPool ) { break; }
 	}
 	
-	[self triggerEvent:name argc:2 argv:(JSValueRef[]){ jsRemainingTouches, jsChangedTouches }];
+	JSValueRef jsTimestamp = JSValueMakeNumber(ctx, timestamp * 1000.0);
+	[self triggerEvent:name argc:3 argv:(JSValueRef[]){ jsRemainingTouches, jsChangedTouches, jsTimestamp }];
 }
 
 EJ_BIND_EVENT(touchstart);

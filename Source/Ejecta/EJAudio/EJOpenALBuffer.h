@@ -1,3 +1,7 @@
+// An OpenAL audio buffer that may be used by several OpenAL Audio sources.
+// This class takes care of loading an audio file from disk and decoding it
+// into a memory buffer.
+
 #import <Foundation/Foundation.h>
 
 #import <OpenAL/al.h>
@@ -14,8 +18,8 @@
 }
 
 + (id)cachedBufferWithPath:(NSString *)path;
-- (id)initWithPath:(NSString *)pathp;
-- (void*)getAudioDataWithURL:(NSURL *)url;
+- (instancetype)initWithPath:(NSString *)pathp;
+- (void*)getAudioDataWithURL:(NSURL *)url NS_RETURNS_INNER_POINTER;
 
 @property (readonly) unsigned int bufferId;
 @property (readonly) float duration;

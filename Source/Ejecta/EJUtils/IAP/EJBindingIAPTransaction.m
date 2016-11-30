@@ -2,7 +2,7 @@
 
 @implementation EJBindingIAPTransaction
 
-- (id)initWithTransaction:(SKPaymentTransaction *)transactionp {
+- (instancetype)initWithTransaction:(SKPaymentTransaction *)transactionp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		transaction	= [transactionp retain];
 	}

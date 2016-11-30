@@ -1,3 +1,10 @@
+// This class exposes the geo-location of the device to JavaScript. Typically,
+// this it is lazily instantiated in the Ejecta.js, when `navigator.geolocation`
+// is first accessed.
+
+// The `watchPosition()`, `clearWatch()` and `getCurrentPosition()` methods are
+// closely modeled to the spec.
+
 #import "EJBindingBase.h"
 #import <CoreLocation/CoreLocation.h>
 
@@ -14,7 +21,7 @@ enum {
 	BOOL oneShot;
 }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp
 	callback:(JSObjectRef)callbackp errback:(JSObjectRef)errbackp
 	oneShot:(BOOL)oneShotp;
 

@@ -67,7 +67,7 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 @implementation EJClassLoader
 @synthesize jsConstructorClass;
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptView name:(NSString *)name {
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView name:(NSString *)name {
 	if( self = [super init] ) {
 		JSGlobalContextRef context = scriptView.jsGlobalContext;
 		
@@ -149,7 +149,7 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 			}
 			else if( [name hasPrefix:@"_const_"] ) {
 				NSObject *constant = [class performSelector:NSSelectorFromString(name)];
-				[constantValues setObject:constant forKey:[name substringFromIndex:sizeof("_const_")-1]];
+				constantValues[[name substringFromIndex:sizeof("_const_")-1]] = constant;
 			}
 		}
 		free(methodList);
@@ -217,7 +217,7 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 @implementation EJLoadedJSClass
 @synthesize jsClass, constantValues;
 
-- (id)initWithJSClass:(JSClassRef)jsClassp constantValues:(NSDictionary *)constantValuesp {
+- (instancetype)initWithJSClass:(JSClassRef)jsClassp constantValues:(NSDictionary *)constantValuesp {
 	if( self = [super init] ) {
 		jsClass = JSClassRetain(jsClassp);
 		constantValues = [constantValuesp retain];

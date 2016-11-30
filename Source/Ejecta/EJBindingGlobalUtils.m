@@ -1,4 +1,4 @@
-#import "EJBindingEjectaCore.h"
+#import "EJBindingGlobalUtils.h"
 
 #import <netinet/in.h>
 #import <sys/utsname.h>
@@ -9,13 +9,13 @@
 
 #import "EJJavaScriptView.h"
 
-@implementation EJBindingEjectaCore
+@implementation EJBindingGlobalUtils
 
 - (NSString*)deviceName {
 	struct utsname systemInfo;
 	uname( &systemInfo );
 
-	NSString *machine = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+	NSString *machine = @(systemInfo.machine);
 
 	if(
 		[machine isEqualToString: @"i386"] ||
@@ -45,14 +45,13 @@ EJ_BIND_FUNCTION(log, ctx, argc, argv ) {
 
 EJ_BIND_FUNCTION(load, ctx, argc, argv ) {
 	if( argc < 1 ) return NULL;
-
-	NSObject<UIApplicationDelegate> *app = [[UIApplication sharedApplication] delegate];
-  SEL selector = NSSelectorFromString(@"loadViewControllerWithScriptAtPath:");
-
-	if( [app respondsToSelector:selector] ) {
+	
+	NSObject<UIApplicationDelegate> *app = UIApplication.sharedApplication.delegate;
+	SEL loadViewControllerWithScriptAtPath = sel_registerName("loadViewControllerWithScriptAtPath:");
+	if( [app respondsToSelector:loadViewControllerWithScriptAtPath] ) {
 		// Queue up the loading till the next frame; the script view may be in the
 		// midst of a timer update
-		[app performSelectorOnMainThread:selector
+		[app performSelectorOnMainThread:loadViewControllerWithScriptAtPath
 			withObject:JSValueToNSString(ctx, argv[0]) waitUntilDone:NO];
 	}
 	else {
@@ -95,7 +94,8 @@ EJ_BIND_FUNCTION(openURL, ctx, argc, argv ) {
 
 		UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
 			handler:^(UIAlertAction * action) {
-				[UIApplication.sharedApplication openURL:[NSURL URLWithString:url]];
+				[UIApplication.sharedApplication openURL:[NSURL URLWithString:url]
+					options:@{} completionHandler:^(BOOL success) {}];
 			}];
 		UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
 			handler:^(UIAlertAction * action) {}];
@@ -106,7 +106,8 @@ EJ_BIND_FUNCTION(openURL, ctx, argc, argv ) {
 		[self.scriptView.window.rootViewController presentViewController:alert animated:YES completion:nil];
 	}
 	else {
-		[UIApplication.sharedApplication openURL:[NSURL URLWithString: url]];
+		[UIApplication.sharedApplication openURL:[NSURL URLWithString:url]
+					options:@{} completionHandler:^(BOOL success) {}];
 	}
 	return NULL;
 }
@@ -161,7 +162,7 @@ EJ_BIND_FUNCTION(clearInterval, ctx, argc, argv ) {
 }
 
 EJ_BIND_FUNCTION(performanceNow, ctx, argc, argv ) {
-	double time = NSDate.timeIntervalSinceReferenceDate - scriptView.startTime;
+	double time = NSProcessInfo.processInfo.systemUptime;
 	return JSValueMakeNumber(ctx, time * 1000.0);
 }
 
@@ -189,7 +190,7 @@ EJ_BIND_GET(platform, ctx ) {
 	char machine[32];
 	size_t size = sizeof(machine);
     sysctlbyname("hw.machine", machine, &size, NULL, 0);
-	return NSStringToJSValue(ctx, [NSString stringWithUTF8String:machine] );
+	return NSStringToJSValue(ctx, @(machine) );
 }
 
 EJ_BIND_GET(language, ctx) {

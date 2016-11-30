@@ -6,7 +6,7 @@
 	return [CAEAGLLayer class];
 }
 
-- (id)initWithFrame:(CGRect)frame contentScale:(float)contentScale retainedBacking:(BOOL)retainedBacking {
+- (instancetype)initWithFrame:(CGRect)frame contentScale:(float)contentScale retainedBacking:(BOOL)retainedBacking {
 	if( self = [super initWithFrame:frame] ) {
 		#if !TARGET_OS_TV
 			[self setMultipleTouchEnabled:YES];

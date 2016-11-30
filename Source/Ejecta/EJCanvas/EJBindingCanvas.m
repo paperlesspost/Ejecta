@@ -73,6 +73,23 @@
 
 #undef EJ_GET_SET_STYLE
 
+- (EJCanvasImageRendering)imageRendering {
+	return imageRendering;
+}
+
+- (void)setImageRendering:(EJCanvasImageRendering)imageRenderingp {
+	imageRendering = imageRenderingp;
+	if( renderingContext && [renderingContext conformsToProtocol:@protocol(EJPresentable)] ) {
+		CALayer *layer = ((NSObject<EJPresentable> *)renderingContext).view.layer;
+		NSString *filter = imageRendering == kEJCanvasImageRenderingAuto
+			? kCAFilterLinear
+			: kCAFilterNearest;
+		
+		layer.magnificationFilter = filter;
+		layer.minificationFilter = filter;
+	}
+}
+
 
 EJ_BIND_GET(width, ctx) {
 	return JSValueMakeNumber(ctx, width);
@@ -208,8 +225,12 @@ EJ_BIND_FUNCTION(getContext, ctx, argc, argv) {
 	[EAGLContext setCurrentContext:renderingContext.glContext];
 	[renderingContext create];
 	scriptView.currentRenderingContext = renderingContext;
-
-
+	
+	// Execute the imageRendering setter again, now that we have a full created
+	// rendering context
+	self.imageRendering = imageRendering;
+	
+	
 	// Create the JS object
 	EJBindingBase *binding = [[bindingClass alloc] initWithRenderingContext:(id)renderingContext];
 	jsCanvasContext = [bindingClass createJSObjectWithContext:ctx scriptView:scriptView instance:binding];

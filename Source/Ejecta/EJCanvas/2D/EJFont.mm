@@ -7,7 +7,7 @@
 @implementation EJFontDescriptor
 @synthesize name, size;
 
-+ (id)descriptorWithName:(NSString *)name size:(float)size {
++ (instancetype)descriptorWithName:(NSString *)name size:(float)size {
 	// Check if the font exists
 	if( !name.length || ![UIFont fontWithName:name size:size] ) {
 		return NULL;
@@ -16,7 +16,7 @@
 	EJFontDescriptor *descriptor = [EJFontDescriptor new];
 	descriptor->name = [name retain];
 	descriptor->size = size;
-	descriptor->hash = [name hash] + (size * 383); // 383 is a 'random' prime, chosen by fair dice roll
+	descriptor->hash = name.hash + (size * 383); // 383 is a 'random' prime, chosen by fair dice roll
 	return [descriptor autorelease];
 }
 
@@ -45,7 +45,7 @@
 @implementation EJFontLayout
 @synthesize metrics, glyphCount;
 
-- (id)initWithGlyphLayout:(NSData *)layout glyphCount:(NSInteger)count metrics:(EJTextMetrics)metricsp {
+- (instancetype)initWithGlyphLayout:(NSData *)layout glyphCount:(NSInteger)count metrics:(EJTextMetrics)metricsp {
 	if( self = [super init] ) {
 		glyphLayout = [layout retain];
 		glyphCount = count;
@@ -81,7 +81,7 @@ int EJFontGlyphLayoutSortByTextureIndex(const void *a, const void *b) {
 
 @implementation EJFont
 
-- (id)initWithDescriptor:(EJFontDescriptor *)desc fill:(BOOL)fillp lineWidth:(float)lineWidthp contentScale:(float)contentScalep {
+- (instancetype)initWithDescriptor:(EJFontDescriptor *)desc fill:(BOOL)fillp lineWidth:(float)lineWidthp contentScale:(float)contentScalep {
 	self = [super init];
 	if(self) {
 		positionsBuffer = NULL;

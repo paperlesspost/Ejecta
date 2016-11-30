@@ -1,3 +1,6 @@
+// A wrapper class around OpenGL's shader compilation, used for compiling
+// shaders for Canvas2D.
+
 #import <Foundation/Foundation.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
@@ -15,7 +18,7 @@ enum {
 	GLuint screen;
 }
 
-- (id)initWithVertexShader:(const char *)vertexShaderSource fragmentShader:(const char *)fragmentShaderSource;
+- (instancetype)initWithVertexShader:(const char *)vertexShaderSource fragmentShader:(const char *)fragmentShaderSource;
 - (void)bindAttributeLocations;
 - (void)getUniforms;
 

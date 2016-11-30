@@ -4,7 +4,7 @@
 @implementation EJBindingGamepad
 @synthesize controller;
 
-- (id)initWithController:(GCController *)controllerp atIndex:(NSUInteger)indexp {
+- (instancetype)initWithController:(GCController *)controllerp atIndex:(NSUInteger)indexp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		controller = [controllerp retain];
 		index = indexp;
@@ -161,7 +161,7 @@ EJ_BIND_GET(connected, ctx) {
 }
 
 EJ_BIND_GET(timestamp, ctx) {
-	double time = NSDate.timeIntervalSinceReferenceDate - scriptView.startTime;
+	double time = NSProcessInfo.processInfo.systemUptime;
 	return JSValueMakeNumber(ctx, time * 1000.0);
 }
 

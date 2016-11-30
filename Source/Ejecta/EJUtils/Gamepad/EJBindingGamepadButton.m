@@ -3,7 +3,7 @@
 
 @implementation EJControllerButtonInputHome
 
-- (id)initWithController:(GCController *)controllerp {
+- (instancetype)initWithController:(GCController *)controllerp {
 	if( self = [super init] ) {
 		controller = [controllerp retain];
 		controller.controllerPausedHandler = ^(GCController *controller) {
@@ -35,7 +35,7 @@
 
 @implementation EJBindingGamepadButton
 
-- (id)initWithButton:(NSObject<EJControllerButtonInputProtocol> *)buttonp {
+- (instancetype)initWithButton:(NSObject<EJControllerButtonInputProtocol> *)buttonp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		button = [buttonp retain];
 	}

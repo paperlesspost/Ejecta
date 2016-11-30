@@ -1,3 +1,16 @@
+// This class handles the gist of all the Canvas2D state, stack and drawing.
+
+// All drawing operations go through one of the pushQuad, pushRect etc. methods
+// which transform and write vertex and texture coords into a buffer. This
+// buffer is automatically flushed (i.e. rendered to the screen) whenever some
+// OpenGL state changes (texture or shader bindings, blend modes, etc.), when
+// the frame needs presenting or simply when the buffer is full.
+
+// This ensures that even when drawing thousands of sprites, only one draw call
+// to OpenGL is issued, provided that no texture changes happen in between.
+
+// Path and Font rendering are handled by the EJPath and EJFont classes.
+
 #import <Foundation/Foundation.h>
 #import "EJTexture.h"
 #import "EJImageData.h"
@@ -10,39 +23,41 @@
 
 #define EJ_CANVAS_STATE_STACK_SIZE 16
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJLineCap) {
 	kEJLineCapButt,
 	kEJLineCapRound,
 	kEJLineCapSquare
-} EJLineCap;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJLineJoin) {
 	kEJLineJoinMiter,
 	kEJLineJoinBevel,
 	kEJLineJoinRound
-} EJLineJoin;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJTextBaseline) {
 	kEJTextBaselineAlphabetic,
 	kEJTextBaselineMiddle,
 	kEJTextBaselineTop,
 	kEJTextBaselineHanging,
 	kEJTextBaselineBottom,
 	kEJTextBaselineIdeographic
-} EJTextBaseline;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJTextAlign) {
 	kEJTextAlignStart,
 	kEJTextAlignEnd,
 	kEJTextAlignLeft,
 	kEJTextAlignCenter,
 	kEJTextAlignRight
-} EJTextAlign;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJCompositeOperation) {
 	kEJCompositeOperationSourceOver,
 	kEJCompositeOperationLighter,
+	kEJCompositeOperationLighten,
 	kEJCompositeOperationDarker,
+	kEJCompositeOperationDarken,
 	kEJCompositeOperationDestinationOut,
 	kEJCompositeOperationDestinationOver,
 	kEJCompositeOperationSourceAtop,
@@ -52,7 +67,7 @@ typedef enum {
 	kEJCompositeOperationDestinationIn,
 	kEJCompositeOperationSourceOut,
 	kEJCompositeOperationDestinationAtop
-} EJCompositeOperation;
+};
 
 typedef struct { GLenum source; GLenum destination; float alphaFactor; } EJCompositeOperationFunc;
 extern const EJCompositeOperationFunc EJCompositeOperationFuncs[];
@@ -140,7 +155,7 @@ static inline EJColorRGBA EJCanvasBlendStrokeColor( EJCanvasState *state ) {
 	EJSharedOpenGLContext *sharedGLContext;
 }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp;
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp;
 - (void)create;
 - (void)resizeToWidth:(short)newWidth height:(short)newHeight;
 - (void)resetFramebuffer;

@@ -3,7 +3,7 @@
 
 @implementation EJBindingVideo
 
-- (id)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super initWithContext:ctx argc:argc argv:argv] ) {
 		controller = [AVPlayerViewController new];
 		controller.player = [[AVPlayer new] autorelease];

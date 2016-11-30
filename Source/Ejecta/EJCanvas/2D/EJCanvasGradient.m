@@ -6,7 +6,7 @@
 @synthesize type;
 @synthesize p1, p2, r1, r2;
 
-- (id)initLinearGradientWithP1:(EJVector2)p1p p2:(EJVector2)p2p {
+- (instancetype)initLinearGradientWithP1:(EJVector2)p1p p2:(EJVector2)p2p {
 	if( self = [super init] ) {
 		type = kEJCanvasGradientTypeLinear;
 		p1 = p1p;
@@ -17,7 +17,7 @@
 	return self;
 }
 
-- (id)initRadialGradientWithP1:(EJVector2)p1p r1:(float)r1p p2:(EJVector2)p2p r2:(float)r2p {
+- (instancetype)initRadialGradientWithP1:(EJVector2)p1p r1:(float)r1p p2:(EJVector2)p2p r2:(float)r2p {
 	if( self = [super init] ) {
 		type = kEJCanvasGradientTypeRadial;
 		p1 = p1p;

@@ -4,7 +4,7 @@
 
 @synthesize width, height, pixels;
 
-- (id)initWithWidth:(int)widthp height:(int)heightp pixels:(NSMutableData *)pixelsp {
+- (instancetype)initWithWidth:(int)widthp height:(int)heightp pixels:(NSMutableData *)pixelsp {
 	if( self = [super init] ) {
 		width = widthp;
 		height = heightp;

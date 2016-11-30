@@ -2,7 +2,7 @@
 
 @implementation EJBindingWebGLObject
 
-- (id)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp index:(GLuint)indexp {
+- (instancetype)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp index:(GLuint)indexp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		webglContext = [webglContextp retain];
 		index = indexp;
@@ -20,11 +20,11 @@
 	[super dealloc];
 }
 
-+ (GLuint)indexFromJSValue:(JSValueRef)value {
++ (GLint)indexFromJSValue:(JSValueRef)value {
 	if( !value ) { return 0; }
 	
 	EJBindingWebGLObject *binding = (EJBindingWebGLObject *)JSValueGetPrivate(value);
-	return (binding && [binding isKindOfClass:[self class]]) ? binding->index : 0;
+	return (binding && [binding isKindOfClass:[self class]]) ? binding->index : -1;
 }
 
 + (EJBindingWebGLObject *)webGLObjectFromJSValue:(JSValueRef)value {
@@ -74,7 +74,7 @@
 
 
 @implementation EJBindingWebGLTexture
-- (id)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp {
+- (instancetype)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		webglContext = [webglContextp retain];
 		texture = [[EJTexture alloc] initEmptyForWebGL];
@@ -123,12 +123,14 @@
 }
 @end
 
+
 @implementation EJBindingWebGLFramebuffer
 - (void)invalidate {
 	[webglContext deleteFramebuffer:index];
 	[super invalidate];
 }
 @end
+
 
 @implementation EJBindingWebGLVertexArrayObjectOES
 - (void)invalidate {
@@ -137,9 +139,10 @@
 }
 @end
 
+
 @implementation EJBindingWebGLActiveInfo
 
-- (id)initWithSize:(GLint)sizep type:(GLenum)typep name:(NSString *)namep {
+- (instancetype)initWithSize:(GLint)sizep type:(GLenum)typep name:(NSString *)namep {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		size = sizep;
 		type = typep;
@@ -173,7 +176,7 @@ EJ_BIND_GET(name, ctx) { return NSStringToJSValue(ctx, name); }
 
 @implementation EJBindingWebGLShaderPrecisionFormat
 
-- (id)initWithRangeMin:(GLint)rangeMinp rangeMax:(GLint)rangeMaxp precision:(GLint)precisionp {
+- (instancetype)initWithRangeMin:(GLint)rangeMinp rangeMax:(GLint)rangeMaxp precision:(GLint)precisionp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		rangeMin = rangeMinp;
 		rangeMax = rangeMaxp;
@@ -198,7 +201,6 @@ EJ_BIND_GET(precision, ctx) { return JSValueMakeNumber(ctx, precision); }
 }
 
 @end
-
 
 
 @implementation EJBindingWebGLContextAttributes : EJBindingBase

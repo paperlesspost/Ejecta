@@ -1,3 +1,10 @@
+// The Canvas object exposed to JavaScript. The Ejecta.js sets it up to be
+// instantiated through `document.createElement('canvas')`.
+
+// A Canvas object starts as an empty shell that just has a `width`, `height`
+// and `style`, until getContext() is called. A Canvas can either host a 2D
+// or WebGL Context.
+
 #import "EJBindingBase.h"
 #import "EJTexture.h"
 #import "EJDrawable.h"
@@ -10,11 +17,17 @@
 
 @class EJJavaScriptView;
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJCanvasContextMode) {
 	kEJCanvasContextModeInvalid,
 	kEJCanvasContextMode2D,
 	kEJCanvasContextModeWebGL
-} EJCanvasContextMode;
+};
+
+typedef NS_ENUM(unsigned int, EJCanvasImageRendering) {
+	kEJCanvasImageRenderingAuto,
+	kEJCanvasImageRenderingCrispEdges,
+	kEJCanvasImageRenderingPixelated
+};
 
 @interface EJBindingCanvas : EJBindingBase <EJDrawable> {
 	JSObjectRef jsCanvasContext;
@@ -23,11 +36,13 @@ typedef enum {
 	short width, height;
 	
 	EJBindingCanvasStyle *styleObject;
+	EJCanvasImageRendering imageRendering;
 	CGRect style;
 	
 	BOOL isScreenCanvas;
 }
 
+@property (nonatomic) EJCanvasImageRendering imageRendering;
 @property (nonatomic) float styleLeft;
 @property (nonatomic) float styleTop;
 @property (nonatomic) float styleWidth;

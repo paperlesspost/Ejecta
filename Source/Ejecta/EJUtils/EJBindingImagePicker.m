@@ -68,7 +68,7 @@ EJ_BIND_FUNCTION(getPicture, ctx, argc, argv) {
 	}
 	
 	// limit to pictures only
-	[picker setMediaTypes: @[(NSString *)kUTTypeImage]];
+	picker.mediaTypes = @[(NSString *)kUTTypeImage];
 	
 	// set the source type
 	picker.sourceType = [EJBindingImagePicker getSourceTypeClass:sourceType];

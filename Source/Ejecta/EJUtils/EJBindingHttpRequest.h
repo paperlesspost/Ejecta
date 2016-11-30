@@ -1,21 +1,25 @@
+// This class implements the XMLHttpRequest API quite closely to the w3c spec.
+// Notably absent is the ability to load binary data as Blob. Luckily, Blobs
+// are stupid anyway and ArrayBuffers nicely fill the gap.
+
 #import "EJBindingEventedBase.h"
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJHttpRequestType) {
 	kEJHttpRequestTypeString,
 	kEJHttpRequestTypeArrayBuffer,
 	kEJHttpRequestTypeBlob,
 	kEJHttpRequestTypeDocument,
 	kEJHttpRequestTypeJSON,
 	kEJHttpRequestTypeText
-} EJHttpRequestType;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJHttpRequestState) {
 	kEJHttpRequestStateUnsent = 0,
 	kEJHttpRequestStateOpened = 1,
 	kEJHttpRequestStateHeadersReceived = 2,
 	kEJHttpRequestStateLoading = 3,
 	kEJHttpRequestStateDone = 4,
-} EJHttpRequestState;
+};
 
 @interface EJBindingHttpRequest : EJBindingEventedBase <NSURLSessionDelegate> {
 	EJHttpRequestType type;
@@ -36,6 +40,6 @@ typedef enum {
 
 - (void)clearConnection;
 - (void)clearRequest;
-- (NSString *)getResponseText;
+@property (NS_NONATOMIC_IOSONLY, getter=getResponseText, readonly, copy) NSString *responseText;
 
 @end

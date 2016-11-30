@@ -1,3 +1,7 @@
+// An instance of EJBindingGamepadButton represents a single button on a
+// Gamepad. It provides just two getters: a normalized `value` and the boolean
+// `pressed`.
+
 #import <GameController/GameController.h>
 #import "EJBindingEventedBase.h"
 
@@ -33,7 +37,7 @@
 	GCController *controller;
 	NSTimeInterval lastPressed;
 }
-- (id)initWithController:(GCController *)controller;
+- (instancetype)initWithController:(GCController *)controller;
 @property (nonatomic, readonly) float value;
 @property (nonatomic, readonly, getter = isPressed) BOOL pressed;
 @end
@@ -44,6 +48,6 @@
 	NSObject<EJControllerButtonInputProtocol> *button;
 }
 
-- (id)initWithButton:(NSObject<EJControllerButtonInputProtocol> *)button;
+- (instancetype)initWithButton:(NSObject<EJControllerButtonInputProtocol> *)button;
 
 @end

@@ -5,7 +5,7 @@
 
 @synthesize delegate;
 
-- (id)initWithPath:(NSString *)pathp {
+- (instancetype)initWithPath:(NSString *)pathp {
 	if( self = [super init] ) {
 		path = [pathp retain];
 		player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];

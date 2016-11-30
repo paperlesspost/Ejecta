@@ -107,7 +107,7 @@ JSValueRef NSObjectToJSValue( JSContextRef ctx, NSObject *obj ) {
 		for( NSString *key in dict ) {
 			JSStringRef jsKey = JSStringCreateWithUTF8CString(key.UTF8String);
 			JSValueRef value = NSObjectToJSValue(ctx, dict[key]);
-			JSObjectSetProperty(ctx, (JSObjectRef)ret, jsKey, value, 0, NULL);
+			JSObjectSetProperty(ctx, (JSObjectRef)ret, jsKey, value, kJSPropertyAttributeNone, NULL);
 			JSStringRelease(jsKey);
 		}
 	}
@@ -120,8 +120,8 @@ NSObject *JSValueToNSObject( JSContextRef ctx, JSValueRef value ) {
 	
 	switch( type ) {
 		case kJSTypeString: return JSValueToNSString(ctx, value);
-		case kJSTypeBoolean: return [NSNumber numberWithBool:JSValueToBoolean(ctx, value)];
-		case kJSTypeNumber: return [NSNumber numberWithDouble:JSValueToNumberFast(ctx, value)];
+		case kJSTypeBoolean: return @(JSValueToBoolean(ctx, value));
+		case kJSTypeNumber: return @(JSValueToNumberFast(ctx, value));
 		case kJSTypeNull: return nil;
 		case kJSTypeUndefined: return nil;
 		case kJSTypeObject: break;
@@ -169,5 +169,32 @@ NSObject *JSValueToNSObject( JSContextRef ctx, JSValueRef value ) {
 	}
 	
 	return nil;
+}
+
+// Shorthand to get the data ptr and length from a TypedArray or ArrayBuffer
+void *JSValueGetTypedArrayPtr( JSContextRef ctx, JSValueRef value, size_t *length ) {
+	JSTypedArrayType type = JSValueGetTypedArrayType(ctx, value, NULL);
+	
+	// Array Buffer
+	if (type == kJSTypedArrayTypeArrayBuffer) {
+		if (length != NULL) {
+			*length = JSObjectGetArrayBufferByteLength(ctx, (JSObjectRef)value, NULL);
+		}
+		return JSObjectGetArrayBufferBytesPtr(ctx, (JSObjectRef)value, NULL);
+	}
+	
+	// Typed Array
+	else if (type != kJSTypedArrayTypeNone) {
+		if (length != NULL) {
+			*length = JSObjectGetTypedArrayByteLength(ctx, (JSObjectRef)value, NULL);
+		}
+		return JSObjectGetTypedArrayBytesPtr(ctx, (JSObjectRef)value, NULL);
+	}
+	
+	if (length != NULL) {
+		*length = 0;
+	}
+	
+	return NULL;
 }
 

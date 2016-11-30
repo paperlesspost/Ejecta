@@ -9,7 +9,7 @@
 }
 
 - (BOOL)becomeFirstResponder{
-    BOOL isCurrent = [self isFirstResponder];
+    BOOL isCurrent = self.isFirstResponder;
     BOOL become = [super becomeFirstResponder];
     if (become && !isCurrent && [self.delegate respondsToSelector:@selector(keyInputDidBecomeFirstResponder:)]) {
         [self.delegate keyInputDidBecomeFirstResponder:self];
@@ -22,7 +22,7 @@
 }
 
 - (BOOL)resignFirstResponder{
-    BOOL isCurrent = [self isFirstResponder];
+    BOOL isCurrent = self.isFirstResponder;
     BOOL resign = [super resignFirstResponder];
     if (resign && isCurrent && [self.delegate respondsToSelector:@selector(keyInputDidResignFirstResponderStatus:)]) {
         [self.delegate keyInputDidResignFirstResponderStatus:self];
@@ -79,7 +79,7 @@ EJ_BIND_FUNCTION(blur, ctx, argc, argv){
 }
 
 EJ_BIND_FUNCTION(isOpen, ctx, argc, argv){
-    return JSValueMakeBoolean(ctx, [self.inputController isFirstResponder]);
+    return JSValueMakeBoolean(ctx, (self.inputController).isFirstResponder);
 }
 
 EJ_BIND_GET(value, ctx){

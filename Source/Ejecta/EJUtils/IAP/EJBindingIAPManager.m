@@ -5,7 +5,7 @@
 
 @implementation EJBindingIAPManager
 
-- (id)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super initWithContext:ctxp argc:argc argv:argv] ) {
 		productRequestCallbacks = [NSMutableDictionary new];
 		products = [NSMutableDictionary new];
