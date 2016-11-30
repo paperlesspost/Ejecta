@@ -21,7 +21,7 @@ enum {
 	BOOL oneShot;
 }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp
 	callback:(JSObjectRef)callbackp errback:(JSObjectRef)errbackp
 	oneShot:(BOOL)oneShotp;
 

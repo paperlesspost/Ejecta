@@ -5,7 +5,7 @@
 @synthesize textureId;
 @synthesize immutable;
 
-- (id)init {
+- (instancetype)init {
 	if( self = [super init] ) {
 		glGenTextures(1, &textureId);
 		immutable = NO;
@@ -13,7 +13,7 @@
 	return self;
 }
 
-- (id)initImmutable {
+- (instancetype)initImmutable {
 	if( self = [super init] ) {
 		glGenTextures(1, &textureId);
 		immutable = YES;

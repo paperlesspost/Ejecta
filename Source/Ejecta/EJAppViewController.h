@@ -12,6 +12,6 @@
 	NSString *path;
 }
 
-- (id)initWithScriptAtPath:(NSString *)pathp;
+- (instancetype)initWithScriptAtPath:(NSString *)pathp;
 
 @end

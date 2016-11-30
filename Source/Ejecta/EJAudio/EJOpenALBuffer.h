@@ -18,8 +18,8 @@
 }
 
 + (id)cachedBufferWithPath:(NSString *)path;
-- (id)initWithPath:(NSString *)pathp;
-- (void*)getAudioDataWithURL:(NSURL *)url;
+- (instancetype)initWithPath:(NSString *)pathp;
+- (void*)getAudioDataWithURL:(NSURL *)url NS_RETURNS_INNER_POINTER;
 
 @property (readonly) unsigned int bufferId;
 @property (readonly) float duration;

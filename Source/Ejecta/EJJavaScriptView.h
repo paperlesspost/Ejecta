@@ -107,7 +107,7 @@
 @property (nonatomic, retain) NSOperationQueue *backgroundQueue;
 @property (nonatomic, retain) EJClassLoader *classLoader;
 
-- (id)initWithFrame:(CGRect)frame appFolder:(NSString *)folder;
+- (instancetype)initWithFrame:(CGRect)frame appFolder:(NSString *)folder;
 
 - (void)loadScriptAtPath:(NSString *)path;
 - (JSValueRef)evaluateScript:(NSString *)script;

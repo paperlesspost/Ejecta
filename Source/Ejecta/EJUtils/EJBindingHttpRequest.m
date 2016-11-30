@@ -3,7 +3,7 @@
 
 @implementation EJBindingHttpRequest
 
-- (id)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super initWithContext:ctxp argc:argc argv:argv] ) {
 		requestHeaders = [NSMutableDictionary new];
 		defaultEncoding = NSUTF8StringEncoding;
@@ -69,14 +69,14 @@
 	completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition,
 	NSURLCredential * _Nullable credential))completionHandler
 {
-	if( user && password && [challenge previousFailureCount] == 0 ) {
+	if( user && password && challenge.previousFailureCount == 0 ) {
 		NSURLCredential *credentials = [NSURLCredential
 			credentialWithUser:user
 			password:password
 			persistence:NSURLCredentialPersistenceNone];
 		completionHandler(NSURLSessionAuthChallengeUseCredential, credentials);
 	}
-	else if( [challenge previousFailureCount] == 0 ) {
+	else if( challenge.previousFailureCount == 0 ) {
 		completionHandler(NSURLSessionAuthChallengeUseCredential, nil);
 	}
 	else {
@@ -252,7 +252,7 @@ EJ_BIND_FUNCTION(send, ctx, argc, argv) {
 		requestUrl = [NSURL fileURLWithPath:[scriptView pathForResource:requestUrl.path]];
 	}
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:requestUrl];
-	[request setHTTPMethod:method];
+	request.HTTPMethod = method;
 	
 	for( NSString *header in requestHeaders ) {
 		[request setValue:requestHeaders[header] forHTTPHeaderField:header];
@@ -281,7 +281,7 @@ EJ_BIND_FUNCTION(send, ctx, argc, argv) {
 	
 	if( timeout ) {
 		NSTimeInterval timeoutSeconds = (float)timeout/1000.0f;
-		[request setTimeoutInterval:timeoutSeconds];
+		request.timeoutInterval = timeoutSeconds;
 	}
 	
 	NSLog(@"XHR: %@ %@", method, url);

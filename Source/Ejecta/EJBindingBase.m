@@ -6,7 +6,7 @@
 @implementation EJBindingBase
 @synthesize scriptView;
 
-- (id)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super init] ) {
 	}
 	return self;
@@ -37,7 +37,7 @@
 	NSDictionary *constantValues = class.constantValues;
 	
 	for( NSString* key in constantValues ) {
-		NSObject *value = [constantValues objectForKey:key];
+		NSObject *value = constantValues[key];
 		JSValueRef jsValue = [value isKindOfClass:NSString.class]
 			? NSStringToJSValue(ctx, (NSString *)value)
 			: JSValueMakeNumber(ctx, ((NSNumber *)value).doubleValue);

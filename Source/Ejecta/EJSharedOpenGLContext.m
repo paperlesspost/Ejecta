@@ -19,7 +19,7 @@ static EJSharedOpenGLContext *sharedOpenGLContext;
     return sharedOpenGLContext;
 }
 
-- (id)init {
+- (instancetype)init {
 	if( self = [super init] ) {
 		glContext2D = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 		glSharegroup = glContext2D.sharegroup;

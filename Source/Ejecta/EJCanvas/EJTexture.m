@@ -35,7 +35,7 @@ typedef struct {
 
 @synthesize lazyLoaded;
 
-- (id)initEmptyForWebGL {
+- (instancetype)initEmptyForWebGL {
 	// For WebGL textures; this will not create a textureStorage
 	
 	if( self = [super init] ) {
@@ -47,7 +47,7 @@ typedef struct {
 	return self;
 }
 
-- (id)initWithPath:(NSString *)path {
+- (instancetype)initWithPath:(NSString *)path {
 	// For loading on the main thread (blocking)
 	
 	if( self = [super init] ) {
@@ -95,7 +95,7 @@ typedef struct {
 	return texture;
 }
 
-- (id)initWithPath:(NSString *)path loadOnQueue:(NSOperationQueue *)queue callback:(NSOperation *)callback {
+- (instancetype)initWithPath:(NSString *)path loadOnQueue:(NSOperationQueue *)queue callback:(NSOperation *)callback {
 	// For loading on a background thread (non-blocking)
 	// This will defer loading for local images
 	
@@ -142,12 +142,12 @@ typedef struct {
 	return self;
 }
 
-- (id)initWithWidth:(int)widthp height:(int)heightp {
+- (instancetype)initWithWidth:(int)widthp height:(int)heightp {
 	// Create an empty RGBA texture
 	return [self initWithWidth:widthp height:heightp format:GL_RGBA];
 }
 
-- (id)initWithWidth:(int)widthp height:(int)heightp format:(GLenum)formatp {
+- (instancetype)initWithWidth:(int)widthp height:(int)heightp format:(GLenum)formatp {
 	// Create an empty texture
 	
 	if( self = [super init] ) {
@@ -159,7 +159,7 @@ typedef struct {
 	return self;
 }
 
-- (id)initWithWidth:(int)widthp height:(int)heightp pixels:(NSData *)pixels {
+- (instancetype)initWithWidth:(int)widthp height:(int)heightp pixels:(NSData *)pixels {
 	// Creates a texture with the given pixels
 	
 	if( self = [super init] ) {
@@ -171,14 +171,14 @@ typedef struct {
 	return self;
 }
 
-- (id)initAsRenderTargetWithWidth:(int)widthp height:(int)heightp fbo:(GLuint)fbop {
+- (instancetype)initAsRenderTargetWithWidth:(int)widthp height:(int)heightp fbo:(GLuint)fbop {
 	if( self = [self initWithWidth:widthp height:heightp] ) {
 		fbo = fbop;
 	}
 	return self;
 }
 
-- (id)initWithUIImage:(UIImage *)image {
+- (instancetype)initWithUIImage:(UIImage *)image {
 	if( self = [super init] ) {
 		NSMutableData *pixels = [self loadPixelsFromUIImage:image];
 		if( pixels ) {

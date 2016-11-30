@@ -24,7 +24,7 @@ typedef std::vector<subpath_t> path_t;
 @synthesize transform;
 @synthesize fillRule;
 
-- (id)init {
+- (instancetype)init {
 	self = [super init];
 	if(self) {
 		transform = CGAffineTransformIdentity;

@@ -19,7 +19,7 @@
 	EJJavaScriptView *scriptView;
 }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptView;
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView;
 - (int)scheduleCallback:(JSObjectRef)callback interval:(NSTimeInterval)interval repeat:(BOOL)repeat;
 - (void)cancelId:(int)timerId;
 - (void)update;
@@ -35,7 +35,7 @@
 	EJJavaScriptView *scriptView;
 }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp
 	callback:(JSObjectRef)callbackp
 	interval:(NSTimeInterval)intervalp
 	repeat:(BOOL)repeatp;

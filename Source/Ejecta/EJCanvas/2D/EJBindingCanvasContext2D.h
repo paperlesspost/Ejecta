@@ -10,6 +10,6 @@
 	EJCanvasContext2D *renderingContext;
 }
 
-- (id)initWithRenderingContext:(EJCanvasContext2D *)renderingContextp;
+- (instancetype)initWithRenderingContext:(EJCanvasContext2D *)renderingContextp;
 
 @end

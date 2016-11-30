@@ -4,7 +4,7 @@
 @implementation EJBindingGamepad
 @synthesize controller;
 
-- (id)initWithController:(GCController *)controllerp atIndex:(NSUInteger)indexp {
+- (instancetype)initWithController:(GCController *)controllerp atIndex:(NSUInteger)indexp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		controller = [controllerp retain];
 		index = indexp;

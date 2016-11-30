@@ -5,7 +5,7 @@
 @synthesize program;
 @synthesize screen;
 
-- (id)initWithVertexShader:(const char *)vertexShaderSource fragmentShader:(const char *)fragmentShaderSource {
+- (instancetype)initWithVertexShader:(const char *)vertexShaderSource fragmentShader:(const char *)fragmentShaderSource {
 	if( self = [super init] ) {
 		program = glCreateProgram();
 		GLuint vertexShader = [EJGLProgram2D compileShaderSource:vertexShaderSource type:GL_VERTEX_SHADER];

@@ -50,7 +50,7 @@ typedef struct {
 	float size;
 	NSUInteger hash;
 }
-+ (id)descriptorWithName:(NSString *)name size:(float)size;
++ (instancetype)descriptorWithName:(NSString *)name size:(float)size;
 
 @property (readonly, nonatomic) NSString *name;
 @property (readonly, nonatomic) float size;
@@ -65,7 +65,7 @@ typedef struct {
 	NSInteger glyphCount;
 }
 
-- (id)initWithGlyphLayout:(NSData *)layoutp glyphCount:(NSInteger)count metrics:(EJTextMetrics)metrics;
+- (instancetype)initWithGlyphLayout:(NSData *)layoutp glyphCount:(NSInteger)count metrics:(EJTextMetrics)metrics;
 @property (readonly, nonatomic) EJFontGlyphLayout *layout;
 @property (readonly, nonatomic) NSInteger glyphCount;
 @property (readonly, nonatomic) EJTextMetrics metrics;
@@ -97,7 +97,7 @@ int EJFontGlyphLayoutSortByTextureIndex(const void *a, const void *b);
 	NSCache *layoutCache;
 }
 
-- (id)initWithDescriptor:(EJFontDescriptor *)desc fill:(BOOL)fillp lineWidth:(float)lineWidthp contentScale:(float)contentScalep;
+- (instancetype)initWithDescriptor:(EJFontDescriptor *)desc fill:(BOOL)fillp lineWidth:(float)lineWidthp contentScale:(float)contentScalep;
 + (void)loadFontAtPath:(NSString *)path;
 - (void)drawString:(NSString *)string toContext:(EJCanvasContext2D *)context x:(float)x y:(float)y;
 - (EJTextMetrics)measureString:(NSString *)string forContext:(EJCanvasContext2D *)context;

@@ -17,17 +17,17 @@
 
 @class EJJavaScriptView;
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJCanvasContextMode) {
 	kEJCanvasContextModeInvalid,
 	kEJCanvasContextMode2D,
 	kEJCanvasContextModeWebGL
-} EJCanvasContextMode;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJCanvasImageRendering) {
 	kEJCanvasImageRenderingAuto,
 	kEJCanvasImageRenderingCrispEdges,
 	kEJCanvasImageRenderingPixelated
-} EJCanvasImageRendering;
+};
 
 @interface EJBindingCanvas : EJBindingBase <EJDrawable> {
 	JSObjectRef jsCanvasContext;

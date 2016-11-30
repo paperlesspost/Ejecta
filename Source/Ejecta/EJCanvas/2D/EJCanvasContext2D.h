@@ -23,36 +23,36 @@
 
 #define EJ_CANVAS_STATE_STACK_SIZE 16
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJLineCap) {
 	kEJLineCapButt,
 	kEJLineCapRound,
 	kEJLineCapSquare
-} EJLineCap;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJLineJoin) {
 	kEJLineJoinMiter,
 	kEJLineJoinBevel,
 	kEJLineJoinRound
-} EJLineJoin;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJTextBaseline) {
 	kEJTextBaselineAlphabetic,
 	kEJTextBaselineMiddle,
 	kEJTextBaselineTop,
 	kEJTextBaselineHanging,
 	kEJTextBaselineBottom,
 	kEJTextBaselineIdeographic
-} EJTextBaseline;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJTextAlign) {
 	kEJTextAlignStart,
 	kEJTextAlignEnd,
 	kEJTextAlignLeft,
 	kEJTextAlignCenter,
 	kEJTextAlignRight
-} EJTextAlign;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJCompositeOperation) {
 	kEJCompositeOperationSourceOver,
 	kEJCompositeOperationLighter,
 	kEJCompositeOperationLighten,
@@ -67,7 +67,7 @@ typedef enum {
 	kEJCompositeOperationDestinationIn,
 	kEJCompositeOperationSourceOut,
 	kEJCompositeOperationDestinationAtop
-} EJCompositeOperation;
+};
 
 typedef struct { GLenum source; GLenum destination; float alphaFactor; } EJCompositeOperationFunc;
 extern const EJCompositeOperationFunc EJCompositeOperationFuncs[];
@@ -155,7 +155,7 @@ static inline EJColorRGBA EJCanvasBlendStrokeColor( EJCanvasState *state ) {
 	EJSharedOpenGLContext *sharedGLContext;
 }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp;
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp;
 - (void)create;
 - (void)resizeToWidth:(short)newWidth height:(short)newHeight;
 - (void)resetFramebuffer;

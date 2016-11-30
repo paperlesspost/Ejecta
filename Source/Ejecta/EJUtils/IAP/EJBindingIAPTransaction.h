@@ -8,7 +8,7 @@
 	SKPaymentTransaction *transaction;
 }
 
-- (id)initWithTransaction:(SKPaymentTransaction *)transaction;
+- (instancetype)initWithTransaction:(SKPaymentTransaction *)transaction;
 
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx
 	scriptView:(EJJavaScriptView *)view

@@ -5,7 +5,7 @@
 
 @implementation EJAppViewController
 
-- (id)initWithScriptAtPath:(NSString *)pathp {
+- (instancetype)initWithScriptAtPath:(NSString *)pathp {
 	if( self = [super init] ) {
 		path = [pathp retain];
 	}

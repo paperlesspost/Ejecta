@@ -8,7 +8,7 @@
 @synthesize path;
 @synthesize preload;
 
-- (id)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super initWithContext:ctx argc:argc argv:argv] ) {
 		volume = 1;
 		paused = true;

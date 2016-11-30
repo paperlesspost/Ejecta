@@ -9,7 +9,7 @@
 	NSMutableData *pixels;
 }
 
-- (id)initWithWidth:(int)width height:(int)height pixels:(NSMutableData *)pixels;
+- (instancetype)initWithWidth:(int)width height:(int)height pixels:(NSMutableData *)pixels;
 
 @property (readonly, nonatomic) EJTexture *texture;
 @property (readonly, nonatomic) int width;

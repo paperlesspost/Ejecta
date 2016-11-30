@@ -13,7 +13,7 @@
 	NSUInteger hash;
 }
 
-+ keyWithDescriptor:(EJFontDescriptor *)descriptor lineWidth:(float)lineWidth contentScale:(float)contentScale;
++ (instancetype) keyWithDescriptor:(EJFontDescriptor *)descriptor lineWidth:(float)lineWidth contentScale:(float)contentScale;
 
 @property (readonly) int normalizedContentScale;
 
@@ -24,7 +24,7 @@ static float kEJFontCacheKeyLineWidthNoneFilled = -1;
 @implementation EJFontCacheKey
 @synthesize normalizedContentScale;
 
-+ (id)keyWithDescriptor:(EJFontDescriptor *)descriptor lineWidth:(float)lineWidth contentScale:(float)contentScale {
++ (instancetype)keyWithDescriptor:(EJFontDescriptor *)descriptor lineWidth:(float)lineWidth contentScale:(float)contentScale {
 
 	// Find the next power of two for the normalized content scale
 	int scale = 1;
@@ -36,7 +36,7 @@ static float kEJFontCacheKeyLineWidthNoneFilled = -1;
 	key->descriptor = [descriptor retain];
 	key->normalizedContentScale = scale;
 	key->lineWidth = lineWidth;
-	key->hash = [descriptor hash] + (scale * 673) + (int)(lineWidth * 487);
+	key->hash = descriptor.hash + (scale * 673) + (int)(lineWidth * 487);
 	
 	return [key autorelease];
 }
@@ -89,7 +89,7 @@ static EJFontCache *fontCache;
     return fontCache;
 }
 
-- (id)init {
+- (instancetype)init {
 	if( self = [super init] ) {
 		fonts = [NSMutableDictionary new];
 		[NSNotificationCenter.defaultCenter addObserver:self

@@ -15,10 +15,10 @@
 
 #define EJ_CANVAS_GRADIENT_WIDTH 1024
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJCanvasGradientType) {
 	kEJCanvasGradientTypeLinear,
 	kEJCanvasGradientTypeRadial
-} EJCanvasGradientType;
+};
 
 typedef struct {
 	float pos;
@@ -35,8 +35,8 @@ typedef struct {
 	EJTexture *texture;
 }
 
-- (id)initLinearGradientWithP1:(EJVector2)p1 p2:(EJVector2)p2;
-- (id)initRadialGradientWithP1:(EJVector2)p1 r1:(float)r1 p2:(EJVector2)p2 r2:(float)r2;
+- (instancetype)initLinearGradientWithP1:(EJVector2)p1 p2:(EJVector2)p2;
+- (instancetype)initRadialGradientWithP1:(EJVector2)p1 r1:(float)r1 p2:(EJVector2)p2 r2:(float)r2;
 
 - (void)addStopWithColor:(EJColorRGBA)color at:(float)pos;
 - (void)rebuild;

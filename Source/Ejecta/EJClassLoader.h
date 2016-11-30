@@ -28,7 +28,7 @@
 - (EJLoadedJSClass *)getJSClass:(id)class;
 - (EJLoadedJSClass *)loadJSClass:(id)class;
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptView name:(NSString *)name;
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView name:(NSString *)name;
 
 @property (nonatomic, readonly) JSClassRef jsConstructorClass;
 
@@ -41,7 +41,7 @@
 	NSDictionary *constantValues;
 }
 
-- (id)initWithJSClass:(JSClassRef)jsClassp constantValues:(NSDictionary *)constantValuesp;
+- (instancetype)initWithJSClass:(JSClassRef)jsClassp constantValues:(NSDictionary *)constantValuesp;
 @property (readonly) JSClassRef jsClass;
 @property (readonly) NSDictionary *constantValues;
 @end

@@ -41,16 +41,16 @@
 	EJTextureParams params;
 	NSBlockOperation *loadCallback;
 }
-- (id)initEmptyForWebGL;
-- (id)initWithPath:(NSString *)path;
+- (instancetype)initEmptyForWebGL;
+- (instancetype)initWithPath:(NSString *)path;
 + (id)cachedTextureWithPath:(NSString *)path loadOnQueue:(NSOperationQueue *)queue callback:(NSOperation *)callback;
-- (id)initWithPath:(NSString *)path loadOnQueue:(NSOperationQueue *)queue callback:(NSOperation *)callback;
+- (instancetype)initWithPath:(NSString *)path loadOnQueue:(NSOperationQueue *)queue callback:(NSOperation *)callback;
 
-- (id)initWithWidth:(int)widthp height:(int)heightp;
-- (id)initWithWidth:(int)widthp height:(int)heightp format:(GLenum) format;
-- (id)initWithWidth:(int)widthp height:(int)heightp pixels:(NSData *)pixels;
-- (id)initAsRenderTargetWithWidth:(int)widthp height:(int)heightp fbo:(GLuint)fbo;
-- (id)initWithUIImage:(UIImage *)image;
+- (instancetype)initWithWidth:(int)widthp height:(int)heightp;
+- (instancetype)initWithWidth:(int)widthp height:(int)heightp format:(GLenum) format;
+- (instancetype)initWithWidth:(int)widthp height:(int)heightp pixels:(NSData *)pixels;
+- (instancetype)initAsRenderTargetWithWidth:(int)widthp height:(int)heightp fbo:(GLuint)fbo;
+- (instancetype)initWithUIImage:(UIImage *)image;
 
 - (void)maybeReleaseStorage;
 
@@ -71,7 +71,7 @@
 - (void)bindWithFilter:(GLenum)filter;
 - (void)bindToTarget:(GLenum)target;
 
-- (UIImage *)image;
+@property (NS_NONATOMIC_IOSONLY, readonly, strong) UIImage *image;
 + (UIImage *)imageWithPixels:(NSData *)pixels width:(int)width height:(int)height;
 
 + (void)premultiplyPixels:(const GLubyte *)inPixels to:(GLubyte *)outPixels byteLength:(int)byteLength format:(GLenum)format;

@@ -6,7 +6,7 @@
 - (BOOL)needsPresenting { return needsPresenting; }
 - (void)setNeedsPresenting:(BOOL)needsPresentingp { needsPresenting = needsPresentingp; }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp {
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp {
 	if( self = [super init] ) {
 		scriptView = scriptViewp;
 		

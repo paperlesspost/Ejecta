@@ -4,22 +4,22 @@
 
 #import "EJBindingEventedBase.h"
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJHttpRequestType) {
 	kEJHttpRequestTypeString,
 	kEJHttpRequestTypeArrayBuffer,
 	kEJHttpRequestTypeBlob,
 	kEJHttpRequestTypeDocument,
 	kEJHttpRequestTypeJSON,
 	kEJHttpRequestTypeText
-} EJHttpRequestType;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJHttpRequestState) {
 	kEJHttpRequestStateUnsent = 0,
 	kEJHttpRequestStateOpened = 1,
 	kEJHttpRequestStateHeadersReceived = 2,
 	kEJHttpRequestStateLoading = 3,
 	kEJHttpRequestStateDone = 4,
-} EJHttpRequestState;
+};
 
 @interface EJBindingHttpRequest : EJBindingEventedBase <NSURLSessionDelegate> {
 	EJHttpRequestType type;
@@ -40,6 +40,6 @@ typedef enum {
 
 - (void)clearConnection;
 - (void)clearRequest;
-- (NSString *)getResponseText;
+@property (NS_NONATOMIC_IOSONLY, getter=getResponseText, readonly, copy) NSString *responseText;
 
 @end

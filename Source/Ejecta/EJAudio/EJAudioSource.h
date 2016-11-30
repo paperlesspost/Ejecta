@@ -6,7 +6,7 @@
 @protocol EJAudioSourceDelegate;
 @protocol EJAudioSource
 
-- (id)initWithPath:(NSString *)path;
+- (instancetype)initWithPath:(NSString *)path;
 - (void)play;
 - (void)pause;
 - (void)setLooping:(BOOL)loop;

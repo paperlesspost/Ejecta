@@ -6,17 +6,17 @@
 #import "EJBindingEventedBase.h"
 #import "SRWebSocket.h"
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJWebSocketBinaryType) {
 	kEJWebSocketBinaryTypeBlob,
 	kEJWebSocketBinaryTypeArrayBuffer
-} EJWebSocketBinaryType;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJWebSocketReadyState) {
 	kEJWebSocketReadyStateConnecting = 0,
 	kEJWebSocketReadyStateOpen = 1,
 	kEJWebSocketReadyStateClosing = 2,
 	kEJWebSocketReadyStateClosed = 3
-} EJWebSocketReadyState;
+};
 
 @interface EJBindingWebSocket : EJBindingEventedBase <SRWebSocketDelegate> {
 	EJWebSocketBinaryType binaryType;

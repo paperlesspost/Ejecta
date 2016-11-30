@@ -15,7 +15,7 @@
 	JSObjectRef dataArray;
 }
 
-- (id)initWithImageData:(EJImageData *)data;
+- (instancetype)initWithImageData:(EJImageData *)data;
 
 @property (readonly, nonatomic) EJImageData *imageData;
 @property (readonly, nonatomic) EJTexture *texture;

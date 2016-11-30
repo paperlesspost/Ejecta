@@ -37,7 +37,7 @@
 	GCController *controller;
 	NSTimeInterval lastPressed;
 }
-- (id)initWithController:(GCController *)controller;
+- (instancetype)initWithController:(GCController *)controller;
 @property (nonatomic, readonly) float value;
 @property (nonatomic, readonly, getter = isPressed) BOOL pressed;
 @end
@@ -48,6 +48,6 @@
 	NSObject<EJControllerButtonInputProtocol> *button;
 }
 
-- (id)initWithButton:(NSObject<EJControllerButtonInputProtocol> *)button;
+- (instancetype)initWithButton:(NSObject<EJControllerButtonInputProtocol> *)button;
 
 @end

@@ -21,15 +21,15 @@
 #define EJ_PATH_MIN_STEPS_FOR_CIRCLE 20.0f
 #define EJ_PATH_MAX_STEPS_FOR_CIRCLE 64.0f
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJPathPolygonTarget) {
 	kEJPathPolygonTargetColor,
 	kEJPathPolygonTargetDepth
-} EJPathPolygonTarget;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJPathFillRule) {
 	kEJPathFillRuleNonZero,
 	kEJPathFillRuleEvenOdd
-} EJPathFillRule;
+};
 
 @class EJCanvasContext2D;
 

@@ -11,7 +11,7 @@
 	JSObjectRef callback;
 }
 
-- (id)initWithProduct:(SKProduct *)product;
+- (instancetype)initWithProduct:(SKProduct *)product;
 - (void)finishPurchaseWithTransaction:(SKPaymentTransaction *)transaction;
 
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx

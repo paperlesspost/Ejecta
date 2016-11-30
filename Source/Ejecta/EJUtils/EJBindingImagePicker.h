@@ -10,10 +10,10 @@
 #define EJ_PICKER_TYPE_FULLSCREEN 1
 #define EJ_PICKER_TYPE_POPUP      2
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJImagePickerType) {
 	kEJImagePickerTypeFullscreen,
 	kEJImagePickerTypePopup
-} EJImagePickerType;
+};
 
 @interface EJBindingImagePicker : EJBindingBase <UIImagePickerControllerDelegate, UIPopoverControllerDelegate, UINavigationControllerDelegate> {
 	JSObjectRef callback;

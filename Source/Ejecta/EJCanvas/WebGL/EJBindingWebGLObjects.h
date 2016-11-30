@@ -14,7 +14,7 @@
 	GLuint index;
 	EJBindingCanvasContextWebGL *webglContext;
 }
-- (id)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContext index:(GLuint)index;
+- (instancetype)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContext index:(GLuint)index;
 - (void)invalidate;
 + (GLint)indexFromJSValue:(JSValueRef)value;
 + (EJBindingWebGLObject *)webGLObjectFromJSValue:(JSValueRef)value;
@@ -66,7 +66,7 @@
 	GLenum type;
 	NSString *name;
 }
-- (id)initWithSize:(GLint)sizep type:(GLenum)typep name:(NSString *)namep;
+- (instancetype)initWithSize:(GLint)sizep type:(GLenum)typep name:(NSString *)namep;
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx
 	scriptView:(EJJavaScriptView *)scriptView
 	size:(GLint)sizep type:(GLenum)typep name:(NSString *)namep;
@@ -78,7 +78,7 @@
 	GLint rangeMax;
 	GLint precision;
 }
-- (id)initWithRangeMin:(GLint)rangeMin rangeMax:(GLint)rangeMax precision:(GLint)precision;
+- (instancetype)initWithRangeMin:(GLint)rangeMin rangeMax:(GLint)rangeMax precision:(GLint)precision;
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx
 	scriptView:(EJJavaScriptView *)scriptView
 	rangeMin:(GLint)rangeMin rangeMax:(GLint)rangeMax precision:(GLint)precision;

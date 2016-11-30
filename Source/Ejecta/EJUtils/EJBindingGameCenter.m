@@ -3,7 +3,7 @@
 
 @implementation EJBindingGameCenter
 
-- (id)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super initWithContext:ctx argc:argc argv:argv] ) {
 		achievements = [NSMutableDictionary new];
 	}

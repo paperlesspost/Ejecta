@@ -14,7 +14,7 @@
 
 @implementation EJBindingCanvasContext2D
 
-- (id)initWithRenderingContext:(EJCanvasContext2D *)renderingContextp {
+- (instancetype)initWithRenderingContext:(EJCanvasContext2D *)renderingContextp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		renderingContext = [renderingContextp retain];
 	}

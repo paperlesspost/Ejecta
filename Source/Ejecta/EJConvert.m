@@ -120,8 +120,8 @@ NSObject *JSValueToNSObject( JSContextRef ctx, JSValueRef value ) {
 	
 	switch( type ) {
 		case kJSTypeString: return JSValueToNSString(ctx, value);
-		case kJSTypeBoolean: return [NSNumber numberWithBool:JSValueToBoolean(ctx, value)];
-		case kJSTypeNumber: return [NSNumber numberWithDouble:JSValueToNumberFast(ctx, value)];
+		case kJSTypeBoolean: return @(JSValueToBoolean(ctx, value));
+		case kJSTypeNumber: return @(JSValueToNumberFast(ctx, value));
 		case kJSTypeNull: return nil;
 		case kJSTypeUndefined: return nil;
 		case kJSTypeObject: break;

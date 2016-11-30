@@ -5,7 +5,7 @@
 @implementation EJTimerCollection
 
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp {
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp {
 	if (self = [super init]) {
 		scriptView = scriptViewp;
 		timers = [NSMutableDictionary new];
@@ -32,7 +32,7 @@
 }
 
 - (void)update {	
-	for( NSNumber *timerId in [timers allKeys]) {
+	for( NSNumber *timerId in timers.allKeys) {
 		EJTimer *timer = [timers[timerId] retain];
 		[timer check];
 		
@@ -55,7 +55,7 @@
 @implementation EJTimer
 @synthesize active;
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp
 	callback:(JSObjectRef)callbackp
 	interval:(NSTimeInterval)intervalp
 	repeat:(BOOL)repeatp

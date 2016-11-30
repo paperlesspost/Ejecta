@@ -29,7 +29,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 @synthesize imageSmoothingEnabled;
 @synthesize stencilMask;
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp {
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp {
 	if( self = [super init] ) {
 		scriptView = scriptViewp;
 		sharedGLContext = scriptView.openGLContext;

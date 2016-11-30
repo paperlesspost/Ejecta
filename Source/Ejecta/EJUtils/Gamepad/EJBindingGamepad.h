@@ -5,7 +5,7 @@
 #import "EJBindingEventedBase.h"
 
 // Button Mappings according to http://www.w3.org/TR/gamepad/#remapping
-typedef enum {
+typedef NS_ENUM(unsigned int, kEJGamepadButtonMapping) {
 	kEJGamepadButtonA = 0,
 	kEJGamepadButtonB = 1,
 	kEJGamepadButtonX = 2,
@@ -24,7 +24,7 @@ typedef enum {
 	kEJGamepadButtonRight = 15,
 	kEJGamepadButtonHome = 16,
 	kEJGamepadNumButtons
-} kEJGamepadButtonMapping;
+};
 
 
 @interface EJBindingGamepad : EJBindingBase {
@@ -37,7 +37,7 @@ typedef enum {
 	JSObjectRef jsButtons;
 }
 
-- (id)initWithController:(GCController *)controller atIndex:(NSUInteger)index;
+- (instancetype)initWithController:(GCController *)controller atIndex:(NSUInteger)index;
 - (void)disconnect;
 
 @property (readonly) JSObjectRef jsObject;

@@ -2,7 +2,7 @@
 
 @implementation EJBindingWebGLObject
 
-- (id)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp index:(GLuint)indexp {
+- (instancetype)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp index:(GLuint)indexp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		webglContext = [webglContextp retain];
 		index = indexp;
@@ -74,7 +74,7 @@
 
 
 @implementation EJBindingWebGLTexture
-- (id)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp {
+- (instancetype)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		webglContext = [webglContextp retain];
 		texture = [[EJTexture alloc] initEmptyForWebGL];
@@ -142,7 +142,7 @@
 
 @implementation EJBindingWebGLActiveInfo
 
-- (id)initWithSize:(GLint)sizep type:(GLenum)typep name:(NSString *)namep {
+- (instancetype)initWithSize:(GLint)sizep type:(GLenum)typep name:(NSString *)namep {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		size = sizep;
 		type = typep;
@@ -176,7 +176,7 @@ EJ_BIND_GET(name, ctx) { return NSStringToJSValue(ctx, name); }
 
 @implementation EJBindingWebGLShaderPrecisionFormat
 
-- (id)initWithRangeMin:(GLint)rangeMinp rangeMax:(GLint)rangeMaxp precision:(GLint)precisionp {
+- (instancetype)initWithRangeMin:(GLint)rangeMinp rangeMax:(GLint)rangeMaxp precision:(GLint)precisionp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		rangeMin = rangeMinp;
 		rangeMax = rangeMaxp;

@@ -46,11 +46,11 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 @synthesize backgroundQueue;
 @synthesize classLoader;
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
 	return [self initWithFrame:frame appFolder:EJECTA_DEFAULT_APP_FOLDER];
 }
 
-- (id)initWithFrame:(CGRect)frame appFolder:(NSString *)folder {
+- (instancetype)initWithFrame:(CGRect)frame appFolder:(NSString *)folder {
     if( self = [super initWithFrame:frame] ) {
         [self setupWithAppFolder:folder];
     }
@@ -108,7 +108,7 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
     [EAGLContext setCurrentContext:glCurrentContext];
 
     //Load the Ejecta.js from this bundle, rather than the main bundle
-    NSString *path = [NSString stringWithFormat:@"%@/%@", [[NSBundle bundleForClass:[EJJavaScriptView class]] resourcePath], @"Ejecta.js"];;
+    NSString *path = [NSString stringWithFormat:@"%@/%@", [NSBundle bundleForClass:[EJJavaScriptView class]].resourcePath, @"Ejecta.js"];;
     
     NSString *script = [NSString stringWithContentsOfFile:path
                                                  encoding:NSUTF8StringEncoding error:NULL];

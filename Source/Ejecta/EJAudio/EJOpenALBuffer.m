@@ -18,7 +18,7 @@
 	return buffer;
 }
 
-- (id)initWithPath:(NSString *)pathp {
+- (instancetype)initWithPath:(NSString *)pathp {
 	if( self = [super init] ) {
 		path = [pathp retain];
 		NSURL *url = [NSURL fileURLWithPath:pathp];

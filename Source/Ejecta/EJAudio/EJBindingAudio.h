@@ -11,19 +11,19 @@
 #define EJ_AUDIO_OPENAL_MAX_SIZE 512 * 1024 // 512kb
 
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJAudioPreload) {
 	kEJAudioPreloadNone,
 	kEJAudioPreloadMetadata,
 	kEJAudioPreloadAuto
-} EJAudioPreload;
+};
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJAudioReadyState) {
 	kEJAudioHaveNothing = 0,
 	kEJAudioHaveMetadata = 1,
 	kEJAudioHaveCurrentData = 2,
 	kEJAudioHaveFutureData = 3,
 	kEJAudioHaveEnoughData = 4
-} EJAudioReadyState;
+};
 
 @interface EJBindingAudio : EJBindingEventedBase <EJAudioSourceDelegate> {
 	NSString *path;

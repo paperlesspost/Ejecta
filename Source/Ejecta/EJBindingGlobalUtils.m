@@ -15,7 +15,7 @@
 	struct utsname systemInfo;
 	uname( &systemInfo );
 
-	NSString *machine = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+	NSString *machine = @(systemInfo.machine);
 
 	if(
 		[machine isEqualToString: @"i386"] ||
@@ -190,7 +190,7 @@ EJ_BIND_GET(platform, ctx ) {
 	char machine[32];
 	size_t size = sizeof(machine);
     sysctlbyname("hw.machine", machine, &size, NULL, 0);
-	return NSStringToJSValue(ctx, [NSString stringWithUTF8String:machine] );
+	return NSStringToJSValue(ctx, @(machine) );
 }
 
 EJ_BIND_GET(language, ctx) {

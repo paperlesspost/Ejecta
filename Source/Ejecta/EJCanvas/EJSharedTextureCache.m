@@ -13,7 +13,7 @@ static EJSharedTextureCache *sharedTextureCache;
     return sharedTextureCache;
 }
 
-- (id)init {
+- (instancetype)init {
 	if( self = [super init] ) {
 		// Create a non-retaining Dictionary to hold the cached textures
 		textures = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 8, &kCFCopyStringDictionaryKeyCallBacks, NULL);
@@ -24,7 +24,7 @@ static EJSharedTextureCache *sharedTextureCache;
 - (void)releaseStoragesOlderThan:(NSTimeInterval)seconds {
 	NSTimeInterval now = NSProcessInfo.processInfo.systemUptime;
 	for( NSString *key in textures ) {
-		EJTexture *texture = [textures objectForKey:key];
+		EJTexture *texture = textures[key];
 		if( now - texture.lastUsed > seconds ) {
 			[texture maybeReleaseStorage];
 		}

@@ -18,11 +18,11 @@
 #import "EJFont.h"
 #import "EJTimer.h"
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJCoreAudioSession) {
 	kEJCoreAudioSessionAmbient,
 	kEJCoreAudioSessionSoloAmbient,
 	kEJCoreAudioSessionPlayback
-} EJCoreAudioSession;
+};
 
 
 @interface EJBindingGlobalUtils : EJBindingBase {

@@ -18,7 +18,7 @@
 	__unsafe_unretained EJJavaScriptView *scriptView;
 }
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptView width:(short)width height:(short)height;
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView width:(short)width height:(short)height;
 - (void)resizeAuxiliaryBuffers;
 - (void)bindFramebuffer:(GLint)framebuffer toTarget:(GLuint)target;
 - (void)bindRenderbuffer:(GLint)renderbuffer toTarget:(GLuint)target;

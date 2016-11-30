@@ -3,7 +3,7 @@
 
 @implementation EJBindingIAPProduct
 
-- (id)initWithProduct:(SKProduct *)productp {
+- (instancetype)initWithProduct:(SKProduct *)productp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		product = [productp retain];
 	}
@@ -72,9 +72,9 @@ EJ_BIND_GET(description, ctx) {
 
 EJ_BIND_GET(price, ctx) {
 	NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
-	[numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
-	[numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-	[numberFormatter setLocale:product.priceLocale];
+	numberFormatter.formatterBehavior = NSNumberFormatterBehavior10_4;
+	numberFormatter.numberStyle = NSNumberFormatterCurrencyStyle;
+	numberFormatter.locale = product.priceLocale;
 	NSString *localizedPrice = [numberFormatter stringFromNumber:product.price];
 	[numberFormatter release];
 		

@@ -18,7 +18,7 @@ enum {
 	GLuint screen;
 }
 
-- (id)initWithVertexShader:(const char *)vertexShaderSource fragmentShader:(const char *)fragmentShaderSource;
+- (instancetype)initWithVertexShader:(const char *)vertexShaderSource fragmentShader:(const char *)fragmentShaderSource;
 - (void)bindAttributeLocations;
 - (void)getUniforms;
 

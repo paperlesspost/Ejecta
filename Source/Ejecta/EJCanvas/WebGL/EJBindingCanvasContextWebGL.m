@@ -9,7 +9,7 @@
 @implementation EJBindingCanvasContextWebGL
 @synthesize renderingContext;
 
-- (id)initWithRenderingContext:(EJCanvasContextWebGL *)renderingContextp {
+- (instancetype)initWithRenderingContext:(EJCanvasContextWebGL *)renderingContextp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		renderingContext = [renderingContextp retain];
 		
@@ -1342,7 +1342,7 @@ EJ_BIND_FUNCTION(shaderSource, ctx, argc, argv) {
 	scriptView.currentRenderingContext = renderingContext;
 	
 	GLuint shader = [EJBindingWebGLShader indexFromJSValue:argv[0]];
-	const GLchar *source = [JSValueToNSString(ctx, argv[1]) UTF8String];
+	const GLchar *source = JSValueToNSString(ctx, argv[1]).UTF8String;
 	
 	glShaderSource(shader, 1, &source, NULL);
 	return NULL;

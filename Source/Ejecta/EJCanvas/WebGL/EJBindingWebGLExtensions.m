@@ -18,7 +18,7 @@ const int EJWebGLExtensionsCount = sizeof(EJWebGLExtensions) / sizeof(EJWebGLExt
 
 @implementation EJBindingWebGLExtension
 
-- (id)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp {
+- (instancetype)initWithWebGLContext:(EJBindingCanvasContextWebGL *)webglContextp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
 		webglContext = [webglContextp retain];
 	}

@@ -10,13 +10,13 @@
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
-typedef enum {
+typedef NS_ENUM(unsigned int, EJTextureParam) {
 	kEJTextureParamMinFilter,
 	kEJTextureParamMagFilter,
 	kEJTextureParamWrapS,
 	kEJTextureParamWrapT,
 	kEJTextureParamLast
-} EJTextureParam;
+};
 
 typedef EJTextureParam EJTextureParams[kEJTextureParamLast];
 
@@ -27,8 +27,8 @@ typedef EJTextureParam EJTextureParams[kEJTextureParamLast];
 	BOOL immutable;
 	NSTimeInterval lastBound;
 }
-- (id)init;
-- (id)initImmutable;
+- (instancetype)init;
+- (instancetype)initImmutable;
 - (void)bindToTarget:(GLenum)target withParams:(EJTextureParam *)newParams;
 
 @property (readonly, nonatomic) GLuint textureId;

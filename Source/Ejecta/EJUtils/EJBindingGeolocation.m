@@ -3,7 +3,7 @@
 @implementation EJGeolocationCallback
 @synthesize callback, errback, oneShot;
 
-- (id)initWithScriptView:(EJJavaScriptView *)scriptViewp
+- (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp
 	callback:(JSObjectRef)callbackp errback:(JSObjectRef)errbackp
 	oneShot:(BOOL)oneShotp
 {
@@ -36,7 +36,7 @@
 
 @implementation EJBindingGeolocation
 
-- (id)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
+- (instancetype)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if (self = [super initWithContext:ctx argc:argc argv:argv]) {
 		locationManager = [CLLocationManager new];
 		locationManager.delegate = self;
