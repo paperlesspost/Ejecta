@@ -22,17 +22,17 @@ typedef EJTextureParam EJTextureParams[kEJTextureParamLast];
 
 
 @interface EJTextureStorage : NSObject {
-	EJTextureParams params;
-	GLuint textureId;
-	BOOL immutable;
-	NSTimeInterval lastBound;
+    
+    EJTextureParams params;
 }
-- (instancetype)init;
-- (instancetype)initImmutable;
-- (void)bindToTarget:(GLenum)target withParams:(EJTextureParam *)newParams;
 
 @property (readonly, nonatomic) GLuint textureId;
 @property (readonly, nonatomic) BOOL immutable;
 @property (readonly, nonatomic) NSTimeInterval lastBound;
+
+- (instancetype)initImmutable;
+- (void)bindToTarget:(GLenum)target withParams:(EJTextureParam *)newParams;
+
+
 
 @end

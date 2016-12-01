@@ -127,33 +127,34 @@ static inline EJColorRGBA EJCanvasBlendStrokeColor( EJCanvasState *state ) {
 
 @class EJJavaScriptView;
 @interface EJCanvasContext2D : EJCanvasContext {
-	GLuint viewFrameBuffer, viewRenderBuffer;
-	GLuint msaaFrameBuffer, msaaRenderBuffer;
-	GLuint stencilBuffer;
-	GLubyte stencilMask;
-	
-	short bufferWidth, bufferHeight;
-	
-	GLenum textureFilter;
-	EJTexture *currentTexture;
-	EJPath *path;
-	
-	EJVertex *vertexBuffer;
-	int vertexBufferSize;
-	int vertexBufferIndex;
-	
-	int stateIndex;
-	EJCanvasState stateStack[EJ_CANVAS_STATE_STACK_SIZE];
-	EJCanvasState *state;
-	
-	BOOL upsideDown;
-	
-	EJFontCache *fontCache;
-	
-	EJJavaScriptView *scriptView;
-	EJGLProgram2D *currentProgram;
-	EJSharedOpenGLContext *sharedGLContext;
+
+    EJCanvasState stateStack[EJ_CANVAS_STATE_STACK_SIZE];
 }
+
+@property (nonatomic, assign) GLuint viewFrameBuffer, viewRenderBuffer;
+@property (nonatomic, assign) GLuint msaaFrameBuffer, msaaRenderBuffer;
+@property (nonatomic, assign) GLuint stencilBuffer;
+@property (nonatomic, assign) GLubyte stencilMask;
+@property (nonatomic, assign) CGFloat bufferWidth, bufferHeight;
+@property (nonatomic, assign) GLenum textureFilter;
+@property (nonatomic, retain) EJTexture *currentTexture;
+@property (nonatomic, retain) EJPath *path;
+@property (nonatomic, assign) EJVertex *vertexBuffer;
+@property (nonatomic, assign) NSInteger vertexBufferSize;
+@property (nonatomic, assign) GLuint vertexBufferIndex;
+@property (nonatomic, assign) NSInteger stateIndex;
+@property (nonatomic, assign) EJCanvasState *state;
+@property (nonatomic, assign) BOOL upsideDown;
+@property (nonatomic, retain) EJFontCache *fontCache;
+@property (nonatomic, retain) EJJavaScriptView *scriptView;
+@property (nonatomic, retain) EJGLProgram2D *currentProgram;
+@property (nonatomic, retain) EJSharedOpenGLContext *sharedGLContext;
+@property (nonatomic) EJCompositeOperation globalCompositeOperation;
+@property (nonatomic, retain) EJFontDescriptor *font;
+@property (nonatomic, retain) NSObject<EJFillable> *fillObject;
+@property (nonatomic, retain) NSObject<EJFillable> *strokeObject;
+@property (nonatomic) BOOL imageSmoothingEnabled;
+
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp;
 - (void)create;
@@ -224,13 +225,6 @@ static inline EJColorRGBA EJCanvasBlendStrokeColor( EJCanvasState *state ) {
 - (void)clip:(EJPathFillRule)fillRule;
 - (void)resetClip;
 
-@property (nonatomic) EJCanvasState *state;
-@property (nonatomic) EJCompositeOperation globalCompositeOperation;
-@property (nonatomic, retain) EJFontDescriptor *font;
-@property (nonatomic, retain) NSObject<EJFillable> *fillObject;
-@property (nonatomic, retain) NSObject<EJFillable> *strokeObject;
-@property (nonatomic) BOOL imageSmoothingEnabled;
-@property (nonatomic) GLubyte stencilMask;
 
 /* TODO: not yet implemented:
 	shadowOffsetX

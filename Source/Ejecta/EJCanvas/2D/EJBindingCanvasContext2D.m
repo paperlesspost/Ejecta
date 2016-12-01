@@ -73,7 +73,7 @@ EJ_BIND_ENUM(textBaseline, renderingContext.state->textBaseline,
 );
 
 EJ_BIND_GET(fillStyle, ctx ) {
-	if( renderingContext.fillObject ) {
+	if(renderingContext.fillObject ) {
 		if( [renderingContext.fillObject isKindOfClass:EJCanvasPattern.class] ) {
 			EJCanvasPattern *pattern = (EJCanvasPattern *)renderingContext.fillObject;
 			return [EJBindingCanvasPattern createJSObjectWithContext:ctx scriptView:scriptView pattern:pattern];

@@ -1,35 +1,41 @@
 #import "EJTextureStorage.h"
 
+@interface EJTextureStorage ()
+
+@property (nonatomic, readwrite) GLuint textureId;
+@property (nonatomic, readwrite) BOOL immutable;
+@property (nonatomic, readwrite) NSTimeInterval lastBound;
+
+@end
+
 @implementation EJTextureStorage
-@synthesize lastBound;
-@synthesize textureId;
-@synthesize immutable;
+
 
 - (instancetype)init {
 	if( self = [super init] ) {
-		glGenTextures(1, &textureId);
-		immutable = NO;
+		glGenTextures(1, &_textureId);
+        [self setImmutable:NO];
 	}
 	return self;
 }
 
 - (instancetype)initImmutable {
 	if( self = [super init] ) {
-		glGenTextures(1, &textureId);
-		immutable = YES;
+		glGenTextures(1, &_textureId);
+        [self setImmutable:NO];
 	}
 	return self;
 }
 
 - (void)dealloc {
-	if( textureId ) {
-		glDeleteTextures(1, &textureId);
+	if(_textureId) {
+		glDeleteTextures(1, &_textureId);
 	}
 	[super dealloc];
 }
 
 - (void)bindToTarget:(GLenum)target withParams:(EJTextureParam *)newParams {
-	glBindTexture(target, textureId);
+	glBindTexture(target, _textureId);
 	
 	// Check if we have to set a param
 	if(params[kEJTextureParamMinFilter] != newParams[kEJTextureParamMinFilter]) {
@@ -49,7 +55,7 @@
 		glTexParameteri(target, GL_TEXTURE_WRAP_T, params[kEJTextureParamWrapT]);
 	}
 	
-	lastBound = NSProcessInfo.processInfo.systemUptime;
+	_lastBound = NSProcessInfo.processInfo.systemUptime;
 }
 
 @end

@@ -14,8 +14,8 @@
 
 - (void)setStyle:(CGRect)newStyle {
 	if(
-		(style.size.width ? style.size.width : width) != newStyle.size.width ||
-		(style.size.height ? style.size.height : height) != newStyle.size.height
+		(style.size.width ? style.size.width : self.width) != newStyle.size.width ||
+		(style.size.height ? style.size.height : self.height) != newStyle.size.height
 	) {
 		// Must resize
 		style = newStyle;
@@ -23,7 +23,8 @@
 		// Only resize if we already have a viewFrameBuffer. Otherwise the style
 		// will be honored in the 'create' call.
 		if( viewFrameBuffer ) {
-			[self resizeToWidth:width height:height];
+			[self resizeToWidth:self.width
+                         height:self.height];
 		}
 	}
 	else {
@@ -41,34 +42,34 @@
 	return CGRectMake(
 		style.origin.x,
 		style.origin.y,
-		(style.size.width ? style.size.width : width),
-		(style.size.height ? style.size.height : height)
+		(style.size.width ? style.size.width : self.width),
+		(style.size.height ? style.size.height : self.height)
 	);
 }
 
 - (void)resizeToWidth:(short)newWidth height:(short)newHeight {
 	[self flushBuffers];
 	
-	width = newWidth;
-	height = newHeight;
+	self.width = newWidth;
+	self.height = newHeight;
 	
 	CGRect frame = self.frame;
-	float contentScale = MAX(width/frame.size.width, height/frame.size.height);
+	float contentScale = MAX(self.width/frame.size.width, self.height/frame.size.height);
 	
 	NSLog(
 		@"Creating ScreenCanvas (WebGL): "
-			@"size: %dx%d, "
+			@"size: %fx%f, "
 			@"style: %.0fx%.0f, "
 			@"antialias: %@, preserveDrawingBuffer: %@",
-		width, height, 
+		self.width, self.height,
 		frame.size.width, frame.size.height,
-		(msaaEnabled ? [NSString stringWithFormat:@"yes (%d samples)", msaaSamples] : @"no"),
-		(preserveDrawingBuffer ? @"yes" : @"no")
+		(self.msaaEnabled ? [NSString stringWithFormat:@"yes (%d samples)", self.msaaSamples] : @"no"),
+		(self.preserveDrawingBuffer ? @"yes" : @"no")
 	);
 	
 	if( !glview ) {
 		// Create the OpenGL UIView with final screen size and content scaling (retina)
-		glview = [[EAGLView alloc] initWithFrame:frame contentScale:contentScale retainedBacking:preserveDrawingBuffer];
+		glview = [[EAGLView alloc] initWithFrame:frame contentScale:contentScale retainedBacking:self.preserveDrawingBuffer];
 		
 		// Append the OpenGL view to Ejecta's main view
 		[scriptView addSubview:glview];
@@ -98,7 +99,7 @@
 	glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
 	
 	// Set up the renderbuffer and some initial OpenGL properties
-	[glContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer *)glview.layer];
+	[self.glContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer *)glview.layer];
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, viewRenderBuffer);
 	
 	// The renderbuffer may be bigger than the requested size; make sure to store the real
@@ -113,7 +114,7 @@
 	[self resizeAuxiliaryBuffers];
 	
 	// Clear
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, self.width, self.height);
 	[self clear];
 	
 	
@@ -127,29 +128,29 @@
 }
 
 - (void)present {
-	if( !needsPresenting ) { return; }
+	if(!self.needsPresenting) { return; }
 	
-	if( msaaEnabled ) {
+	if(self.msaaEnabled) {
 		//Bind the MSAA and View frameBuffers and resolve
 		glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, msaaFrameBuffer);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFrameBuffer);
 		glResolveMultisampleFramebufferAPPLE();
 		
 		glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
-		[glContext presentRenderbuffer:GL_RENDERBUFFER];
+		[self.glContext presentRenderbuffer:GL_RENDERBUFFER];
 		glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
 	}
 	else {
-		[glContext presentRenderbuffer:GL_RENDERBUFFER];
+		[self.glContext presentRenderbuffer:GL_RENDERBUFFER];
 	}
 	
-	if( preserveDrawingBuffer ) {
+	if(self.preserveDrawingBuffer) {
 		glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 	else {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
-	needsPresenting = NO;
+    [self setNeedsPresenting:NO];
 }
 
 - (EJTexture *)texture {

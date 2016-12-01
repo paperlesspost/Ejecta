@@ -4,25 +4,19 @@
 #import <Foundation/Foundation.h>
 
 @class EAGLContext;
-@interface EJCanvasContext : NSObject {
-	short width, height;
-	
-	BOOL preserveDrawingBuffer;
-	BOOL msaaEnabled;
-	BOOL needsPresenting;
-	int msaaSamples;
-	EAGLContext *glContext;
-}
+
+@interface EJCanvasContext : NSObject
 
 - (void)create;
 - (void)flushBuffers;
 - (void)prepare;
 
-@property (nonatomic) BOOL preserveDrawingBuffer;
-@property (nonatomic) BOOL msaaEnabled;
-@property (nonatomic) int msaaSamples;
-@property (nonatomic) short width;
-@property (nonatomic) short height;
-@property (nonatomic, readonly) EAGLContext *glContext;
+@property (nonatomic, assign) BOOL preserveDrawingBuffer;
+@property (nonatomic, assign) BOOL needsPresenting;
+@property (nonatomic, assign) BOOL msaaEnabled;
+@property (nonatomic, assign) GLint msaaSamples;
+@property (nonatomic, assign) CGFloat width;
+@property (nonatomic, assign) CGFloat height;
+@property (nonatomic, retain) EAGLContext *glContext;
 
 @end

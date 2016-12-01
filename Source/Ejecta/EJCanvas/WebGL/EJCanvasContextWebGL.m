@@ -3,8 +3,8 @@
 
 @implementation EJCanvasContextWebGL
 
-- (BOOL)needsPresenting { return needsPresenting; }
-- (void)setNeedsPresenting:(BOOL)needsPresentingp { needsPresenting = needsPresentingp; }
+- (BOOL)needsPresenting { return self.needsPresenting; }
+- (void)setNeedsPresenting:(BOOL)needsPresentingp { self.needsPresenting = needsPresentingp; }
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp {
 	if( self = [super init] ) {
@@ -15,39 +15,39 @@
 			glFlush();
 		}
 		
-		glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2
+		self.glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2
 			sharegroup:scriptView.openGLContext.glSharegroup];
 		
-		bufferWidth = width = widthp;
-		bufferHeight = height = heightp;
+		bufferWidth = self.width = widthp;
+		bufferHeight = self.height = heightp;
 		
-		msaaEnabled = NO;
-		msaaSamples = 2;
-		preserveDrawingBuffer = NO;
+		self.msaaEnabled = NO;
+		self.msaaSamples = 2;
+		self.preserveDrawingBuffer = NO;
 	}
 	return self;
 }
 
 - (void)resizeToWidth:(short)newWidth height:(short)newHeight {
 	// This function is a stub - Overwritten in both subclasses
-	bufferWidth = width = newWidth;
-	bufferHeight = height = newHeight;
+	bufferWidth = self.width = newWidth;
+	bufferHeight = self.height = newHeight;
 }
 
 - (void)resizeAuxiliaryBuffers {
 	// Resize the MSAA buffer, if enabled
-	if( msaaEnabled && msaaFrameBuffer && msaaRenderBuffer ) {
+	if(self.msaaEnabled && msaaFrameBuffer && msaaRenderBuffer ) {
 		glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, msaaRenderBuffer);
 		
-		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, msaaSamples, GL_RGBA8_OES, bufferWidth, bufferHeight);
+		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, self.msaaSamples, GL_RGBA8_OES, bufferWidth, bufferHeight);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, msaaRenderBuffer);
 	}
 	
 	// Resize the depth and stencil buffer
 	glBindRenderbuffer(GL_RENDERBUFFER, depthStencilBuffer);
-	if( msaaEnabled ) {
-		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8_OES, bufferWidth, bufferHeight);
+	if(self.msaaEnabled) {
+		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, self.msaaSamples, GL_DEPTH24_STENCIL8_OES, bufferWidth, bufferHeight);
 	}
 	else {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, bufferWidth, bufferHeight);
@@ -55,12 +55,11 @@
 	
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthStencilBuffer);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilBuffer);
-	
-	needsPresenting = YES;
+    [self setNeedsPresenting:YES];
 }
 
 - (void)create {
-	if( msaaEnabled ) {
+	if(self.msaaEnabled) {
 		glGenFramebuffers(1, &msaaFrameBuffer);
 		glGenRenderbuffers(1, &msaaRenderBuffer);
 	}
@@ -70,7 +69,8 @@
 	glGenRenderbuffers(1, &viewRenderBuffer);
 	glGenRenderbuffers(1, &depthStencilBuffer);
 	
-	[self resizeToWidth:width height:height];
+	[self resizeToWidth:self.width
+                 height:self.height];
 }
 
 - (void)dealloc {
@@ -78,15 +78,16 @@
 	// OpenGL objects can be deleted properly. Remember the currently bound
 	// Context, but only if it's not the context to be deleted
 	EAGLContext *oldContext = [EAGLContext currentContext];
-	if( oldContext == glContext ) { oldContext = NULL; }
-	[EAGLContext setCurrentContext:glContext];
+	if( oldContext == self.glContext ) { oldContext = NULL; }
+	[EAGLContext setCurrentContext:self.glContext];
 	
 	if( viewFrameBuffer ) { glDeleteFramebuffers( 1, &viewFrameBuffer); }
 	if( viewRenderBuffer ) { glDeleteRenderbuffers(1, &viewRenderBuffer); }
 	if( msaaFrameBuffer ) {	glDeleteFramebuffers( 1, &msaaFrameBuffer); }
 	if( msaaRenderBuffer ) { glDeleteRenderbuffers(1, &msaaRenderBuffer); }
 	if( depthStencilBuffer ) { glDeleteRenderbuffers(1, &depthStencilBuffer); }
-	[glContext release];
+	
+    [self.glContext release];
 	
 	[EAGLContext setCurrentContext:oldContext];
 	[super dealloc];
@@ -105,8 +106,7 @@
 	GLint boundTextureCube;
 	glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, &boundTextureCube);
 	if( boundTextureCube ) { glBindTexture(GL_TEXTURE_CUBE_MAP, boundTextureCube); }
-	
-	needsPresenting = YES;
+    [self setNeedsPresenting:YES];
 }
 
 - (void)clear {
@@ -121,7 +121,7 @@
 
 - (void)bindFramebuffer:(GLint)framebuffer toTarget:(GLuint)target {
 	if( framebuffer == EJ_WEBGL_DEFAULT_FRAMEBUFFER ) {
-		framebuffer = msaaEnabled ? msaaFrameBuffer : viewFrameBuffer;
+		framebuffer = self.msaaEnabled ? msaaFrameBuffer : viewFrameBuffer;
 		[self bindRenderbuffer:EJ_WEBGL_DEFAULT_RENDERBUFFER toTarget:GL_RENDERBUFFER];
 	}
 	glBindFramebuffer(target, framebuffer);
@@ -130,28 +130,28 @@
 
 - (void)bindRenderbuffer:(GLint)renderbuffer toTarget:(GLuint)target {
 	if( renderbuffer == EJ_WEBGL_DEFAULT_RENDERBUFFER ) {
-		renderbuffer = msaaEnabled ? msaaRenderBuffer : viewRenderBuffer;
+		renderbuffer = self.msaaEnabled ? msaaRenderBuffer : viewRenderBuffer;
 	}
 	glBindRenderbuffer(target, renderbuffer);
 	boundRenderBuffer = renderbuffer;
 }
 
-- (void)setWidth:(short)newWidth {
-	if( newWidth == width ) {
+- (void)setWidth:(CGFloat)newWidth {
+	if( newWidth == self.width ) {
 		// Same width as before? Just clear the canvas, as per the spec
 		[self clear];
 		return;
 	}
-	[self resizeToWidth:newWidth height:height];
+	[self resizeToWidth:newWidth height:self.height];
 }
 
-- (void)setHeight:(short)newHeight {
-	if( newHeight == height ) {
+- (void)setHeight:(CGFloat)newHeight {
+	if( newHeight == self.height ) {
 		// Same height as before? Just clear the canvas, as per the spec
 		[self clear];
 		return;
 	}
-	[self resizeToWidth:width height:newHeight];
+	[self resizeToWidth:self.width height:newHeight];
 }
 
 @end

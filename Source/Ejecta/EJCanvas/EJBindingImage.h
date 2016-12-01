@@ -6,14 +6,12 @@
 #import "EJTexture.h"
 #import "EJDrawable.h"
 
-@interface EJBindingImage : EJBindingEventedBase <EJDrawable> {
-	EJTexture *texture;
-	NSString *path;
-	BOOL loading;	
-	NSOperation *loadCallback;
-}
+@interface EJBindingImage : EJBindingEventedBase <EJDrawable>
 
-@property (readonly, nonatomic) EJTexture *texture;
+@property (nonatomic, readonly) EJTexture *texture;
+@property (nonatomic, copy) NSString *path;
+@property (nonatomic, assign) BOOL loading;
+@property (nonatomic, assign) NSOperation *loadCallback;
 
 - (void)setTexture:(EJTexture *)texturep path:(NSString *)pathp;
 

@@ -25,88 +25,105 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 };
 
 
-@synthesize state;
-@synthesize imageSmoothingEnabled;
-@synthesize stencilMask;
-
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp {
-	if( self = [super init] ) {
-		scriptView = scriptViewp;
-		sharedGLContext = scriptView.openGLContext;
-		glContext = sharedGLContext.glContext2D;
-		vertexBuffer = (EJVertex *)(sharedGLContext.vertexBuffer.mutableBytes);
-		vertexBufferSize = (int)(sharedGLContext.vertexBuffer.length / sizeof(EJVertex));
-	
-		memset(stateStack, 0, sizeof(stateStack));
-		stateIndex = 0;
-		state = &stateStack[stateIndex];
-		state->globalAlpha = 1;
-		state->globalCompositeOperation = kEJCompositeOperationSourceOver;
-		state->transform = CGAffineTransformIdentity;
-		state->lineWidth = 1;
-		state->lineCap = kEJLineCapButt;
-		state->lineJoin = kEJLineJoinMiter;
-		state->miterLimit = 10;
-		state->textBaseline = kEJTextBaselineAlphabetic;
-		state->textAlign = kEJTextAlignStart;
-		state->font = [[EJFontDescriptor descriptorWithName:@"Helvetica" size:10] retain];
-		state->clipPath = nil;
-		
-		bufferWidth = width = widthp;
-		bufferHeight = height = heightp;
-		
-		path = [EJPath new];
-		
-		fontCache = [[EJFontCache instance] retain];
-		
-		textureFilter = GL_LINEAR;
-		msaaEnabled = NO;
-		msaaSamples = 2;
-		preserveDrawingBuffer = YES;
-		stencilMask = 0x1;
-	}
-	return self;
+    
+    self = [super init];
+    
+    if (self) {
+        
+        [self setScriptView:scriptViewp];
+        [self setSharedGLContext:scriptViewp.openGLContext];
+        [self setGlContext:self.sharedGLContext.glContext2D];
+        [self setVertexBuffer:self.sharedGLContext.vertexBuffer.mutableBytes];
+        NSInteger bufferSize = self.sharedGLContext.vertexBuffer.length / sizeof(EJVertex);
+        [self setVertexBufferSize:bufferSize];
+        memset(stateStack, 0, sizeof(stateStack));
+        [self setStateIndex:0];
+        [self setState:&stateStack[_stateIndex]];
+        self.state->globalAlpha = 1;
+        self.state->globalCompositeOperation = kEJCompositeOperationSourceOver;
+        self.state->transform = CGAffineTransformIdentity;
+        self.state->lineWidth = 1;
+        self.state->lineCap = kEJLineCapButt;
+        self.state->lineJoin = kEJLineJoinMiter;
+        self.state->miterLimit = 10;
+        self.state->textBaseline = kEJTextBaselineAlphabetic;
+        self.state->textAlign = kEJTextAlignStart;
+        self.state->font = [[EJFontDescriptor descriptorWithName:@"Helvetica" size:10] retain];
+        self.state->clipPath = nil;
+        
+        _bufferWidth = self.width = widthp;
+        _bufferHeight = self.height = heightp;
+        _path = [[EJPath alloc] init];
+        _fontCache = [[EJFontCache instance] retain];
+        _textureFilter = GL_LINEAR;
+        
+        self.msaaEnabled = NO;
+        self.msaaSamples = 2;
+        self.preserveDrawingBuffer = YES;
+        
+        _stencilMask = 0x1;
+        
+    }
+    return self;
 }
 
 - (void)dealloc {
 	// Make sure this rendering context is the current one, so all
 	// OpenGL objects can be deleted properly.
 	EAGLContext *oldContext = EAGLContext.currentContext;
-	[EAGLContext setCurrentContext:glContext];
+	[EAGLContext setCurrentContext:self.glContext];
 	
-	[fontCache release];
-	
+	[_fontCache release];
+    _fontCache = nil;
+    
+    [_currentTexture release];
+    _currentTexture = nil;
+    
+    [_path release];
+    _path = nil;
+    
+    [_scriptView release];
+    _scriptView = nil;
+    
+    [_currentProgram release];
+    _currentProgram = nil;
+    
+    [_sharedGLContext release];
+    _sharedGLContext = nil;
+    
+    
 	// Release all fonts, clip paths and patterns from the stack
-	for( int i = 0; i < stateIndex + 1; i++ ) {
+	for( int i = 0; i < _stateIndex + 1; i++ ) {
 		[stateStack[i].font release];
 		[stateStack[i].clipPath release];
 		[stateStack[i].fillObject release];
 		[stateStack[i].strokeObject release];
 	}
 	
-	if( viewFrameBuffer ) { glDeleteFramebuffers( 1, &viewFrameBuffer); }
-	if( viewRenderBuffer ) { glDeleteRenderbuffers(1, &viewRenderBuffer); }
-	if( msaaFrameBuffer ) {	glDeleteFramebuffers( 1, &msaaFrameBuffer); }
-	if( msaaRenderBuffer ) { glDeleteRenderbuffers(1, &msaaRenderBuffer); }
-	if( stencilBuffer ) { glDeleteRenderbuffers(1, &stencilBuffer); }
+	if( _viewFrameBuffer ) { glDeleteFramebuffers( 1, &_viewFrameBuffer); }
+	if( _viewRenderBuffer ) { glDeleteRenderbuffers(1, &_viewRenderBuffer); }
+	if( _msaaFrameBuffer ) {	glDeleteFramebuffers( 1, &_msaaFrameBuffer); }
+	if( _msaaRenderBuffer ) { glDeleteRenderbuffers(1, &_msaaRenderBuffer); }
+	if( _stencilBuffer ) { glDeleteRenderbuffers(1, &_stencilBuffer); }
 	
-	[path release];
+	[_path release];
 	[EAGLContext setCurrentContext:oldContext];
 	
 	[super dealloc];
 }
 
 - (void)create {
-	if( msaaEnabled ) {
-		glGenFramebuffers(1, &msaaFrameBuffer);
-		glGenRenderbuffers(1, &msaaRenderBuffer);
+	if(self.msaaEnabled) {
+		glGenFramebuffers(1, &_msaaFrameBuffer);
+		glGenRenderbuffers(1, &_msaaRenderBuffer);
 	}
 	
-	glGenFramebuffers(1, &viewFrameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, viewFrameBuffer);
+	glGenFramebuffers(1, &_viewFrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, _viewFrameBuffer);
 	
-	glGenRenderbuffers(1, &viewRenderBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, viewRenderBuffer);
+	glGenRenderbuffers(1, &_viewRenderBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, _viewRenderBuffer);
 	
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DITHER);
@@ -114,34 +131,35 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	glEnable(GL_BLEND);
 	glDepthFunc(GL_ALWAYS);
 	
-	[self resizeToWidth:width height:height];
+	[self resizeToWidth:self.width
+                 height:self.height];
 }
 
 - (void)resizeToWidth:(short)newWidth height:(short)newHeight {
 	// This function is a stub - Overwritten in both subclasses
-	width = newWidth;
-	height = newHeight;
+	self.width = newWidth;
+	self.height = newHeight;
 	
-	bufferWidth = width;
-	bufferHeight = height;
+	_bufferWidth = self.width;
+	_bufferHeight = self.height;
 	
 	[self resetFramebuffer];
 }
 
 - (void)resetFramebuffer {
 	// Delete stencil buffer if present; it will be re-created when needed
-	if( stencilBuffer ) {
-		glDeleteRenderbuffers(1, &stencilBuffer);
-		stencilBuffer = 0;
+	if( _stencilBuffer ) {
+		glDeleteRenderbuffers(1, &_stencilBuffer);
+		_stencilBuffer = 0;
 	}
 	
 	// Resize the MSAA buffer
-	if( msaaEnabled && msaaFrameBuffer && msaaRenderBuffer ) {
-		glBindFramebuffer(GL_FRAMEBUFFER, msaaFrameBuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, msaaRenderBuffer);
+	if(self.msaaEnabled && _msaaFrameBuffer && _msaaRenderBuffer ) {
+		glBindFramebuffer(GL_FRAMEBUFFER, _msaaFrameBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, _msaaRenderBuffer);
 		
-		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, msaaSamples, GL_RGBA8_OES, bufferWidth, bufferHeight);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, msaaRenderBuffer);
+		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, self.msaaSamples, GL_RGBA8_OES, _bufferWidth, _bufferHeight);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _msaaRenderBuffer);
 	}
 	
 	[self prepare];
@@ -149,25 +167,26 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	// Clear to transparent
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-	needsPresenting = YES;
+
+    [self setNeedsPresenting:YES];
+    
 }
 
 - (void)createStencilBufferOnce {
-	if( stencilBuffer ) { return; }
+	if( _stencilBuffer ) { return; }
 	
-	glGenRenderbuffers(1, &stencilBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, stencilBuffer);
-	if( msaaEnabled ) {
-		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8_OES, bufferWidth, bufferHeight);
+	glGenRenderbuffers(1, &_stencilBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, _stencilBuffer);
+	if(self.msaaEnabled) {
+		glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, self.msaaSamples, GL_DEPTH24_STENCIL8_OES, _bufferWidth, _bufferHeight);
 	}
 	else {
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, bufferWidth, bufferHeight);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, _bufferWidth, _bufferHeight);
 	}
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, stencilBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _stencilBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _stencilBuffer);
 	
-	glBindRenderbuffer(GL_RENDERBUFFER, msaaEnabled ? msaaRenderBuffer : viewRenderBuffer );
+	glBindRenderbuffer(GL_RENDERBUFFER, self.msaaEnabled ? _msaaRenderBuffer : _viewRenderBuffer );
 	
 	glClear(GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -176,85 +195,94 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 - (void)bindVertexBuffer {	
 	glEnableVertexAttribArray(kEJGLProgram2DAttributePos);
 	glVertexAttribPointer(kEJGLProgram2DAttributePos, 2, GL_FLOAT, GL_FALSE,
-		sizeof(EJVertex), (char *)vertexBuffer + offsetof(EJVertex, pos));
+		sizeof(EJVertex), (char *)self.vertexBuffer + offsetof(EJVertex, pos));
 	
 	glEnableVertexAttribArray(kEJGLProgram2DAttributeUV);
 	glVertexAttribPointer(kEJGLProgram2DAttributeUV, 2, GL_FLOAT, GL_FALSE,
-		sizeof(EJVertex), (char *)vertexBuffer + offsetof(EJVertex, uv));
+		sizeof(EJVertex), (char *)self.vertexBuffer + offsetof(EJVertex, uv));
 
 	glEnableVertexAttribArray(kEJGLProgram2DAttributeColor);
 	glVertexAttribPointer(kEJGLProgram2DAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
-		sizeof(EJVertex), (char *)vertexBuffer + offsetof(EJVertex, color));
+		sizeof(EJVertex), (char *)self.vertexBuffer + offsetof(EJVertex, color));
 }
 
 - (void)prepare {
 	// Bind the frameBuffer and vertexBuffer array
-	glBindFramebuffer(GL_FRAMEBUFFER, msaaEnabled ? msaaFrameBuffer : viewFrameBuffer );
-	glBindRenderbuffer(GL_RENDERBUFFER, msaaEnabled ? msaaRenderBuffer : viewRenderBuffer );
+	glBindFramebuffer(GL_FRAMEBUFFER, self.msaaEnabled ? self.msaaFrameBuffer : self.viewFrameBuffer );
+	glBindRenderbuffer(GL_RENDERBUFFER, self.msaaEnabled ? self.msaaRenderBuffer : self.viewRenderBuffer );
 	
-	glViewport(0, 0, bufferWidth, bufferHeight);
+	glViewport(0, 0, self.bufferWidth, self.bufferHeight);
 	
-	EJCompositeOperation op = state->globalCompositeOperation;
+	EJCompositeOperation op = self.state->globalCompositeOperation;
 	glBlendFunc( EJCompositeOperationFuncs[op].source, EJCompositeOperationFuncs[op].destination );
-	currentTexture = nil;
-	currentProgram = nil;
+	_currentTexture = nil;
+	_currentProgram = nil;
 	
 	[self bindVertexBuffer];
 	
-	if( stencilBuffer ) {
+	if(_stencilBuffer) {
 		glEnable(GL_DEPTH_TEST);
 	}
 	else {
 		glDisable(GL_DEPTH_TEST);
 	}
 	
-	if( state->clipPath ) {
+	if( _state->clipPath ) {
 		glDepthFunc(GL_EQUAL);
 	}
 	else {
 		glDepthFunc(GL_ALWAYS);
 	}
 	
-	needsPresenting = YES;
+    [self setNeedsPresenting:YES];
 }
 
-- (void)setWidth:(short)newWidth {
-	if( newWidth == width ) {
-		// Same width as before? Just clear the canvas, as per the spec
-		[self flushBuffers];
-		glClear(GL_COLOR_BUFFER_BIT);
-		return;
-	}
-	[self resizeToWidth:newWidth height:height];
+- (void)setWidth:(CGFloat)newWidth {
+    
+    if(newWidth == self.width) {
+        // Same width as before? Just clear the canvas, as per the spec
+        [self flushBuffers];
+        glClear(GL_COLOR_BUFFER_BIT);
+        return;
+    }
+    
+    self.width = newWidth;
+    
+    [self resizeToWidth:newWidth height:self.height];
 }
 
-- (void)setHeight:(short)newHeight {
-	if( newHeight == height ) {
-		// Same height as before? Just clear the canvas, as per the spec
-		[self flushBuffers];
-		glClear(GL_COLOR_BUFFER_BIT);
-		return;
-	}
-	[self resizeToWidth:width height:newHeight];
+- (void)setHeight:(CGFloat)newHeight {
+    
+    if(newHeight == self.height) {
+        // Same height as before? Just clear the canvas, as per the spec
+        [self flushBuffers];
+        glClear(GL_COLOR_BUFFER_BIT);
+        return;
+    }
+    
+    self.height = newHeight;
+    
+    [self resizeToWidth:self.width
+                 height:newHeight];
 }
 
 - (void)setTexture:(EJTexture *)newTexture {
-	if( currentTexture == newTexture ) { return; }
+	if( _currentTexture == newTexture ) { return; }
 	
 	[self flushBuffers];
 	
-	currentTexture = newTexture;
-	[currentTexture bindWithFilter:textureFilter];
+	_currentTexture = newTexture;
+	[_currentTexture bindWithFilter:_textureFilter];
 }
 
 - (void)setProgram:(EJGLProgram2D *)newProgram {
-	if( currentProgram == newProgram ) { return; }
+	if( _currentProgram == newProgram ) { return; }
 	
 	[self flushBuffers];
-	currentProgram = newProgram;
+	_currentProgram = newProgram;
 	
-	glUseProgram(currentProgram.program);
-	glUniform2f(currentProgram.screen, width, height * (upsideDown ? -1 : 1));
+	glUseProgram(_currentProgram.program);
+	glUniform2f(_currentProgram.screen, self.width, self.height * (_upsideDown ? -1 : 1));
 }
 
 - (void)pushTriX1:(float)x1 y1:(float)y1 x2:(float)x2 y2:(float)y2
@@ -262,7 +290,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	color:(EJColorRGBA)color
 	withTransform:(CGAffineTransform)transform
 {
-	if( vertexBufferIndex >= vertexBufferSize - 3 ) {
+	if( _vertexBufferIndex >= _vertexBufferSize - 3 ) {
 		[self flushBuffers];
 	}
 	
@@ -276,19 +304,19 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 		d3 = EJVector2ApplyTransform( d3, transform );
 	}
 	
-	EJVertex *vb = &vertexBuffer[vertexBufferIndex];
+	EJVertex *vb = &_vertexBuffer[_vertexBufferIndex];
 	vb[0] = (EJVertex) { d1, {0, 0}, color };
 	vb[1] = (EJVertex) { d2, {0, 0}, color };
 	vb[2] = (EJVertex) { d3, {0, 0}, color };
 	
-	vertexBufferIndex += 3;
+	_vertexBufferIndex += 3;
 }
 
 - (void)pushQuadV1:(EJVector2)v1 v2:(EJVector2)v2 v3:(EJVector2)v3 v4:(EJVector2)v4
 	color:(EJColorRGBA)color
 	withTransform:(CGAffineTransform)transform
 {
-	if( vertexBufferIndex >= vertexBufferSize - 6 ) {
+	if( _vertexBufferIndex >= _vertexBufferSize - 6 ) {
 		[self flushBuffers];
 	}
 	
@@ -299,7 +327,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 		v4 = EJVector2ApplyTransform( v4, transform );
 	}
 	
-	EJVertex *vb = &vertexBuffer[vertexBufferIndex];
+	EJVertex *vb = &_vertexBuffer[_vertexBufferIndex];
 	vb[0] = (EJVertex) { v1, {0, 0}, color };
 	vb[1] = (EJVertex) { v2, {0, 0}, color };
 	vb[2] = (EJVertex) { v3, {0, 0}, color };
@@ -307,14 +335,14 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	vb[4] = (EJVertex) { v3, {0, 0}, color };
 	vb[5] = (EJVertex) { v4, {0, 0}, color };
 	
-	vertexBufferIndex += 6;
+	_vertexBufferIndex += 6;
 }
 
 - (void)pushRectX:(float)x y:(float)y w:(float)w h:(float)h
 	color:(EJColorRGBA)color
 	withTransform:(CGAffineTransform)transform
 {
-	if( vertexBufferIndex >= vertexBufferSize - 6 ) {
+	if( _vertexBufferIndex >= _vertexBufferSize - 6 ) {
 		[self flushBuffers];
 	}
 		
@@ -330,7 +358,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 		d22 = EJVector2ApplyTransform( d22, transform );
 	}
 	
-	EJVertex *vb = &vertexBuffer[vertexBufferIndex];
+	EJVertex *vb = &_vertexBuffer[_vertexBufferIndex];
 	vb[0] = (EJVertex) { d11, {0, 0}, color };	// top left
 	vb[1] = (EJVertex) { d21, {0, 0}, color };	// top right
 	vb[2] = (EJVertex) { d12, {0, 0}, color };	// bottom left
@@ -339,7 +367,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	vb[4] = (EJVertex) { d12, {0, 0}, color };	// bottom left
 	vb[5] = (EJVertex) { d22, {0, 0}, color };	// bottom right
 	
-	vertexBufferIndex += 6;
+	_vertexBufferIndex += 6;
 }
 
 - (void)pushFilledRectX:(float)x y:(float)y w:(float)w h:(float)h
@@ -393,9 +421,9 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 			t12 = {a21.x + a12.x, a21.y + a12.y},
 			t22 = {a21.x + a22.x, a21.y + a22.y};
 		
-		[self setProgram:sharedGLContext.programTexture];
+		[self setProgram:_sharedGLContext.programTexture];
 		[self setTexture:gradient.texture];
-		if( vertexBufferIndex >= vertexBufferSize - 6 ) {
+		if( _vertexBufferIndex >= _vertexBufferSize - 6 ) {
 			[self flushBuffers];
 		}
 		
@@ -412,7 +440,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 			d22 = EJVector2ApplyTransform( d22, transform );
 		}
 
-		EJVertex *vb = &vertexBuffer[vertexBufferIndex];
+		EJVertex *vb = &_vertexBuffer[_vertexBufferIndex];
 		vb[0] = (EJVertex) { d11, t11, color };	// top left
 		vb[1] = (EJVertex) { d21, t21, color };	// top right
 		vb[2] = (EJVertex) { d12, t12, color };	// bottom left
@@ -421,13 +449,13 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 		vb[4] = (EJVertex) { d12, t12, color };	// bottom left
 		vb[5] = (EJVertex) { d22, t22, color };	// bottom right
 		
-		vertexBufferIndex += 6;
+		_vertexBufferIndex += 6;
 	}
 	
 	else if( gradient.type == kEJCanvasGradientTypeRadial ) {
 		[self flushBuffers];
 				
-		EJGLProgram2DRadialGradient *gradientProgram = sharedGLContext.programRadialGradient;
+		EJGLProgram2DRadialGradient *gradientProgram = _sharedGLContext.programRadialGradient;
 		[self setProgram:gradientProgram];
 		
 		glUniform3f(gradientProgram.inner, gradient.p1.x, gradient.p1.y, gradient.r1);
@@ -460,7 +488,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	}
 
 	if( pw > 0 && ph > 0 ) { // We may have to skip entirely
-		[self setProgram:sharedGLContext.programPattern];
+		[self setProgram:_sharedGLContext.programPattern];
 		[self setTexture:texture];
 		
 		[self pushTexturedRectX:x y:y w:pw h:ph tx:x/tw ty:y/th tw:pw/tw th:ph/th
@@ -470,7 +498,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	if( pw < w || ph < h ) {
 		// Draw clearing rect for the stencil buffer if we didn't fill everything with
 		// the pattern image - happens when not repeating in both directions
-		[self setProgram:sharedGLContext.programFlat];
+		[self setProgram:_sharedGLContext.programFlat];
 		EJColorRGBA transparentBlack = {.hex = 0x00000000};
 		[self pushRectX:x y:y w:w h:h color:transparentBlack withTransform:transform];
 	}
@@ -481,14 +509,14 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	color:(EJColorRGBA)color
 	withTransform:(CGAffineTransform)transform
 {
-	if( vertexBufferIndex >= vertexBufferSize - 6 ) {
+	if( _vertexBufferIndex >= _vertexBufferSize - 6 ) {
 		[self flushBuffers];
 	}
 	
 	// Textures from offscreen WebGL contexts have to be draw upside down.
 	// They're actually right-side up in memory, but everything else has
 	// flipped y
-	if( currentTexture.drawFlippedY ) {
+	if( _currentTexture.drawFlippedY ) {
 		ty = 1 - ty;
 		th *= -1;
 	}
@@ -505,7 +533,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 		d22 = EJVector2ApplyTransform( d22, transform );
 	}
 
-	EJVertex *vb = &vertexBuffer[vertexBufferIndex];
+	EJVertex *vb = &_vertexBuffer[_vertexBufferIndex];
 	vb[0] = (EJVertex) { d11, {tx, ty}, color };	// top left
 	vb[1] = (EJVertex) { d21, {tx+tw, ty}, color };	// top right
 	vb[2] = (EJVertex) { d12, {tx, ty+th}, color };	// bottom left
@@ -514,137 +542,138 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	vb[4] = (EJVertex) { d12, {tx, ty+th}, color };	// bottom left
 	vb[5] = (EJVertex) { d22, {tx+tw, ty+th}, color };	// bottom right
 	
-	vertexBufferIndex += 6;
+	_vertexBufferIndex += 6;
 }
 
 - (void)flushBuffers {
-	if( vertexBufferIndex == 0 ) { return; }
+	if(_vertexBufferIndex == 0 ) { return; }
 	
-	glDrawArrays(GL_TRIANGLES, 0, vertexBufferIndex);
-	needsPresenting = YES;
-	vertexBufferIndex = 0;
+    
+	glDrawArrays(GL_TRIANGLES, 0, _vertexBufferIndex);
+    [self setNeedsPresenting:YES];
+	_vertexBufferIndex = 0;
 }
 
 - (BOOL)imageSmoothingEnabled {
-	return (textureFilter == GL_LINEAR);
+	return (_textureFilter == GL_LINEAR);
 }
 
 - (void)setImageSmoothingEnabled:(BOOL)enabled {
 	[self setTexture:NULL]; // force rebind for next texture
-	textureFilter = (enabled ? GL_LINEAR : GL_NEAREST);
+	_textureFilter = (enabled ? GL_LINEAR : GL_NEAREST);
 }
 
 - (void)setGlobalCompositeOperation:(EJCompositeOperation)op {
 	[self flushBuffers];
 	glBlendFunc( EJCompositeOperationFuncs[op].source, EJCompositeOperationFuncs[op].destination );
-	state->globalCompositeOperation = op;
+	_state->globalCompositeOperation = op;
 }
 
 - (EJCompositeOperation)globalCompositeOperation {
-	return state->globalCompositeOperation;
+	return _state->globalCompositeOperation;
 }
 
 - (void)setFont:(EJFontDescriptor *)font {
-	[state->font release];
-	state->font = [font retain];
+	[_state->font release];
+	_state->font = [font retain];
 }
 
 - (EJFontDescriptor *)font {
-	return state->font;
+	return _state->font;
 }
 
 - (void)setFillObject:(NSObject<EJFillable> *)fillObject {
-	[state->fillObject release];
-	state->fillObject = [fillObject retain];
+	[_state->fillObject release];
+	_state->fillObject = [fillObject retain];
 }
 
 - (NSObject<EJFillable> *)fillObject {
-	return state->fillObject;
+	return _state->fillObject;
 }
 
 - (void)setStrokeObject:(NSObject<EJFillable> *)strokeObject {
-	[state->strokeObject release];
-	state->strokeObject = [strokeObject retain];
+	[_state->strokeObject release];
+	_state->strokeObject = [strokeObject retain];
 }
 
 - (NSObject<EJFillable> *)strokeObject {
-	return state->strokeObject;
+	return _state->strokeObject;
 }
 
 
 - (void)save {
-	if( stateIndex == EJ_CANVAS_STATE_STACK_SIZE-1 ) {
+	if( _stateIndex == EJ_CANVAS_STATE_STACK_SIZE-1 ) {
 		NSLog(@"Warning: EJ_CANVAS_STATE_STACK_SIZE (%d) reached", EJ_CANVAS_STATE_STACK_SIZE);
 		return;
 	}
 	
-	stateStack[stateIndex+1] = stateStack[stateIndex];
-	stateIndex++;
-	state = &stateStack[stateIndex];
-	[state->font retain];
-	[state->fillObject retain];
-	[state->strokeObject retain];
-	[state->clipPath retain];
+	stateStack[_stateIndex+1] = stateStack[_stateIndex];
+	_stateIndex++;
+	_state = &stateStack[_stateIndex];
+	[_state->font retain];
+	[_state->fillObject retain];
+	[_state->strokeObject retain];
+	[_state->clipPath retain];
 }
 
 - (void)restore {
-	if( stateIndex == 0 ) {	return; }
+	if( _stateIndex == 0 ) {	return; }
 	
-	EJCompositeOperation oldCompositeOp = state->globalCompositeOperation;
-	EJPath *oldClipPath = state->clipPath;
+	EJCompositeOperation oldCompositeOp = _state->globalCompositeOperation;
+	EJPath *oldClipPath = _state->clipPath;
 	
 	// Clean up current state
-	[state->font release];
-	[state->fillObject release];
-	[state->strokeObject release];
+	[_state->font release];
+	[_state->fillObject release];
+	[_state->strokeObject release];
 
-	if( state->clipPath && state->clipPath != stateStack[stateIndex-1].clipPath ) {
+	if( _state->clipPath && _state->clipPath != stateStack[_stateIndex-1].clipPath ) {
 		[self resetClip];
 	}
-	[state->clipPath release];
+	[_state->clipPath release];
 	
 	// Load state from stack
-	stateIndex--;
-	state = &stateStack[stateIndex];
+	_stateIndex--;
+	_state = &stateStack[_stateIndex];
 	
-	path.transform = state->transform;
+	_path.transform = _state->transform;
 	
 	// Set Composite op, if different
-	if( state->globalCompositeOperation != oldCompositeOp ) {
-		self.globalCompositeOperation = state->globalCompositeOperation;
+	if( _state->globalCompositeOperation != oldCompositeOp ) {
+		self.globalCompositeOperation = _state->globalCompositeOperation;
 	}
 	
 	// Render clip path, if present and different
-	if( state->clipPath && state->clipPath != oldClipPath ) {
-		[self setProgram:sharedGLContext.programFlat];
-		[state->clipPath drawPolygonsToContext:self fillRule:state->clipPath.fillRule target:kEJPathPolygonTargetDepth];
+	if( _state->clipPath && _state->clipPath != oldClipPath ) {
+		[self setProgram:_sharedGLContext.programFlat];
+		[_state->clipPath drawPolygonsToContext:self fillRule:_state->clipPath.fillRule target:kEJPathPolygonTargetDepth];
 	}
 }
 
 - (void)rotate:(float)angle {
-	state->transform = CGAffineTransformRotate( state->transform, angle );
-	path.transform = state->transform;
+	_state->transform = CGAffineTransformRotate( _state->transform, angle );
+	_path.transform = _state->transform;
 }
 
 - (void)translateX:(float)x y:(float)y {
-	state->transform = CGAffineTransformTranslate( state->transform, x, y );
-	path.transform = state->transform;
+	_state->transform = CGAffineTransformTranslate( _state->transform, x, y );
+	_path.transform = _state->transform;
 }
 
 - (void)scaleX:(float)x y:(float)y {
-	state->transform = CGAffineTransformScale( state->transform, x, y );
-	path.transform = state->transform;
+	_state->transform = CGAffineTransformScale( _state->transform, x, y );
+	_path.transform = _state->transform;
 }
 
 - (void)transformM11:(float)m11 m12:(float)m12 m21:(float)m21 m22:(float)m22 dx:(float)dx dy:(float)dy {
 	CGAffineTransform t = CGAffineTransformMake( m11, m12, m21, m22, dx, dy );
-	state->transform = CGAffineTransformConcat( t, state->transform );
-	path.transform = state->transform;
+	_state->transform = CGAffineTransformConcat( t, _state->transform );
+	_path.transform = _state->transform;
 }
 
 - (void)setTransformM11:(float)m11 m12:(float)m12 m21:(float)m21 m22:(float)m22 dx:(float)dx dy:(float)dy {
-	state->transform = CGAffineTransformMake( m11, m12, m21, m22, dx, dy );
-	path.transform = state->transform;
+	_state->transform = CGAffineTransformMake( m11, m12, m21, m22, dx, dy );
+	_path.transform = _state->transform;
 }
 
 - (void)drawImage:(EJTexture *)texture sx:(float)sx sy:(float)sy sw:(float)sw sh:(float)sh dx:(float)dx dy:(float)dy dw:(float)dw dh:(float)dh {
@@ -652,23 +681,23 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	float tw = texture.width;
 	float th = texture.height;
 	
-	[self setProgram:sharedGLContext.programTexture];
+	[self setProgram:_sharedGLContext.programTexture];
 	[self setTexture:texture];
 	[self pushTexturedRectX:dx y:dy w:dw h:dh tx:sx/tw ty:sy/th tw:sw/tw th:sh/th
-		color:EJCanvasBlendWhiteColor(state) withTransform:state->transform];
+		color:EJCanvasBlendWhiteColor(_state) withTransform:_state->transform];
 }
 
 - (void)fillRectX:(float)x y:(float)y w:(float)w h:(float)h {
-	if( state->fillObject ) {
-		[self pushFilledRectX:x y:y w:w h:h fillable:state->fillObject
-			color:EJCanvasBlendWhiteColor(state) withTransform:state->transform];
+	if( _state->fillObject ) {
+		[self pushFilledRectX:x y:y w:w h:h fillable:_state->fillObject
+			color:EJCanvasBlendWhiteColor(_state) withTransform:_state->transform];
 	}
 	else {
-		[self setProgram:sharedGLContext.programFlat];
+		[self setProgram:_sharedGLContext.programFlat];
 		
-		EJColorRGBA cc = EJCanvasBlendFillColor(state);
+		EJColorRGBA cc = EJCanvasBlendFillColor(_state);
 		[self pushRectX:x y:y w:w h:h
-			color:cc withTransform:state->transform];
+			color:cc withTransform:_state->transform];
 	}
 }
 
@@ -676,7 +705,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	// strokeRect should not affect the current path, so we create
 	// a new, tempPath instead.
 	EJPath *tempPath = [EJPath new];
-	tempPath.transform = state->transform;
+	tempPath.transform = _state->transform;
 	
 	[tempPath moveToX:x y:y];
 	[tempPath lineToX:x+w y:y];
@@ -684,19 +713,19 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	[tempPath lineToX:x y:y+h];
 	[tempPath close];
 	
-	[self setProgram:sharedGLContext.programFlat];
+	[self setProgram:_sharedGLContext.programFlat];
 	[tempPath drawLinesToContext:self];
 	[tempPath release];
 }
 
 - (void)clearRectX:(float)x y:(float)y w:(float)w h:(float)h {
-	[self setProgram:sharedGLContext.programFlat];
+	[self setProgram:_sharedGLContext.programFlat];
 	
-	EJCompositeOperation oldOp = state->globalCompositeOperation;
+	EJCompositeOperation oldOp = _state->globalCompositeOperation;
 	self.globalCompositeOperation = kEJCompositeOperationDestinationOut;
 	
 	static EJColorRGBA white = {.hex = 0xffffffff};
-	[self pushRectX:x y:y w:w h:h color:white withTransform:state->transform];
+	[self pushRectX:x y:y w:w h:h color:white withTransform:_state->transform];
 	
 	self.globalCompositeOperation = oldOp;
 }
@@ -705,14 +734,14 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	
 	[self flushBuffers];
 	
-	if( upsideDown ) {
-		sy = bufferHeight-sy-sh;
+	if( _upsideDown ) {
+		sy = _bufferHeight-sy-sh;
 	}
 	
 	NSMutableData *pixels = [NSMutableData dataWithLength:sw * sh * 4 * sizeof(GLubyte)];
 	glReadPixels(sx, sy, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, pixels.mutableBytes);
 	
-	if( upsideDown ) {
+	if( _upsideDown ) {
 		[EJTexture flipPixelsY:pixels.mutableBytes bytesPerRow:sw*4 rows:sh];
 	}
 	
@@ -721,7 +750,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 
 - (void)putImageData:(EJImageData*)imageData dx:(float)dx dy:(float)dy {
 	EJTexture *texture = imageData.texture;
-	[self setProgram:sharedGLContext.programTexture];
+	[self setProgram:_sharedGLContext.programTexture];
 	[self setTexture:texture];
 	
 	short tw = texture.width;
@@ -729,7 +758,7 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 	
 	static EJColorRGBA white = {.hex = 0xffffffff};
 	
-	EJCompositeOperation oldOp = state->globalCompositeOperation;
+	EJCompositeOperation oldOp = _state->globalCompositeOperation;
 	self.globalCompositeOperation = kEJCompositeOperationCopy;
 	
 	[self pushTexturedRectX:dx y:dy w:tw h:th tx:0 ty:0 tw:1 th:1 color:white withTransform:CGAffineTransformIdentity];
@@ -739,97 +768,97 @@ const EJCompositeOperationFunc EJCompositeOperationFuncs[] = {
 }
 
 - (void)beginPath {
-	[path reset];
+	[_path reset];
 }
 
 - (void)closePath {
-	[path close];
+	[_path close];
 }
 
 - (void)fill:(EJPathFillRule)fillRule {
-	[self setProgram:sharedGLContext.programFlat];
-	[path drawPolygonsToContext:self fillRule:fillRule target:kEJPathPolygonTargetColor];
+	[self setProgram:_sharedGLContext.programFlat];
+	[_path drawPolygonsToContext:self fillRule:fillRule target:kEJPathPolygonTargetColor];
 }
 
 - (void)stroke {
-	[self setProgram:sharedGLContext.programFlat];
-	[path drawLinesToContext:self];
+	[self setProgram:_sharedGLContext.programFlat];
+	[_path drawLinesToContext:self];
 }
 
 - (void)moveToX:(float)x y:(float)y {
-	[path moveToX:x y:y];
+	[_path moveToX:x y:y];
 }
 
 - (void)lineToX:(float)x y:(float)y {
-	[path lineToX:x y:y];
+	[_path lineToX:x y:y];
 }
 
 - (void)bezierCurveToCpx1:(float)cpx1 cpy1:(float)cpy1 cpx2:(float)cpx2 cpy2:(float)cpy2 x:(float)x y:(float)y {
-	float scale = CGAffineTransformGetScale( state->transform );
-	[path bezierCurveToCpx1:cpx1 cpy1:cpy1 cpx2:cpx2 cpy2:cpy2 x:x y:y scale:scale];
+	float scale = CGAffineTransformGetScale( _state->transform );
+	[_path bezierCurveToCpx1:cpx1 cpy1:cpy1 cpx2:cpx2 cpy2:cpy2 x:x y:y scale:scale];
 }
 
 - (void)quadraticCurveToCpx:(float)cpx cpy:(float)cpy x:(float)x y:(float)y {
-	float scale = CGAffineTransformGetScale( state->transform );
-	[path quadraticCurveToCpx:cpx cpy:cpy x:x y:y scale:scale];
+	float scale = CGAffineTransformGetScale( _state->transform );
+	[_path quadraticCurveToCpx:cpx cpy:cpy x:x y:y scale:scale];
 }
 
 - (void)rectX:(float)x y:(float)y w:(float)w h:(float)h {
-	[path moveToX:x y:y];
-	[path lineToX:x+w y:y];
-	[path lineToX:x+w y:y+h];
-	[path lineToX:x y:y+h];
-	[path close];
+	[_path moveToX:x y:y];
+	[_path lineToX:x+w y:y];
+	[_path lineToX:x+w y:y+h];
+	[_path lineToX:x y:y+h];
+	[_path close];
 }
 
 - (void)arcToX1:(float)x1 y1:(float)y1 x2:(float)x2 y2:(float)y2 radius:(float)radius {
-	[path arcToX1:x1 y1:y1 x2:x2 y2:y2 radius:radius];
+	[_path arcToX1:x1 y1:y1 x2:x2 y2:y2 radius:radius];
 }
 
 - (void)arcX:(float)x y:(float)y radius:(float)radius
 	startAngle:(float)startAngle endAngle:(float)endAngle
 	antiClockwise:(BOOL)antiClockwise
 {
-	[path arcX:x y:y radius:radius startAngle:startAngle endAngle:endAngle antiClockwise:antiClockwise];
+	[_path arcX:x y:y radius:radius startAngle:startAngle endAngle:endAngle antiClockwise:antiClockwise];
 }
 
 - (void)fillText:(NSString *)text x:(float)x y:(float)y {
-	float scale = CGAffineTransformGetScale( state->transform );
-	EJFont *font = [fontCache fontWithDescriptor:state->font contentScale:scale];
+	float scale = CGAffineTransformGetScale( _state->transform );
+	EJFont *font = [[EJFontCache instance] fontWithDescriptor:_state->font contentScale:scale];
 	
-	[self setProgram:sharedGLContext.programAlphaTexture];
+	[self setProgram:_sharedGLContext.programAlphaTexture];
 	[font drawString:text toContext:self x:x y:y];
 }
 
 - (void)strokeText:(NSString *)text x:(float)x y:(float)y {
-	float scale = CGAffineTransformGetScale( state->transform );
-	EJFont *font = [fontCache outlineFontWithDescriptor:state->font lineWidth:state->lineWidth contentScale:scale];
+	float scale = CGAffineTransformGetScale( _state->transform );
+	EJFont *font = [[EJFontCache instance] outlineFontWithDescriptor:_state->font lineWidth:_state->lineWidth contentScale:scale];
 	
-	[self setProgram:sharedGLContext.programAlphaTexture];
+	[self setProgram:_sharedGLContext.programAlphaTexture];
 	[font drawString:text toContext:self x:x y:y];
 }
 
 - (EJTextMetrics)measureText:(NSString *)text {
-	float scale = CGAffineTransformGetScale( state->transform );
-	EJFont *font = [fontCache fontWithDescriptor:state->font contentScale:scale];
+	float scale = CGAffineTransformGetScale( _state->transform );
+	EJFont *font = [[EJFontCache instance] fontWithDescriptor:_state->font contentScale:scale];
 	return [font measureString:text forContext:self];
 }
 
 - (void)clip:(EJPathFillRule)fillRule {
 	[self flushBuffers];
-	[state->clipPath release];
-	state->clipPath = nil;
+	[_state->clipPath release];
+	_state->clipPath = nil;
 	
-	state->clipPath = path.copy;
-	[self setProgram:sharedGLContext.programFlat];
-	[state->clipPath drawPolygonsToContext:self fillRule:fillRule target:kEJPathPolygonTargetDepth];
+	_state->clipPath = _path.copy;
+	[self setProgram:_sharedGLContext.programFlat];
+	[_state->clipPath drawPolygonsToContext:self fillRule:fillRule target:kEJPathPolygonTargetDepth];
 }
 
 - (void)resetClip {
-	if( state->clipPath ) {
+	if( _state->clipPath ) {
 		[self flushBuffers];
-		[state->clipPath release];
-		state->clipPath = nil;
+		[_state->clipPath release];
+		_state->clipPath = nil;
 		
 		glDepthMask(GL_TRUE);
 		glClear(GL_DEPTH_BUFFER_BIT);

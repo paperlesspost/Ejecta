@@ -10,13 +10,13 @@
 - (void)resizeToWidth:(short)newWidth height:(short)newHeight {
 	[self flushBuffers];
 	
-	bufferWidth = width = newWidth;
-	bufferHeight = height = newHeight;
+	bufferWidth = self.width = newWidth;
+	bufferHeight = self.height = newHeight;
 	
 	NSLog(
-		@"Creating Offscreen Canvas (WebGL): size: %dx%d, antialias: %@",
-		width, height,
-		(msaaEnabled ? [NSString stringWithFormat:@"yes (%d samples)", msaaSamples] : @"no")
+		@"Creating Offscreen Canvas (WebGL): size: %fx%f, antialias: %@",
+		self.width, self.height,
+		(self.msaaEnabled ? [NSString stringWithFormat:@"yes (%d samples)", self.msaaSamples] : @"no")
 	);
 	
 	GLint previousFrameBuffer;
@@ -39,7 +39,7 @@
 	[self resizeAuxiliaryBuffers];
 	
 	// Clear
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, self.width, self.height);
 	[self clear];
 	
 	// Reset to the previously bound frame and renderbuffers
@@ -50,7 +50,7 @@
 - (EJTexture *)texture {
 	// If this texture Canvas uses MSAA, we need to resolve the MSAA first,
 	// before we can use the texture for drawing.
-	if( msaaEnabled && needsPresenting ) {
+	if(self.msaaEnabled && self.needsPresenting) {
 		GLint previousFrameBuffer;
 		glGetIntegerv( GL_FRAMEBUFFER_BINDING, &previousFrameBuffer );
 		
@@ -60,8 +60,8 @@
 		glResolveMultisampleFramebufferAPPLE();
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, previousFrameBuffer);
-		needsPresenting = NO;
-	}
+        [self setNeedsPresenting:NO];
+    }
 	
 	return texture;
 }

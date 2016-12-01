@@ -27,20 +27,26 @@
 #import "EJTextureStorage.h"
 
 @interface EJTexture : NSObject <NSCopying> {
-	BOOL cached;
-	BOOL drawFlippedY;
-	BOOL isCompressed;
-	BOOL lazyLoaded;
-	BOOL dimensionsKnown;
-	short width, height;
-	NSString *fullPath;
-	EJTextureStorage *textureStorage;
-	GLenum format;
-	GLuint fbo;
-	
-	EJTextureParams params;
-	NSBlockOperation *loadCallback;
+    EJTextureParams params;
 }
+
+@property (nonatomic, readonly) BOOL cached;
+@property (nonatomic, assign) BOOL drawFlippedY;
+@property (nonatomic, readonly) BOOL isCompressed;
+@property (nonatomic, readonly) BOOL lazyLoaded;
+@property (nonatomic, readonly) BOOL dimensionsKnown;
+@property (nonatomic, readonly) CGFloat width, height;
+@property (nonatomic, readonly) NSString *fullPath;
+@property (nonatomic, readonly) EJTextureStorage *textureStorage;
+@property (nonatomic, readonly) GLenum format;
+@property (nonatomic, readonly) GLuint fbo;
+@property (nonatomic, readonly) NSBlockOperation *loadCallback;
+@property (nonatomic, readonly) BOOL isDynamic;
+@property (nonatomic, readonly) NSMutableData *pixels;
+@property (nonatomic, readonly) GLuint textureId;
+@property (nonatomic, readonly) NSTimeInterval lastUsed;
+
+
 - (instancetype)initEmptyForWebGL;
 - (instancetype)initWithPath:(NSString *)path;
 + (id)cachedTextureWithPath:(NSString *)path loadOnQueue:(NSOperationQueue *)queue callback:(NSOperation *)callback;
@@ -72,19 +78,12 @@
 - (void)bindToTarget:(GLenum)target;
 
 @property (NS_NONATOMIC_IOSONLY, readonly, strong) UIImage *image;
-+ (UIImage *)imageWithPixels:(NSData *)pixels width:(int)width height:(int)height;
++ (UIImage *)imageWithPixels:(NSData *)pixels width:(CGFloat)width height:(CGFloat)height;
 
-+ (void)premultiplyPixels:(const GLubyte *)inPixels to:(GLubyte *)outPixels byteLength:(int)byteLength format:(GLenum)format;
-+ (void)unPremultiplyPixels:(const GLubyte *)inPixels to:(GLubyte *)outPixels byteLength:(int)byteLength format:(GLenum)format;
-+ (void)flipPixelsY:(GLubyte *)pixels bytesPerRow:(int)bytesPerRow rows:(int)rows;
++ (void)premultiplyPixels:(const GLubyte *)inPixels to:(GLubyte *)outPixels byteLength:(NSInteger)byteLength format:(GLenum)format;
++ (void)unPremultiplyPixels:(const GLubyte *)inPixels to:(GLubyte *)outPixels byteLength:(NSInteger)byteLength format:(GLenum)format;
++ (void)flipPixelsY:(GLubyte *)pixels bytesPerRow:(GLuint)bytesPerRow rows:(GLuint)rows;
 
-@property (readwrite, nonatomic) BOOL drawFlippedY;
-@property (readonly, nonatomic) BOOL isDynamic;
-@property (readonly, nonatomic) BOOL lazyLoaded;
-@property (readonly, nonatomic) NSMutableData *pixels;
-@property (readonly, nonatomic) GLuint textureId;
-@property (readonly, nonatomic) GLenum format;
-@property (readonly, nonatomic) short width, height;
-@property (readonly, nonatomic) NSTimeInterval lastUsed;
+
 
 @end
