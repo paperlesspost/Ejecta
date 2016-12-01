@@ -49,47 +49,32 @@
 @class EJClassLoader;
 
 @interface EJJavaScriptView : UIView {
-	CGSize oldSize;
-	NSString *appFolder;
-	
-	BOOL pauseOnEnterBackground;
-	BOOL hasScreenCanvas;
-
-	BOOL isPaused;
-	BOOL exitOnMenuPress;
-	
-	EJNonRetainingProxy	*proxy;
-
-	JSGlobalContextRef jsGlobalContext;
-	EJClassLoader *classLoader;
-
-	EJTimerCollection *timers;
-	
-	EJSharedOpenGLContext *openGLContext;
-	EJSharedTextureCache *textureCache;
-	EJSharedOpenALManager *openALManager;
-	
-	EJCanvasContext *currentRenderingContext;
-	EAGLContext *glCurrentContext;
-	
-	CADisplayLink *displayLink;
-
-	NSObject<EJWindowEventsDelegate> *windowEventsDelegate;
-	NSObject<EJTouchDelegate> *touchDelegate;
-	NSObject<EJDeviceMotionDelegate> *deviceMotionDelegate;
-	EJCanvasContext<EJPresentable> *screenRenderingContext;
-
-	NSOperationQueue *backgroundQueue;
-	JSClassRef jsBlockFunctionClass;
-	
+    
 	// Public for fast access in bound functions
 	@public JSValueRef jsUndefined;
 }
 
+@property (nonatomic, retain) CADisplayLink *displayLink;
+@property (nonatomic, assign) NSObject<EJWindowEventsDelegate> *windowEventsDelegate;
+@property (nonatomic, assign)NSObject<EJTouchDelegate> *touchDelegate;
+@property (nonatomic, assign)NSObject<EJDeviceMotionDelegate> *deviceMotionDelegate;
+@property (nonatomic, retain)EJCanvasContext<EJPresentable> *screenRenderingContext;
+
+@property (nonatomic, retain)NSOperationQueue *backgroundQueue;
+@property (nonatomic, assign)JSClassRef jsBlockFunctionClass;
+
+@property (nonatomic, retain) EAGLContext *glCurrentContext;
+@property (nonatomic, retain) EJCanvasContext *currentRenderingContext;
+@property (nonatomic, retain) EJSharedOpenALManager *openALManager;
+@property (nonatomic, retain) EJSharedTextureCache *textureCache;
+@property (nonatomic, assign) EJTimerCollection *timers;
+@property (nonatomic, retain) EJClassLoader *classLoader;
+@property (nonatomic, assign) EJNonRetainingProxy *proxy;
+@property (nonatomic, assign) CGSize oldSize;
 @property (nonatomic, copy) NSString *appFolder;
 
 @property (nonatomic, assign) BOOL pauseOnEnterBackground;
-@property (nonatomic, assign, getter = isPaused) BOOL isPaused; // Pauses drawing/updating of the JSView
+@property (nonatomic, assign, getter = isPaused) BOOL paused; // Pauses drawing/updating of the JSView
 @property (nonatomic, assign) BOOL hasScreenCanvas;
 @property (nonatomic, assign) BOOL exitOnMenuPress;
 @property (nonatomic, readonly) NSTimeInterval startTime;
@@ -97,15 +82,15 @@
 @property (nonatomic, readonly) JSGlobalContextRef jsGlobalContext;
 @property (nonatomic, readonly) EJSharedOpenGLContext *openGLContext;
 
-@property (nonatomic, retain) NSObject<EJWindowEventsDelegate> *windowEventsDelegate;
-@property (nonatomic, retain) NSObject<EJTouchDelegate> *touchDelegate;
-@property (nonatomic, retain) NSObject<EJDeviceMotionDelegate> *deviceMotionDelegate;
-
-@property (nonatomic, retain) EJCanvasContext *currentRenderingContext;
-@property (nonatomic, retain) EJCanvasContext<EJPresentable> *screenRenderingContext;
-
-@property (nonatomic, retain) NSOperationQueue *backgroundQueue;
-@property (nonatomic, retain) EJClassLoader *classLoader;
+//@property (nonatomic, retain) NSObject<EJWindowEventsDelegate> *windowEventsDelegate;
+//@property (nonatomic, retain) NSObject<EJTouchDelegate> *touchDelegate;
+//@property (nonatomic, retain) NSObject<EJDeviceMotionDelegate> *deviceMotionDelegate;
+//
+//@property (nonatomic, retain) EJCanvasContext *currentRenderingContext;
+//@property (nonatomic, retain) EJCanvasContext<EJPresentable> *screenRenderingContext;
+//
+//@property (nonatomic, retain) NSOperationQueue *backgroundQueue;
+//@property (nonatomic, retain) EJClassLoader *classLoader;
 
 - (instancetype)initWithFrame:(CGRect)frame appFolder:(NSString *)folder;
 

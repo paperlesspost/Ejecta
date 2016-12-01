@@ -11,6 +11,14 @@
 
 @implementation EJBindingGlobalUtils
 
+- (void)dealloc {
+    
+    [_deviceName release];
+    _deviceName = nil;
+    
+    [super dealloc];
+}
+
 - (NSString*)deviceName {
 	struct utsname systemInfo;
 	uname( &systemInfo );
@@ -39,7 +47,7 @@
 EJ_BIND_FUNCTION(log, ctx, argc, argv ) {
 	if( argc < 1 ) return NULL;
 
-	NSLog( @"JS %@", JSValueToNSString(ctx, argv[0]) );
+	NSLog( @"JS %@", JSValueToNSString(ctx, argv[0]));
 	return NULL;
 }
 
@@ -271,14 +279,14 @@ EJ_BIND_ENUM(audioSession, self.audioSession,
 );
 
 - (EJCoreAudioSession)audioSession {
-	return audioSession;
+	return self.audioSession;
 }
 
 - (void)setAudioSession:(EJCoreAudioSession)session {
-	audioSession = session;
+	self.audioSession = session;
 	AVAudioSession *instance = AVAudioSession.sharedInstance;
 
-	switch(audioSession) {
+	switch(self.audioSession) {
 		case kEJCoreAudioSessionAmbient:
 			[instance setCategory:AVAudioSessionCategoryAmbient error:NULL];
 			break;

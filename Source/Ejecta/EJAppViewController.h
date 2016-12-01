@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface EJAppViewController : UIViewController {
-	NSString *path;
-}
+@interface EJAppViewController : UIViewController
+
+@property (nonatomic, copy) NSString *path;
 
 - (instancetype)initWithScriptAtPath:(NSString *)pathp;
 

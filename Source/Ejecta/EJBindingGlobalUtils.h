@@ -25,11 +25,9 @@ typedef NS_ENUM(unsigned int, EJCoreAudioSession) {
 };
 
 
-@interface EJBindingGlobalUtils : EJBindingBase {
-	NSString *deviceName;
-	EJCoreAudioSession audioSession;
-}
+@interface EJBindingGlobalUtils : EJBindingBase
 
-@property (readwrite, nonatomic) EJCoreAudioSession audioSession;
+@property (nonatomic, copy) NSString *deviceName;
+@property (nonatomic) EJCoreAudioSession audioSession;
 
 @end

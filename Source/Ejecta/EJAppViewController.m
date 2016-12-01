@@ -6,16 +6,21 @@
 @implementation EJAppViewController
 
 - (instancetype)initWithScriptAtPath:(NSString *)pathp {
-	if( self = [super init] ) {
-		path = [pathp retain];
-	}
-	return self;
+	
+    self = [super initWithNibName:nil bundle:nil];
+    
+    if (self) {
+
+        [self setPath:pathp];
+        
+    }
+    return self;
 }
 
 - (void)dealloc {
-	self.view = nil;
-	[path release];
-	[super dealloc];
+	[_path release];
+    _path = nil;
+    [super dealloc];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -24,12 +29,12 @@
 }
 
 - (void)loadView {
+    
 	CGRect frame = UIScreen.mainScreen.bounds;
 
 	EJJavaScriptView *view = [[EJJavaScriptView alloc] initWithFrame:frame];
-	self.view = view;
-
-	[view loadScriptAtPath:path];
+    [self setView:view];
+	[view loadScriptAtPath:_path];
 	[view release];
 }
 

@@ -4,9 +4,9 @@ NSString *JSValueToNSString( JSContextRef ctx, JSValueRef v ) {
 	JSStringRef jsString = JSValueToStringCopy( ctx, v, NULL );
 	if( !jsString ) return nil;
 	
-	NSString *string = (NSString *)JSStringCopyCFString( kCFAllocatorDefault, jsString );
+    NSString *string = (NSString *)JSStringCopyCFString( kCFAllocatorDefault, jsString );
 	[string autorelease];
-	JSStringRelease( jsString );
+	JSStringRelease(jsString );
 	
 	return string;
 }

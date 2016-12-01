@@ -284,7 +284,7 @@ static inline bool JSStrIsEqualToStr( const JSChar *s1, const char *s2, size_t l
 	instance:(EJBindingBase *)instance;
 void EJBindingBaseFinalize(JSObjectRef object);
 
-@property (nonatomic, readonly) EJJavaScriptView *scriptView;
+@property (nonatomic, retain) EJJavaScriptView *scriptView;
 
 @end
 

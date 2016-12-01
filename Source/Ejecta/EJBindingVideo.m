@@ -4,22 +4,40 @@
 @implementation EJBindingVideo
 
 - (instancetype)initWithContext:(JSContextRef)ctx argc:(size_t)argc argv:(const JSValueRef [])argv {
-	if( self = [super initWithContext:ctx argc:argc argv:argv] ) {
-		controller = [AVPlayerViewController new];
-		controller.player = [[AVPlayer new] autorelease];
-		controller.showsPlaybackControls = NO;
-	}
-	return self;
+    
+    self = [super initWithContext:ctx
+                             argc:argc
+                             argv:argv];
+    
+    if (self) {
+        
+        _controller = [[AVPlayerViewController alloc] initWithNibName:nil bundle:nil];
+        _controller.showsPlaybackControls = NO;
+        AVPlayer *player = [[AVPlayer alloc] initWithPlayerItem:nil];
+        [_controller setPlayer:player];
+        [player release];
+
+    }
+    return self;
 }
 
+//Garbage collection in iOS???
 - (void)prepareGarbageCollection {
 	[NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (void)dealloc {
-	[controller.view removeFromSuperview];
-	[controller release];
-	[path release];
+    
+    if (_controller.view.superview) {
+        [_controller.view removeFromSuperview];
+    }
+    
+	[_controller release];
+    _controller = nil;
+    
+	[_path release];
+    _path = nil;
+    
 	[super dealloc];
 }
 
@@ -34,69 +52,72 @@
 }
 
 EJ_BIND_GET(duration, ctx) {
-	return JSValueMakeNumber(ctx, controller.player.currentItem.asset.duration.value);
+	return JSValueMakeNumber(ctx, _controller.player.currentItem.asset.duration.value);
 }
 
 EJ_BIND_GET(loop, ctx) {
-	return JSValueMakeBoolean( ctx, loop );
+	return JSValueMakeBoolean( ctx, _loop );
 }
 
 EJ_BIND_SET(loop, ctx, value) {
-	loop = JSValueToBoolean(ctx, value);
+	_loop = JSValueToBoolean(ctx, value);
 }
 
 EJ_BIND_GET(controls, ctx) {
-	return JSValueMakeBoolean( ctx, controller.showsPlaybackControls);
+	return JSValueMakeBoolean( ctx, _controller.showsPlaybackControls);
 }
 
 EJ_BIND_SET(controls, ctx, value) {
-	controller.showsPlaybackControls = JSValueToNumberFast(ctx, value);
+	_controller.showsPlaybackControls = JSValueToNumberFast(ctx, value);
 }
 
 EJ_BIND_GET(currentTime, ctx) {
-	return JSValueMakeNumber( ctx, controller.player.currentItem.currentTime.value );
+	return JSValueMakeNumber( ctx, _controller.player.currentItem.currentTime.value );
 }
 
 EJ_BIND_SET(currentTime, ctx, value) {
-	[controller.player seekToTime:CMTimeMakeWithSeconds(JSValueToNumberFast(ctx, value), 1)];
+	[_controller.player seekToTime:CMTimeMakeWithSeconds(JSValueToNumberFast(ctx, value), 1)];
 }
 
 EJ_BIND_GET(src, ctx) {
-	return path ? NSStringToJSValue(ctx, path) : NULL;
+	return _path ? NSStringToJSValue(ctx, _path) : NULL;
 }
 
 EJ_BIND_SET(src, ctx, value) {
+    
 	[NSNotificationCenter.defaultCenter removeObserver:self];
 
-	[path release];
-	path = nil;
-	path = [JSValueToNSString(ctx, value) retain];
-
-	NSURL *url = [NSURL URLWithString:path];
-	if( !url.host ) {
+	[_path release];
+	_path = nil;
+    [self setPath:JSValueToNSString(ctx, value)];
+	
+    NSURL *url = [NSURL URLWithString:_path];
+	
+    if( !url.host ) {
 		// No host? Assume we have a local file
-		url = [NSURL fileURLWithPath:[scriptView pathForResource:path]];
+		url = [NSURL fileURLWithPath:[scriptView pathForResource:_path]];
 	}
 
-	[controller.player replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:url]];
-	controller.showsPlaybackControls = NO;
+	[_controller.player replaceCurrentItemWithPlayerItem:[AVPlayerItem playerItemWithURL:url]];
+	_controller.showsPlaybackControls = NO;
 
-	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]
-		initWithTarget:self action:@selector(didTap:)];
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTap:)];
 	tapGesture.delegate = self;
 	tapGesture.numberOfTapsRequired = 1;
-	[controller.view addGestureRecognizer:tapGesture];
+	[_controller.view addGestureRecognizer:tapGesture];
 	[tapGesture release];
 
 	[NSNotificationCenter.defaultCenter addObserver:self
 		selector:@selector(didFinish:)
 		name:AVPlayerItemDidPlayToEndTimeNotification
-		object:controller.player.currentItem];
+		object:_controller.player.currentItem];
 
-	[NSOperationQueue.mainQueue addOperationWithBlock:^{
-		[self triggerEvent:@"canplaythrough"];
-		[self triggerEvent:@"loadedmetadata"];
-	}];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        [self triggerEvent:@"canplaythrough"];
+        [self triggerEvent:@"loadedmetadata"];
+    });
 }
 
 - (void)didTap:(UIGestureRecognizer *)gestureRecognizer {
@@ -104,41 +125,44 @@ EJ_BIND_SET(src, ctx, value) {
 }
 
 - (void)didFinish:(AVPlayerItem *)moviePlayer {
-	if( loop ) {
-		[controller.player seekToTime:kCMTimeZero];
+	if(_loop ) {
+		[_controller.player seekToTime:kCMTimeZero];
 	}
 	else {
-		[controller.player pause];
-		[controller.view removeFromSuperview];
-		ended = true;
+		[_controller.player pause];
+		
+        if (_controller.view.superview) {
+            [_controller.view removeFromSuperview];
+        }
+		_ended = true;
 		[self triggerEvent:@"ended"];
 	}
 }
 
 EJ_BIND_GET(ended, ctx) {
-	return JSValueMakeBoolean(ctx, ended);
+	return JSValueMakeBoolean(ctx, _ended);
 }
 
 EJ_BIND_GET(paused, ctx) {
-	return JSValueMakeBoolean(ctx, (controller.player.rate == 0));
+	return JSValueMakeBoolean(ctx, (_controller.player.rate == 0));
 }
 
 EJ_BIND_FUNCTION(play, ctx, argc, argv) {
-	if( controller.player.rate != 0 ) {
+	if(_controller.player.rate != 0 ) {
 		// Already playing. Nothing to do here.
 		return NULL;
 	}
 
-	controller.view.frame = scriptView.bounds;
-	[scriptView addSubview:controller.view];
-	[controller.player play];
+	_controller.view.frame = scriptView.bounds;
+	[scriptView addSubview:_controller.view];
+	[_controller.player play];
 
 	return NULL;
 }
 
 EJ_BIND_FUNCTION(pause, ctx, argc, argv) {
-	[controller.player pause];
-	[controller.view removeFromSuperview];
+	[_controller.player pause];
+	[_controller.view removeFromSuperview];
 	return NULL;
 }
 

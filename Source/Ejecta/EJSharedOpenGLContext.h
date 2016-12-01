@@ -13,17 +13,7 @@
 
 #define EJ_OPENGL_VERTEX_BUFFER_SIZE (32 * 1024) // 32kb
 
-@interface EJSharedOpenGLContext : NSObject {
-	EJGLProgram2D *programFlat;
-	EJGLProgram2D *programTexture;
-	EJGLProgram2D *programAlphaTexture;
-	EJGLProgram2D *programPattern;
-	EJGLProgram2DRadialGradient *programRadialGradient;
-	
-	EAGLContext *glContext2D;
-	EAGLSharegroup *glSharegroup;
-	NSMutableData *vertexBuffer;
-}
+@interface EJSharedOpenGLContext : NSObject
 
 + (EJSharedOpenGLContext *)instance;
 

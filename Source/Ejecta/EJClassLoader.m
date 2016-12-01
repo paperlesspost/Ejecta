@@ -64,8 +64,11 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 }
 
 
+@interface EJClassLoader ()
+@property (nonatomic, readwrite) JSClassRef jsConstructorClass;
+@end
+
 @implementation EJClassLoader
-@synthesize jsConstructorClass;
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView name:(NSString *)name {
 	if( self = [super init] ) {
@@ -76,7 +79,7 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 		constructorClassDef.callAsConstructor = EJCallAsConstructor;
 		constructorClassDef.hasInstance = EJConstructorHasInstance;
 		constructorClassDef.finalize = EJConstructorFinalize;
-		jsConstructorClass = JSClassCreate(&constructorClassDef);
+		_jsConstructorClass = JSClassCreate(&constructorClassDef);
 		
 		// Create the collection class and attach it to the global context with
 		// the given name
@@ -97,36 +100,40 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 		
 		
 		// Create Class cache dict
-		classCache = [[NSMutableDictionary alloc] initWithCapacity:16];
+		_classCache = [[NSMutableDictionary alloc] initWithCapacity:16];
 	}
 	return self;
 }
 
 - (void)dealloc {
-	[classCache release];
-	JSClassRelease(jsConstructorClass);
-	[super dealloc];
+    
+    
+	[_classCache release];
+    _classCache = nil;
+	JSClassRelease(_jsConstructorClass);
+	
+    [super dealloc];
 }
 
 - (EJLoadedJSClass *)getJSClass:(id)class {
 	// Try the cache first
-	EJLoadedJSClass *loadedClass = classCache[class];
-	if( loadedClass ) {
+	EJLoadedJSClass *loadedClass = _classCache[class];
+	if(loadedClass) {
 		return loadedClass;
 	}
 	
 	// Still here? Load and insert into cache
 	loadedClass = [self loadJSClass:class];
-	classCache[class] = loadedClass;
+	_classCache[class] = loadedClass;
 	
 	return loadedClass;
 }
 
 - (EJLoadedJSClass *)loadJSClass:(id)class {
 	// Gather all class methods that return C callbacks for this class or it's parents
-	NSMutableArray *methods = [NSMutableArray new];
-	NSMutableArray *properties = [NSMutableArray new];
-	NSMutableDictionary *constantValues = [NSMutableDictionary new];
+	NSMutableArray *methods = [[NSMutableArray alloc] initWithCapacity:0];
+	NSMutableArray *properties = [[NSMutableArray alloc] initWithCapacity:0];
+	NSMutableDictionary *constantValues = [[NSMutableDictionary alloc] initWithCapacity:0];
 		
 	// Traverse this class and all its super classes
 	Class base = EJBindingBase.class;
@@ -213,21 +220,25 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 
 @end
 
+@interface EJLoadedJSClass ()
+@property (nonatomic, readwrite) JSClassRef jsClass;
+@property (nonatomic, readwrite) NSDictionary *constantValues;
+@end
 
 @implementation EJLoadedJSClass
-@synthesize jsClass, constantValues;
 
 - (instancetype)initWithJSClass:(JSClassRef)jsClassp constantValues:(NSDictionary *)constantValuesp {
 	if( self = [super init] ) {
-		jsClass = JSClassRetain(jsClassp);
-		constantValues = [constantValuesp retain];
+		_jsClass = JSClassRetain(jsClassp);
+		_constantValues = [constantValuesp retain];
 	}
 	return self;
 }
 
 - (void)dealloc {
-	JSClassRelease(jsClass);
-	[constantValues release];
+	JSClassRelease(_jsClass);
+	[_constantValues release];
+    _constantValues = nil;
 	[super dealloc];
 }
 

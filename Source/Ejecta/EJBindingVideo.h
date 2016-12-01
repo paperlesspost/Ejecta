@@ -12,12 +12,13 @@
 #import <AVFoundation/AVAsset.h>
 
 
-@interface EJBindingVideo : EJBindingEventedBase <UIGestureRecognizerDelegate> {
-	NSString *path;
-	BOOL loaded;
-	BOOL ended;
-	BOOL loop;
-	AVPlayerViewController *controller;
-}
+@interface EJBindingVideo : EJBindingEventedBase <UIGestureRecognizerDelegate>
+
+@property (nonatomic, copy) NSString *path;
+@property (nonatomic, assign) BOOL loaded;
+@property (nonatomic, assign) BOOL ended;
+@property (nonatomic, assign) BOOL loop;
+@property (nonatomic, retain) AVPlayerViewController *controller;
+
 
 @end

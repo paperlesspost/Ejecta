@@ -4,37 +4,46 @@
 @implementation EJBindingEventedBase
 
 - (instancetype)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
-	if( self = [super initWithContext:ctxp argc:argc argv:argv] ) {
-		eventListeners = [NSMutableDictionary new];
-		onCallbacks = [NSMutableDictionary new];
-	}
-	return self;
+    
+    self = [super initWithContext:ctxp
+                             argc:argc
+                             argv:argv];
+    
+    if (self) {
+        
+        _eventListeners = [[NSMutableDictionary alloc] initWithCapacity:0];
+        _onCallbacks = [[NSMutableDictionary alloc] initWithCapacity:0];
+    }
+    
+    return self;
 }
 
 - (void)dealloc {
 	JSContextRef ctx = scriptView.jsGlobalContext;
 	
 	// Unprotect all event callbacks
-	for( NSString *type	in eventListeners ) {
-		NSArray *listeners = eventListeners[type];
+	for( NSString *type	in _eventListeners) {
+		NSArray *listeners = _eventListeners[type];
 		for( NSValue *callbackValue in listeners ) {
 			JSValueUnprotectSafe(ctx, callbackValue.pointerValue);
 		}
 	}
-	[eventListeners release];
+	[_eventListeners release];
+    _eventListeners = nil;
 	
 	// Unprotect all event callbacks
-	for( NSString *type in onCallbacks ) {
-		NSValue *callbackValue = onCallbacks[type];
+	for( NSString *type in _onCallbacks ) {
+		NSValue *callbackValue = _onCallbacks[type];
 		JSValueUnprotectSafe(ctx, callbackValue.pointerValue);
 	}
-	[onCallbacks release];
+	[_onCallbacks release];
+    _onCallbacks = nil;
 	
 	[super dealloc];
 }
 
 - (JSValueRef)getCallbackWithType:(NSString *)type ctx:(JSContextRef)ctx {
-	NSValue *listener = onCallbacks[type];
+	NSValue *listener = _onCallbacks[type];
 	return listener ? listener.pointerValue : JSValueMakeNull(ctx);
 }
 
@@ -43,13 +52,13 @@
 	JSValueRef oldCallback = [self getCallbackWithType:type ctx:ctx];
 	if( oldCallback && !JSValueIsNull(ctx, oldCallback) ) {
 		JSValueUnprotectSafe(ctx, oldCallback);
-		[onCallbacks removeObjectForKey:type];
+		[_onCallbacks removeObjectForKey:type];
 	}
 	
 	JSObjectRef callback = JSValueToObject(ctx, callbackValue, NULL);
 	if( callback && JSObjectIsFunction(ctx, callback) ) {
 		JSValueProtect(ctx, callback);
-		onCallbacks[type] = [NSValue valueWithPointer:callback];
+		_onCallbacks[type] = [NSValue valueWithPointer:callback];
 	}
 }
 
@@ -62,11 +71,11 @@ EJ_BIND_FUNCTION(addEventListener, ctx, argc, argv) {
 	NSValue *callbackValue = [NSValue valueWithPointer:callback];
 	
 	NSMutableArray *listeners = NULL;
-	if( (listeners = eventListeners[type]) ) {
+	if( (listeners = _eventListeners[type]) ) {
 		[listeners addObject:callbackValue];
 	}
 	else {
-		eventListeners[type] = [NSMutableArray arrayWithObject:callbackValue];
+		_eventListeners[type] = [NSMutableArray arrayWithObject:callbackValue];
 	}
 	return NULL;
 }
@@ -77,7 +86,7 @@ EJ_BIND_FUNCTION(removeEventListener, ctx, argc, argv) {
 	NSString *type = JSValueToNSString( ctx, argv[0] );
 
 	NSMutableArray *listeners = NULL;
-	if( (listeners = eventListeners[type]) ) {
+	if( (listeners = _eventListeners[type]) ) {
 		JSObjectRef callback = JSValueToObject(ctx, argv[1], NULL);
 		for( int i = 0; i < listeners.count; i++ ) {
 			if( JSValueIsStrictEqual(ctx, callback, [listeners[i] pointerValue]) ) {
@@ -91,14 +100,14 @@ EJ_BIND_FUNCTION(removeEventListener, ctx, argc, argv) {
 }
 
 - (void)triggerEvent:(NSString *)type argc:(int)argc argv:(JSValueRef[])argv {
-	NSArray *listeners = eventListeners[type];
+	NSArray *listeners = _eventListeners[type];
 	if( listeners ) {
 		for( NSValue *callback in listeners ) {
 			[scriptView invokeCallback:callback.pointerValue thisObject:jsObject argc:argc argv:argv];
 		}
 	}
 	
-	NSValue *callback = onCallbacks[type];
+	NSValue *callback = _onCallbacks[type];
 	if( callback ) {
 		[scriptView invokeCallback:callback.pointerValue thisObject:jsObject argc:argc argv:argv];
 	}
@@ -109,8 +118,8 @@ EJ_BIND_FUNCTION(removeEventListener, ctx, argc, argv) {
 }
 
 - (void)triggerEvent:(NSString *)type properties:(JSEventProperty[])properties {
-	NSArray *listeners = eventListeners[type];
-	NSValue *onCallback = onCallbacks[type];
+	NSArray *listeners = _eventListeners[type];
+	NSValue *onCallback = _onCallbacks[type];
 	
 	// Check if we have any listeners before constructing the event object
 	if( !(listeners && listeners.count) && !onCallback ) {
@@ -156,30 +165,34 @@ EJ_BIND_FUNCTION(removeEventListener, ctx, argc, argv) {
 {
 	EJBindingEvent *event = [[self alloc] initWithContext:ctx argc:0 argv:NULL];
 	JSValueProtect(ctx, target);
-	event->jsTarget = target;
-	event->type = [type retain];
-	
+    
+    [event setJsTarget:target];
+    [event setType:type];
+    
 	JSValueRef jsTimestamp = JSValueMakeNumber(ctx, NSProcessInfo.processInfo.systemUptime * 1000.0);
 	JSValueProtect(ctx, jsTimestamp);
-	event->jsTimestamp = jsTimestamp;	
-	
+    
+    [event setJsTimestamp:jsTimestamp];
+    
 	JSObjectRef jsEvent = [self createJSObjectWithContext:ctx scriptView:scriptView instance:event];
 	[event release];
 	return jsEvent;
 }
 
 - (void)dealloc {
-	[type release];
-	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsTarget);
-	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsTimestamp);
+	[_type release];
+    _type = nil;
+    
+	JSValueUnprotectSafe(scriptView.jsGlobalContext, _jsTarget);
+	JSValueUnprotectSafe(scriptView.jsGlobalContext, _jsTimestamp);
 	
 	[super dealloc];
 }
 
-EJ_BIND_GET(target, ctx) { return jsTarget; }
-EJ_BIND_GET(currentTarget, ctx) { return jsTarget; }
-EJ_BIND_GET(type, ctx) { return NSStringToJSValue(ctx, type); }
-EJ_BIND_GET(timestamp, ctx) { return jsTimestamp; }
+EJ_BIND_GET(target, ctx) { return _jsTarget; }
+EJ_BIND_GET(currentTarget, ctx) { return _jsTarget; }
+EJ_BIND_GET(type, ctx) { return NSStringToJSValue(ctx, _type); }
+EJ_BIND_GET(timestamp, ctx) { return _jsTimestamp; }
 
 EJ_BIND_FUNCTION(preventDefault, ctx, argc, argv){ return NULL; }
 EJ_BIND_FUNCTION(stopPropagation, ctx, argc, argv){ return NULL; }

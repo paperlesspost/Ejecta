@@ -21,14 +21,75 @@
 #import "JavaScriptCore/JavaScriptCore.h"
 
 
+/**
+ Converting a JSValue to NSString
+
+ @param ctx the Javascript context
+ @param v the Javascript value
+ @return an instance of NSString
+ */
 NSString *JSValueToNSString( JSContextRef ctx, JSValueRef v );
+
+/**
+ <#Description#>
+
+ @param ctx <#ctx description#>
+ @param string <#string description#>
+ @return <#return value description#>
+ */
 JSValueRef NSStringToJSValue( JSContextRef ctx, NSString *string );
+
+/**
+ <#Description#>
+
+ @param ctx <#ctx description#>
+ @param v <#v description#>
+ @return <#return value description#>
+ */
 double JSValueToNumberFast( JSContextRef ctx, JSValueRef v );
+
+/**
+ <#Description#>
+
+ @param ctx <#ctx description#>
+ @param v <#v description#>
+ */
 void JSValueUnprotectSafe( JSContextRef ctx, JSValueRef v );
+
+/**
+ <#Description#>
+
+ @param ctx <#ctx description#>
+ @param obj <#obj description#>
+ @return <#return value description#>
+ */
 JSValueRef NSObjectToJSValue( JSContextRef ctx, NSObject *obj );
+
+/**
+ <#Description#>
+
+ @param ctx <#ctx description#>
+ @param value <#value description#>
+ @return <#return value description#>
+ */
 NSObject *JSValueToNSObject( JSContextRef ctx, JSValueRef value );
+
+/**
+ <#Description#>
+
+ @param ctx <#ctx description#>
+ @param value <#value description#>
+ @param length <#length description#>
+ @return <#return value description#>
+ */
 void *JSValueGetTypedArrayPtr( JSContextRef ctx, JSValueRef value, size_t *length );
 
+/**
+ <#Description#>
+
+ @param v <#v description#>
+ @return <#return value description#>
+ */
 static inline void *JSValueGetPrivate(JSValueRef v) {
 	// On 64bit systems we can not safely call JSObjectGetPrivate with any
 	// JSValueRef. Doing so with immediate values (numbers, null, bool,

@@ -10,37 +10,37 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
-
 @class EJJavaScriptView;
 
-@interface EJTimerCollection : NSObject {
-	NSMutableDictionary *timers;
-	int lastId;
-	EJJavaScriptView *scriptView;
-}
+@interface EJTimerCollection : NSObject
+
+@property (nonatomic, retain) NSMutableDictionary *timers;
+@property (nonatomic, assign) NSInteger lastId;
+@property (nonatomic, retain) EJJavaScriptView *scriptView;
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView;
-- (int)scheduleCallback:(JSObjectRef)callback interval:(NSTimeInterval)interval repeat:(BOOL)repeat;
-- (void)cancelId:(int)timerId;
+- (NSInteger)scheduleCallback:(JSObjectRef)callback interval:(NSTimeInterval)interval repeat:(BOOL)repeat;
+- (void)cancelId:(NSInteger)timerId;
 - (void)update;
 
 @end
 
 
+@interface EJTimer : NSObject
 
-@interface EJTimer : NSObject {
-	NSTimeInterval interval;
-	JSObjectRef callback;
-	BOOL active, repeat;
-	EJJavaScriptView *scriptView;
-}
+@property (nonatomic, assign) NSTimeInterval interval;
+@property (nonatomic, assign) JSObjectRef callback;
+@property (nonatomic, assign) BOOL repeat;
+@property (nonatomic, retain) EJJavaScriptView *scriptView;
+@property (nonatomic, readonly, getter=isActive) BOOL active;
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp
 	callback:(JSObjectRef)callbackp
 	interval:(NSTimeInterval)intervalp
 	repeat:(BOOL)repeatp;
+
 - (void)check;
 
-@property (readonly) BOOL active;
+
 
 @end

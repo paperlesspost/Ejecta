@@ -13,9 +13,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface EJNonRetainingProxy : NSObject {
-	id target;
-}
+@interface EJNonRetainingProxy : NSObject
+
+@property (nonatomic, strong) id target;
 
 + (EJNonRetainingProxy *)proxyWithTarget:(id)target;
 

@@ -2,30 +2,38 @@
 
 @implementation EJNonRetainingProxy
 + (EJNonRetainingProxy *)proxyWithTarget:(id)target {
-    EJNonRetainingProxy *proxy = [[self new] autorelease];
-    proxy->target = target;
+    EJNonRetainingProxy *proxy = [[self alloc] init];
+    [proxy setTarget:target];
+    [proxy autorelease];
     return proxy;
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
-	return [target methodSignatureForSelector:sel];
+	return [_target methodSignatureForSelector:sel];
 }
 
 - (BOOL)respondsToSelector:(SEL)sel {
-    return [target respondsToSelector:sel] || [super respondsToSelector:sel];
+    return [_target respondsToSelector:sel] || [super respondsToSelector:sel];
 }
 
 - (id)forwardingTargetForSelector:(SEL)sel {
-    return target;
+    return _target;
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
-    if( [target respondsToSelector:invocation.selector] ) {
-        [invocation invokeWithTarget:target];
+    if( [_target respondsToSelector:invocation.selector] ) {
+        [invocation invokeWithTarget:_target];
 	}
     else {
 		[super forwardInvocation:invocation];
 	}
+}
+
+- (void)dealloc {
+    
+    [_target release];
+    _target = nil;
+    [super dealloc];
 }
 
 @end

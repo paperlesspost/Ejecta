@@ -48,10 +48,10 @@ typedef struct {
 	JSValueRef value;
 } JSEventProperty;
 	
-@interface EJBindingEventedBase : EJBindingBase {
-	NSMutableDictionary *eventListeners; // for addEventListener
-	NSMutableDictionary *onCallbacks; // for on* setters
-}
+@interface EJBindingEventedBase : EJBindingBase
+
+@property (nonatomic, retain) NSMutableDictionary *eventListeners; // for addEventListener
+@property (nonatomic, retain) NSMutableDictionary *onCallbacks; // for on* setters
 
 - (JSValueRef)getCallbackWithType:(NSString *)type ctx:(JSContextRef)ctx;
 - (void)setCallbackWithType:(NSString *)type ctx:(JSContextRef)ctx callback:(JSValueRef)callback;
@@ -63,11 +63,11 @@ typedef struct {
 
 
 
-@interface EJBindingEvent : EJBindingBase {
-	NSString *type;
-	JSObjectRef jsTarget;
-	JSValueRef jsTimestamp;
-}
+@interface EJBindingEvent : EJBindingBase
+
+@property (nonatomic, copy) NSString *type;
+@property (nonatomic, assign) JSObjectRef jsTarget;
+@property (nonatomic, assign) JSValueRef jsTimestamp;
 
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx
 	scriptView:(EJJavaScriptView *)scriptView

@@ -20,28 +20,23 @@
 @class EJJavaScriptView;
 @class EJLoadedJSClass;
 
-@interface EJClassLoader : NSObject {
-	JSClassRef jsConstructorClass;
-	NSMutableDictionary *classCache;
-}
+@interface EJClassLoader : NSObject
+
+@property (nonatomic, assign, readonly) JSClassRef jsConstructorClass;
+@property (nonatomic, retain) NSMutableDictionary *classCache;
 
 - (EJLoadedJSClass *)getJSClass:(id)class;
 - (EJLoadedJSClass *)loadJSClass:(id)class;
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView name:(NSString *)name;
 
-@property (nonatomic, readonly) JSClassRef jsConstructorClass;
-
 @end
 
 
 
-@interface EJLoadedJSClass : NSObject {
-	JSClassRef jsClass;
-	NSDictionary *constantValues;
-}
+@interface EJLoadedJSClass : NSObject
 
 - (instancetype)initWithJSClass:(JSClassRef)jsClassp constantValues:(NSDictionary *)constantValuesp;
-@property (readonly) JSClassRef jsClass;
-@property (readonly) NSDictionary *constantValues;
+@property (nonatomic, readonly) JSClassRef jsClass;
+@property (nonatomic, readonly) NSDictionary *constantValues;
 @end
