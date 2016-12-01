@@ -4,22 +4,23 @@
 @implementation EJBindingGamepadProvider
 
 - (void)createWithJSObject:(JSObjectRef)obj scriptView:(EJJavaScriptView *)view {
-	[super createWithJSObject:obj scriptView:view];
+	
+    [super createWithJSObject:obj scriptView:view];
 	
 	// Create the gamepadBindings array, fill it with available gamepads
-	gamepadBindings = [[NSMutableArray alloc] initWithCapacity:EJ_GAMEPAD_NUM_DEVICES];
+	_gamepadBindings = [[NSMutableArray alloc] initWithCapacity:EJ_GAMEPAD_NUM_DEVICES];
 	int maxIndex = 0;
 	for( GCController *controller in GCController.controllers ) {
 		EJBindingGamepad *binding = [[EJBindingGamepad alloc] initWithController:controller atIndex:maxIndex];
-		[EJBindingGamepad createJSObjectWithContext:scriptView.jsGlobalContext scriptView:scriptView instance:binding];
-		[gamepadBindings addObject:binding];
+		[EJBindingGamepad createJSObjectWithContext:self.scriptView.jsGlobalContext scriptView:scriptView instance:binding];
+		[_gamepadBindings addObject:binding];
 		[binding release];
 		maxIndex++;
 	}
 	
 	// Fill up the remaining slots with NSNull
 	for( int i = maxIndex; i < EJ_GAMEPAD_NUM_DEVICES; i++ ) {
-		[gamepadBindings addObject:NSNull.null];
+		[_gamepadBindings addObject:NSNull.null];
 	}
 	
 	[NSNotificationCenter.defaultCenter
@@ -34,7 +35,7 @@
 - (void)dealloc {
 	[NSNotificationCenter.defaultCenter removeObserver:self];
 	
-	[gamepadBindings release];	
+	[_gamepadBindings release];
 	[super dealloc];
 }
 	
@@ -43,16 +44,16 @@
 	GCController *controller = (GCController *)notification.object;
 	
 	// Do we already have this controller for whatever reason?
-	for( EJBindingGamepad *binding in gamepadBindings ) {
+	for( EJBindingGamepad *binding in _gamepadBindings ) {
 		if( (id)binding != NSNull.null && binding.controller == controller ) {
 			return;
 		}
 	}
 	
 	// Find the first free index
-	NSUInteger index = [gamepadBindings indexOfObject:NSNull.null];
+	NSUInteger index = [_gamepadBindings indexOfObject:NSNull.null];
 	if( index == NSNotFound ) {
-		index = gamepadBindings.count;
+		index = _gamepadBindings.count;
 	}
 	
 	if( index >= EJ_GAMEPAD_NUM_DEVICES ) {
@@ -61,8 +62,8 @@
 	
 	// Create the Binding
 	EJBindingGamepad *binding = [[EJBindingGamepad alloc] initWithController:controller atIndex:index];
-	[EJBindingGamepad createJSObjectWithContext:scriptView.jsGlobalContext scriptView:scriptView instance:binding];
-	[gamepadBindings setObject:binding atIndexedSubscript:index];
+	[EJBindingGamepad createJSObjectWithContext:self.scriptView.jsGlobalContext scriptView:scriptView instance:binding];
+	[_gamepadBindings setObject:binding atIndexedSubscript:index];
 	
 	[self triggerEvent:@"gamepadconnected" properties:(JSEventProperty[]){
 		{"gamepad", binding.jsObject},
@@ -78,7 +79,7 @@
 	// Find the binding for the controller that was disconnected
 	EJBindingGamepad *disconnectedBinding = nil;
 	NSUInteger index = 0;
-	for( EJBindingGamepad *binding in gamepadBindings ) {
+	for( EJBindingGamepad *binding in _gamepadBindings ) {
 		if( (id)binding != NSNull.null && binding.controller == controller ) {
 			disconnectedBinding	= binding;
 			break;
@@ -95,13 +96,13 @@
 	}
 	
 	// Replace the binding with NSNull
-	[gamepadBindings setObject:NSNull.null atIndexedSubscript:index];
+	[_gamepadBindings setObject:NSNull.null atIndexedSubscript:index];
 }
 
 EJ_BIND_FUNCTION(getGamepads, ctx, argc, argv) {
 	JSValueRef args[EJ_GAMEPAD_NUM_DEVICES];
 	for( int i = 0; i < EJ_GAMEPAD_NUM_DEVICES; i++ ) {
-		EJBindingGamepad *binding = gamepadBindings[i];
+		EJBindingGamepad *binding = _gamepadBindings[i];
 		args[i] = (id)binding == NSNull.null
 			? scriptView->jsUndefined
 			: binding.jsObject;

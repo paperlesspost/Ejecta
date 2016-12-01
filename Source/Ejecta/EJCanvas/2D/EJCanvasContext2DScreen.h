@@ -12,6 +12,6 @@
 - (void)present;
 - (void)finish;
 
-@property (readonly, nonatomic) EJTexture *texture;
+@property (retain, nonatomic) EJTexture *texture;
 
 @end

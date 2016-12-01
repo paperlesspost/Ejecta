@@ -8,7 +8,7 @@
 
 @interface EJBindingImage : EJBindingEventedBase <EJDrawable>
 
-@property (nonatomic, readonly) EJTexture *texture;
+@property (nonatomic, retain) EJTexture *texture;
 @property (nonatomic, copy) NSString *path;
 @property (nonatomic, assign) BOOL loading;
 @property (nonatomic, assign) NSOperation *loadCallback;

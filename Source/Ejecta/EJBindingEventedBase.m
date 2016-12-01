@@ -19,7 +19,7 @@
 }
 
 - (void)dealloc {
-	JSContextRef ctx = scriptView.jsGlobalContext;
+	JSContextRef ctx = self.scriptView.jsGlobalContext;
 	
 	// Unprotect all event callbacks
 	for( NSString *type	in _eventListeners) {
@@ -103,13 +103,13 @@ EJ_BIND_FUNCTION(removeEventListener, ctx, argc, argv) {
 	NSArray *listeners = _eventListeners[type];
 	if( listeners ) {
 		for( NSValue *callback in listeners ) {
-			[scriptView invokeCallback:callback.pointerValue thisObject:jsObject argc:argc argv:argv];
+			[scriptView invokeCallback:callback.pointerValue thisObject:self.jsObject argc:argc argv:argv];
 		}
 	}
 	
 	NSValue *callback = _onCallbacks[type];
 	if( callback ) {
-		[scriptView invokeCallback:callback.pointerValue thisObject:jsObject argc:argc argv:argv];
+		[scriptView invokeCallback:callback.pointerValue thisObject:self.jsObject argc:argc argv:argv];
 	}
 }
 
@@ -128,7 +128,7 @@ EJ_BIND_FUNCTION(removeEventListener, ctx, argc, argv) {
 	
 	// Build the event object
 	JSObjectRef jsEvent = [EJBindingEvent createJSObjectWithContext:scriptView.jsGlobalContext
-		scriptView:scriptView type:type target:jsObject];
+		scriptView:scriptView type:type target:self.jsObject];
 	
 	// Attach all additional properties, if any
 	if( properties ) {
@@ -144,12 +144,12 @@ EJ_BIND_FUNCTION(removeEventListener, ctx, argc, argv) {
 	JSValueRef params[] = { jsEvent };
 	if( listeners ) {
 		for( NSValue *callback in listeners ) {
-			[scriptView invokeCallback:callback.pointerValue thisObject:jsObject argc:1 argv:params];
+			[scriptView invokeCallback:callback.pointerValue thisObject:self.jsObject argc:1 argv:params];
 		}
 	}
 	
 	if( onCallback ) {
-		[scriptView invokeCallback:onCallback.pointerValue thisObject:jsObject argc:1 argv:params];
+		[scriptView invokeCallback:onCallback.pointerValue thisObject:self.jsObject argc:1 argv:params];
 	}
 }
 

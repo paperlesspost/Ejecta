@@ -269,12 +269,14 @@ static inline bool JSStrIsEqualToStr( const JSChar *s1, const char *s2, size_t l
 
 
 @class EJJavaScriptView;
+
 @interface EJBindingBase : NSObject {
-	JSObjectRef jsObject;
 	
 	// Puplic for fast access to instance->scriptView->jsUndefined in bound functions
 	@public	EJJavaScriptView *scriptView;
 }
+
+void EJBindingBaseFinalize(JSObjectRef object);
 
 - (instancetype)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv;
 - (void)createWithJSObject:(JSObjectRef)obj scriptView:(EJJavaScriptView *)view;
@@ -282,9 +284,11 @@ static inline bool JSStrIsEqualToStr( const JSChar *s1, const char *s2, size_t l
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx
 	scriptView:(EJJavaScriptView *)scriptView
 	instance:(EJBindingBase *)instance;
-void EJBindingBaseFinalize(JSObjectRef object);
 
-@property (nonatomic, retain) EJJavaScriptView *scriptView;
+- (void)setScriptView:(EJJavaScriptView *)newValue;
+- (EJJavaScriptView *)scriptView;
+
+@property (nonatomic) JSObjectRef jsObject;
 
 @end
 

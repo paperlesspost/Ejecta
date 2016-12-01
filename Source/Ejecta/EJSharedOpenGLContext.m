@@ -1,20 +1,6 @@
 #import "EJSharedOpenGLContext.h"
 #import "EJCanvas/2D/EJCanvasShaders.h"
 
-@interface EJSharedOpenGLContext ()
-
-@property (nonatomic, readwrite) EJGLProgram2D *programFlat;
-@property (nonatomic, readwrite) EJGLProgram2D *programTexture;
-@property (nonatomic, readwrite) EJGLProgram2D *programAlphaTexture;
-@property (nonatomic, readwrite) EJGLProgram2D *programPattern;
-@property (nonatomic, readwrite) EJGLProgram2DRadialGradient *programRadialGradient;
-
-@property (nonatomic, readwrite) EAGLContext *glContext2D;
-@property (nonatomic, readwrite) EAGLSharegroup *glSharegroup;
-@property (nonatomic, readwrite) NSMutableData *vertexBuffer;
-
-@end
-
 
 @implementation EJSharedOpenGLContext
 

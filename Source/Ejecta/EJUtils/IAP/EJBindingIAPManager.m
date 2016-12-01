@@ -81,7 +81,7 @@
 		: JSValueMakeNull(ctx);
 	
 	// Invoke the callback and clean up
-	[scriptView invokeCallback:jsCallback thisObject:jsObject
+	[scriptView invokeCallback:jsCallback thisObject:self.jsObject
 		argc:2 argv:(JSValueRef[]){jsError, jsArray}];
 	
 	JSValueUnprotect(scriptView.jsGlobalContext, jsCallback);
@@ -123,7 +123,7 @@
 	JSValueRef jsError = NSStringToJSValue(ctx, error.localizedDescription);
 	JSObjectRef jsArray = JSObjectMakeArray(ctx, 0, NULL, NULL);
 	
-	[scriptView invokeCallback:restoreCallback thisObject:jsObject
+	[self.scriptView invokeCallback:restoreCallback thisObject:self.jsObject
 		argc:2 argv:(JSValueRef[]){jsError, jsArray}];
 	
 	// Unset the callback
@@ -131,7 +131,7 @@
 	restoreCallback = NULL;
 	[restoredTransactions removeAllObjects];
 	
-	JSValueUnprotect(ctx, jsObject);
+	JSValueUnprotect(ctx, self.jsObject);
 }
 
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue {
@@ -151,7 +151,7 @@
 	JSValueRef jsError = JSValueMakeNull(ctx);
 	JSObjectRef jsArray = JSObjectMakeArray(ctx, count, jsArrayArgs, NULL);
 	
-	[scriptView invokeCallback:restoreCallback thisObject:jsObject
+	[scriptView invokeCallback:restoreCallback thisObject:self.jsObject
 		argc:2 argv:(JSValueRef[]){jsError, jsArray}];
 		
 	// Unset the callback
@@ -159,7 +159,7 @@
 	restoreCallback = NULL;
 	[restoredTransactions removeAllObjects];
 	
-	JSValueUnprotect(ctx, jsObject);
+	JSValueUnprotect(ctx, self.jsObject);
 }
 
 EJ_BIND_FUNCTION(getProducts, ctx, argc, argv) {
@@ -194,7 +194,7 @@ EJ_BIND_FUNCTION(restoreTransactions, ctx, argc, argv) {
 	
 	restoreCallback = (JSObjectRef)argv[0];
 	JSValueProtect(ctx, restoreCallback);
-	JSValueProtect(ctx, jsObject);
+	JSValueProtect(ctx, self.jsObject);
 	
 	[SKPaymentQueue.defaultQueue restoreCompletedTransactions];
 	return NULL;

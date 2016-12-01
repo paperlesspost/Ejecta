@@ -13,10 +13,7 @@ enum {
 	kEJGLProgram2DAttributeColor,
 };
 
-@interface EJGLProgram2D : NSObject {
-	GLuint program;
-	GLuint screen;
-}
+@interface EJGLProgram2D : NSObject
 
 - (instancetype)initWithVertexShader:(const char *)vertexShaderSource fragmentShader:(const char *)fragmentShaderSource;
 - (void)bindAttributeLocations;
@@ -25,7 +22,7 @@ enum {
 + (GLint)compileShaderSource:(const char *)source type:(GLenum)type;
 + (void)linkProgram:(GLuint)program;
 
-@property (nonatomic, readonly) GLuint program;
-@property (nonatomic, readonly) GLuint screen;
+@property (nonatomic, assign) GLuint program;
+@property (nonatomic, assign) GLuint screen;
 
 @end

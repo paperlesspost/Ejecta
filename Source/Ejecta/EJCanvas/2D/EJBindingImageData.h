@@ -17,7 +17,7 @@
 
 - (instancetype)initWithImageData:(EJImageData *)data;
 
-@property (readonly, nonatomic) EJImageData *imageData;
-@property (readonly, nonatomic) EJTexture *texture;
+@property (retain, nonatomic) EJImageData *imageData;
+@property (retain, nonatomic) EJTexture *texture;
 
 @end

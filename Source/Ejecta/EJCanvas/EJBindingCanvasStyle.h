@@ -4,10 +4,8 @@
 #import "EJBindingBase.h"
 
 @class EJBindingCanvas;
-@interface EJBindingCanvasStyle : EJBindingBase {
-	EJBindingCanvas *binding;
-}
+@interface EJBindingCanvasStyle : EJBindingBase
 
-@property (assign, nonatomic) EJBindingCanvas *binding;
-@property (readonly, nonatomic) JSObjectRef jsObject;
+@property (retain, nonatomic) EJBindingCanvas *binding;
+
 @end

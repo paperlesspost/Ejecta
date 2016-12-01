@@ -19,7 +19,7 @@ typedef NS_OPTIONS(unsigned int, EJCanvasPatternRepeat) {
 
 - (instancetype)initWithTexture:(EJTexture *)texturep repeat:(EJCanvasPatternRepeat)repeatp;
 
-@property (readonly, nonatomic) EJTexture *texture;
-@property (readonly, nonatomic) EJCanvasPatternRepeat repeat;
+@property (retain, nonatomic) EJTexture *texture;
+@property (assign, nonatomic) EJCanvasPatternRepeat repeat;
 
 @end

@@ -1,13 +1,7 @@
 #import "EJBindingCanvasStyle.h"
-
 #import "EJBindingCanvas.h"
 
 @implementation EJBindingCanvasStyle
-@synthesize binding;
-
-- (JSObjectRef)jsObject {
-	return jsObject;
-}
 
 #define EJ_BIND_PX_STYLE(NAME, TARGET) \
 	EJ_BIND_GET(NAME, ctx) { \
@@ -30,14 +24,14 @@
 		} \
 	}
 
-	EJ_BIND_PX_STYLE(width, binding.styleWidth);
-	EJ_BIND_PX_STYLE(height, binding.styleHeight);
-	EJ_BIND_PX_STYLE(left, binding.styleLeft);
-	EJ_BIND_PX_STYLE(top, binding.styleTop);
+	EJ_BIND_PX_STYLE(width, _binding.styleWidth);
+	EJ_BIND_PX_STYLE(height, _binding.styleHeight);
+	EJ_BIND_PX_STYLE(left, _binding.styleLeft);
+	EJ_BIND_PX_STYLE(top, _binding.styleTop);
 
 #undef EJ_BIND_PX_STYLE
 
-EJ_BIND_ENUM(imageRendering, binding.imageRendering,
+EJ_BIND_ENUM(imageRendering, _binding.imageRendering,
 	"auto",			// kEJCanvasImageRenderingAuto,
 	"crisp-edges",	// kEJCanvasImageRenderingCrispEdges,
 	"pixelated"		// kEJCanvasImageRenderingPixelated

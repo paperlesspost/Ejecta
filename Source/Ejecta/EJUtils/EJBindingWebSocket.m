@@ -107,7 +107,7 @@
 	
 	
 	// Unprotect self from garbage collection
-	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotectSafe(scriptView.jsGlobalContext, self.jsObject);
 	
 	[socket release];
 	socket = nil;

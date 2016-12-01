@@ -103,7 +103,7 @@
 	[self triggerEvent:@"load"];
 	[self triggerEvent:@"loadend"];
 	[self triggerEvent:@"readystatechange"];
-	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotectSafe(scriptView.jsGlobalContext, self.jsObject);
 }
 
 - (void)didFailWithError:(NSError *)error {
@@ -118,7 +118,7 @@
 	}
 	[self triggerEvent:@"loadend"];
 	[self triggerEvent:@"readystatechange"];
-	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotectSafe(scriptView.jsGlobalContext, self.jsObject);
 }
 
 - (void)didReceiveResponse:(NSURLResponse *)responsep {
@@ -318,7 +318,7 @@ EJ_BIND_FUNCTION(send, ctx, argc, argv) {
 	
 	// Protect this request object from garbage collection, as its callback functions
 	// may be the only thing holding on to it
-	JSValueProtect(scriptView.jsGlobalContext, jsObject);
+	JSValueProtect(scriptView.jsGlobalContext, self.jsObject);
 	
 	return NULL;
 }

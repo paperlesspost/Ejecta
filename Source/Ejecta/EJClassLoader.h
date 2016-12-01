@@ -22,7 +22,7 @@
 
 @interface EJClassLoader : NSObject
 
-@property (nonatomic, assign, readonly) JSClassRef jsConstructorClass;
+@property (nonatomic, assign) JSClassRef jsConstructorClass;
 @property (nonatomic, retain) NSMutableDictionary *classCache;
 
 - (EJLoadedJSClass *)getJSClass:(id)class;
@@ -37,6 +37,6 @@
 @interface EJLoadedJSClass : NSObject
 
 - (instancetype)initWithJSClass:(JSClassRef)jsClassp constantValues:(NSDictionary *)constantValuesp;
-@property (nonatomic, readonly) JSClassRef jsClass;
-@property (nonatomic, readonly) NSDictionary *constantValues;
+@property (nonatomic) JSClassRef jsClass;
+@property (nonatomic, retain) NSDictionary *constantValues;
 @end

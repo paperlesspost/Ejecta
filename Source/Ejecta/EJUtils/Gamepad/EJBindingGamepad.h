@@ -28,7 +28,6 @@ typedef NS_ENUM(unsigned int, kEJGamepadButtonMapping) {
 
 
 @interface EJBindingGamepad : EJBindingBase {
-	GCController *controller;
 	
 	NSUInteger index;
 	BOOL connected;
@@ -40,8 +39,7 @@ typedef NS_ENUM(unsigned int, kEJGamepadButtonMapping) {
 - (instancetype)initWithController:(GCController *)controller atIndex:(NSUInteger)index;
 - (void)disconnect;
 
-@property (readonly) JSObjectRef jsObject;
-@property (readonly) GCController *controller;
+@property (nonatomic, retain) GCController *controller;
 	
 @end
 

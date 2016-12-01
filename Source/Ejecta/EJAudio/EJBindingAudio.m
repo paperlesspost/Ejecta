@@ -52,7 +52,7 @@
 	
 	// Protect this Audio object from garbage collection, as its callback function
 	// may be the only thing holding on to it
-	JSValueProtect(scriptView.jsGlobalContext, jsObject);
+	JSValueProtect(self.scriptView.jsGlobalContext, self.jsObject);
 	
 	
 	EJNonRetainingProxy *proxy = [EJNonRetainingProxy proxyWithTarget:self];
@@ -105,7 +105,7 @@
 	[self triggerEvent:@"canplaythrough"];
 	[self triggerEvent:@"loadedmetadata"];
 	
-	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotectSafe(scriptView.jsGlobalContext, self.jsObject);
 }
 
 - (void)sourceDidFinishPlaying:(NSObject<EJAudioSource> *)source {

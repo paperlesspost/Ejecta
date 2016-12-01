@@ -2,15 +2,14 @@
 #import "EJBindingGamepadButton.h"
 
 @implementation EJBindingGamepad
-@synthesize controller;
 
 - (instancetype)initWithController:(GCController *)controllerp atIndex:(NSUInteger)indexp {
 	if( self = [super initWithContext:NULL argc:0 argv:NULL] ) {
-		controller = [controllerp retain];
+		_controller = [controllerp retain];
 		index = indexp;
 		connected = YES;
 		
-		controller.playerIndex = index;
+		_controller.playerIndex = index;
 	}
 	return self;
 }
@@ -24,7 +23,7 @@
 	JSValueProtect(scriptView.jsGlobalContext, obj);
 
 	// Initialize Axes - JS Array with Numbers
-	if( controller.extendedGamepad ) {
+	if( _controller.extendedGamepad ) {
 		int numAxes = 4;
 		JSValueRef axesValues[numAxes];
 		for( int i = 0; i < numAxes; i++ ) {
@@ -47,8 +46,8 @@
 	// Buttons unsupported by iOS: Select:8, Start:9, LeftStick:10, RightStick:11
 	
 	NSObject<EJControllerButtonInputProtocol> *mapping[kEJGamepadNumButtons] = {NULL};
-	if( controller.extendedGamepad ) {
-		GCExtendedGamepad *gamepad = controller.extendedGamepad;
+	if( _controller.extendedGamepad ) {
+		GCExtendedGamepad *gamepad = _controller.extendedGamepad;
 		mapping[kEJGamepadButtonA] = gamepad.buttonA;
 		mapping[kEJGamepadButtonB] = gamepad.buttonB;
 		mapping[kEJGamepadButtonX] = gamepad.buttonX;
@@ -62,8 +61,8 @@
 		mapping[kEJGamepadButtonLeft] = gamepad.dpad.left;
 		mapping[kEJGamepadButtonRight] = gamepad.dpad.right;
 	}
-	else if( controller.gamepad ) {
-		GCGamepad *gamepad = controller.gamepad;
+	else if( _controller.gamepad ) {
+		GCGamepad *gamepad = _controller.gamepad;
 		mapping[kEJGamepadButtonA] = gamepad.buttonA;
 		mapping[kEJGamepadButtonB] = gamepad.buttonB;
 		mapping[kEJGamepadButtonX] = gamepad.buttonX;
@@ -94,7 +93,7 @@
 	// the "controllerPausedHandler" callback on the controller. So we provide our own
 	// ButtonInput instance that conforms to the same protocol as GCControllerButtonInput.
 	
-	mapping[kEJGamepadButtonHome] = [[EJControllerButtonInputHome alloc] initWithController:controller];
+	mapping[kEJGamepadButtonHome] = [[EJControllerButtonInputHome alloc] initWithController:_controller];
 	
 	
 	JSValueRef buttonsValues[kEJGamepadNumButtons];
@@ -119,27 +118,24 @@
 
 - (void)disconnect {
 	connected = NO;
-	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotectSafe(scriptView.jsGlobalContext, self.jsObject);
 }
 
 - (void)dealloc {
 	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsAxes);
 	JSValueUnprotectSafe(scriptView.jsGlobalContext, jsButtons);
-	[controller release];
+	[_controller release];
 	
 	[super dealloc];
 }
 
-- (JSObjectRef)jsObject {
-	return jsObject;
-}
 
 EJ_BIND_GET(id, ctx) {
-	return NSStringToJSValue(ctx, controller.vendorName);
+	return NSStringToJSValue(ctx, _controller.vendorName);
 }
 
 EJ_BIND_GET(profile, ctx) {
-	if( controller.extendedGamepad ) {
+	if( _controller.extendedGamepad ) {
 		return NSStringToJSValue(ctx, @"extendedGamepad");
 	}
 	#if TARGET_OS_TV
@@ -170,8 +166,8 @@ EJ_BIND_GET(mapping, ctx) {
 }
 
 EJ_BIND_GET(axes, ctx) {
-	if( controller.extendedGamepad ) {
-		GCExtendedGamepad *gamepad = controller.extendedGamepad;
+	if( _controller.extendedGamepad ) {
+		GCExtendedGamepad *gamepad = _controller.extendedGamepad;
 		GCControllerDirectionPad *leftStick = gamepad.leftThumbstick;
 		GCControllerDirectionPad *rightStick = gamepad.rightThumbstick;
 		

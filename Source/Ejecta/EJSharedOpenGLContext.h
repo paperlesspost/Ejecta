@@ -17,14 +17,14 @@
 
 + (EJSharedOpenGLContext *)instance;
 
-@property (nonatomic, readonly) EJGLProgram2D *programFlat;
-@property (nonatomic, readonly) EJGLProgram2D *programTexture;
-@property (nonatomic, readonly) EJGLProgram2D *programAlphaTexture;
-@property (nonatomic, readonly) EJGLProgram2D *programPattern;
-@property (nonatomic, readonly) EJGLProgram2DRadialGradient *programRadialGradient;
+@property (nonatomic, retain) EJGLProgram2D *programFlat;
+@property (nonatomic, retain) EJGLProgram2D *programTexture;
+@property (nonatomic, retain) EJGLProgram2D *programAlphaTexture;
+@property (nonatomic, retain) EJGLProgram2D *programPattern;
+@property (nonatomic, retain) EJGLProgram2DRadialGradient *programRadialGradient;
 
-@property (nonatomic, readonly) EAGLContext *glContext2D;
-@property (nonatomic, readonly) EAGLSharegroup *glSharegroup;
-@property (nonatomic, readonly) NSMutableData *vertexBuffer;
+@property (nonatomic, retain) EAGLContext *glContext2D;
+@property (nonatomic, retain) EAGLSharegroup *glSharegroup;
+@property (nonatomic, retain) NSMutableData *vertexBuffer;
 
 @end

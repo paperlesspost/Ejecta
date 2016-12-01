@@ -5,13 +5,6 @@
 #import <objc/runtime.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface EJJavaScriptView ()
-
-@property (nonatomic, readwrite) EJSharedOpenGLContext *openGLContext;
-@property (nonatomic, readwrite) JSGlobalContextRef jsGlobalContext;
-@property (nonatomic, readwrite) NSTimeInterval startTime;
-@end
-
 
 // Block function callbacks
 JSValueRef EJBlockFunctionCallAsFunction(
@@ -173,6 +166,10 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
     
     
     [super dealloc];
+}
+
+- (BOOL)pauseOnEnterBackground {
+    return pauseOnEnterBackground;
 }
 
 - (void)setPauseOnEnterBackground:(BOOL)pauses {

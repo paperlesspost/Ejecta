@@ -16,34 +16,34 @@ static EJSharedOpenALManager *sharedOpenALManager;
 }
 
 - (void)endInterruption {
-	if (context) {
-		alcMakeContextCurrent(context);
-		alcProcessContext(context);
+	if (_context) {
+		alcMakeContextCurrent(_context);
+		alcProcessContext(_context);
 	}
 }
 
 - (NSMutableDictionary*)buffers {
-	if( !buffers ) {
+	if( !_buffers ) {
 		// Create a non-retaining Dictionary to hold the cached buffers
-		buffers = (NSMutableDictionary*)CFDictionaryCreateMutable(NULL, 8, &kCFCopyStringDictionaryKeyCallBacks, NULL);
+		_buffers = (NSMutableDictionary*)CFDictionaryCreateMutable(NULL, 8, &kCFCopyStringDictionaryKeyCallBacks, NULL);
 		
 		// Create the OpenAL device when .buffers is first accessed
-		device = alcOpenDevice(NULL);
-		if( device ) {
-			context = alcCreateContext( device, NULL );
-			alcMakeContextCurrent( context );
+		_device = alcOpenDevice(NULL);
+		if( _device ) {
+			_context = alcCreateContext( _device, NULL );
+			alcMakeContextCurrent( _context );
 		}
 	}
 	
-	return buffers;
+	return _buffers;
 }
 
 - (void)dealloc {
 	sharedOpenALManager = nil;
-	[buffers release];
+	[_buffers release];
 	
-	if( context ) { alcDestroyContext( context ); }
-	if( device ) { alcCloseDevice( device ); }
+	if( _context ) { alcDestroyContext( _context ); }
+	if( _device ) { alcCloseDevice( _device ); }
 	[super dealloc];
 }
 

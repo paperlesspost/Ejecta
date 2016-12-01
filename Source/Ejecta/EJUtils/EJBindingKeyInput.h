@@ -18,7 +18,7 @@
 - (void)keyInputDidDeleteBackwards:(EJKeyInputResponder*)keyInput;
 - (void)keyInputDidResignFirstResponderStatus:(EJKeyInputResponder*)keyInput;
 - (void)keyInputDidBecomeFirstResponder:(EJKeyInputResponder*)keyInput;
-@property (NS_NONATOMIC_IOSONLY, readonly) BOOL hasText;
+@property (NS_NONATOMIC_IOSONLY, assign) BOOL hasText;
 @end
 
 @interface EJKeyInputResponder : UIResponder <UIKeyInput>

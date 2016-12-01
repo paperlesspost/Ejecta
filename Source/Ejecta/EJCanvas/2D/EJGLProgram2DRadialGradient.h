@@ -3,11 +3,9 @@
 
 #import "EJGLProgram2D.h"
 
-@interface EJGLProgram2DRadialGradient : EJGLProgram2D {
-	GLuint inner, diff;
-}
+@interface EJGLProgram2DRadialGradient : EJGLProgram2D
 
-@property (nonatomic, readonly) GLuint inner;
-@property (nonatomic, readonly) GLuint diff;
+@property (nonatomic, assign) GLuint inner;
+@property (nonatomic, assign) GLuint diff;
 
 @end

@@ -4,7 +4,7 @@
 @implementation EJCanvasContext2DTexture
 
 - (void)dealloc {
-	[texture release];
+	[_texture release];
 	[super dealloc];
 }
 
@@ -24,12 +24,12 @@
 	
 	// Release previous texture if any, create the new texture and set it as
 	// the rendering target for this framebuffer
-	[texture release];
-	texture = [[EJTexture alloc] initAsRenderTargetWithWidth:newWidth height:newHeight
+	[_texture release];
+	_texture = [[EJTexture alloc] initAsRenderTargetWithWidth:newWidth height:newHeight
 		fbo:self.viewFrameBuffer];
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, self.viewFrameBuffer);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.textureId, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _texture.textureId, 0);
 	
 	[self resetFramebuffer];
 }
@@ -57,7 +57,7 @@
 	
 	// Just use the framebuffer texture directly
 	else {
-		return texture;
+		return _texture;
 	}
 }
 

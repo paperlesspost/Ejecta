@@ -21,7 +21,7 @@
 - (instancetype)initWithPath:(NSString *)pathp;
 - (void*)getAudioDataWithURL:(NSURL *)url NS_RETURNS_INNER_POINTER;
 
-@property (readonly) unsigned int bufferId;
-@property (readonly) float duration;
+@property (assign) unsigned int bufferId;
+@property (assign) float duration;
 
 @end

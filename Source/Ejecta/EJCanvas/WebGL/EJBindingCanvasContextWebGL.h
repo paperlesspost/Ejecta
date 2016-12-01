@@ -70,6 +70,6 @@ typedef struct {
 - (void)addVertexArray:(GLuint)vertexArray obj:(JSObjectRef)objp;
 - (void)deleteVertexArray:(GLuint)vertexArray;
 
-@property (readonly, nonatomic) EJCanvasContextWebGL *renderingContext;
+@property (nonatomic, retain) EJCanvasContextWebGL *renderingContext;
 
 @end

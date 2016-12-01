@@ -25,9 +25,9 @@ enum {
 	callback:(JSObjectRef)callbackp errback:(JSObjectRef)errbackp
 	oneShot:(BOOL)oneShotp;
 
-@property (readonly) JSObjectRef callback;
-@property (readonly) JSObjectRef errback;
-@property (readonly) BOOL oneShot;
+@property (assign) JSObjectRef callback;
+@property (assign) JSObjectRef errback;
+@property (assign) BOOL oneShot;
 
 @end
 

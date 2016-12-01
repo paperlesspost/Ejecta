@@ -32,7 +32,6 @@ typedef struct {
 	float r1, r2;
 	
 	NSMutableArray *colorStops;
-	EJTexture *texture;
 }
 
 - (instancetype)initLinearGradientWithP1:(EJVector2)p1 p2:(EJVector2)p2;
@@ -42,11 +41,11 @@ typedef struct {
 - (void)rebuild;
 - (NSData *)getPixelsWithWidth:(int)width forSortedStops:(NSArray *)stops;
 
-@property (readonly, nonatomic) EJCanvasGradientType type;
-@property (readonly, nonatomic) EJTexture *texture;
-@property (readonly, nonatomic) EJVector2 p1;
-@property (readonly, nonatomic) EJVector2 p2;
-@property (readonly, nonatomic) float r1;
-@property (readonly, nonatomic) float r2;
+@property (assign, nonatomic) EJCanvasGradientType type;
+@property (retain, nonatomic) EJTexture *texture;
+@property (assign, nonatomic) EJVector2 p1;
+@property (assign, nonatomic) EJVector2 p2;
+@property (assign, nonatomic) float r1;
+@property (assign, nonatomic) float r2;
 
 @end

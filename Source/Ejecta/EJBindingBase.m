@@ -4,7 +4,6 @@
 
 
 @implementation EJBindingBase
-@synthesize scriptView;
 
 - (instancetype)initWithContext:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv {
 	if( self = [super init] ) {
@@ -12,9 +11,34 @@
 	return self;
 }
 
+#pragma mark -
+#pragma mark - Setter / Getter
+
+- (void)setScriptView:(EJJavaScriptView *)newValue {
+    
+    if (scriptView != newValue) {
+        if (newValue) {
+            [scriptView release];
+            scriptView = [newValue retain];
+        }
+    }
+}
+
+- (EJJavaScriptView *)scriptView {
+    
+    if (!scriptView) {
+        scriptView = [[EJJavaScriptView alloc] initWithFrame:CGRectZero];
+    }
+    
+    return scriptView;
+}
+
+#pragma mark -
+
+
 - (void)createWithJSObject:(JSObjectRef)obj scriptView:(EJJavaScriptView *)view {
-	jsObject = obj;
-	scriptView = view;
+	_jsObject = obj;
+    [self setScriptView:view];
 }
 
 - (void)prepareGarbageCollection {

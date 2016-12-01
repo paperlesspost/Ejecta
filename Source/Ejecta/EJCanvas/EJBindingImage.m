@@ -4,13 +4,6 @@
 #import "EJTexture.h"
 
 
-@interface EJBindingImage ()
-
-@property (nonatomic, retain, readwrite) EJTexture *texture;
-
-@end
-
-
 @implementation EJBindingImage
 
 
@@ -22,7 +15,7 @@
     
 	// Protect this image object from garbage collection, as its callback function
 	// may be the only thing holding on to it
-	JSValueProtect(scriptView.jsGlobalContext, jsObject);
+	JSValueProtect(scriptView.jsGlobalContext, self.jsObject);
 	
 	NSString *fullPath;
 
@@ -79,7 +72,7 @@
 		[self triggerEvent:@"error"];
 	}
 	
-	JSValueUnprotect(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotect(scriptView.jsGlobalContext, self.jsObject);
 }
 
 - (void)setTexture:(EJTexture *)texturep path:(NSString *)pathp {

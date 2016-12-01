@@ -63,11 +63,6 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 	return [instance isKindOfClass:classWithScriptView->class];
 }
 
-
-@interface EJClassLoader ()
-@property (nonatomic, readwrite) JSClassRef jsConstructorClass;
-@end
-
 @implementation EJClassLoader
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView name:(NSString *)name {
@@ -220,10 +215,6 @@ bool EJConstructorHasInstance(JSContextRef ctx, JSObjectRef constructor, JSValue
 
 @end
 
-@interface EJLoadedJSClass ()
-@property (nonatomic, readwrite) JSClassRef jsClass;
-@property (nonatomic, readwrite) NSDictionary *constantValues;
-@end
 
 @implementation EJLoadedJSClass
 

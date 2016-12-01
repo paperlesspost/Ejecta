@@ -6,16 +6,14 @@
 #import <OpenAL/al.h>
 #import <OpenAL/alc.h>
 
-@interface EJSharedOpenALManager : NSObject {
-	ALCcontext *context;
-	ALCdevice *device;
-	NSMutableDictionary *buffers;
-}
+@interface EJSharedOpenALManager : NSObject
 
 + (EJSharedOpenALManager *)instance;
 - (void)beginInterruption;
 - (void)endInterruption;
 
-@property (readonly, nonatomic) NSMutableDictionary *buffers;
+@property (nonatomic, assign) ALCcontext *context;
+@property (nonatomic, assign) ALCdevice *device;
+@property (retain, nonatomic) NSMutableDictionary *buffers;
 
 @end

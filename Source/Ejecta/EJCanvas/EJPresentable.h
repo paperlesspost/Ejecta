@@ -9,6 +9,6 @@
 - (void)finish;
 
 @property (nonatomic) CGRect style;
-@property (nonatomic, readonly) UIView *view;
+@property (nonatomic, assign) UIView *view;
 
 @end

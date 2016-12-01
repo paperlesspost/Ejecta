@@ -15,7 +15,6 @@
 	GLuint depthStencilBuffer;
 	
 	GLint bufferWidth, bufferHeight;
-	__unsafe_unretained EJJavaScriptView *scriptView;
 }
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptView width:(short)width height:(short)height;
@@ -27,5 +26,7 @@
 - (void)clear;
 
 @property (nonatomic) BOOL needsPresenting;
+@property (nonatomic, retain) EJJavaScriptView *scriptView;
+
 
 @end

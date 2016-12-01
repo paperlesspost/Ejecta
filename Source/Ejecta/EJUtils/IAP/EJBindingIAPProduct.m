@@ -31,12 +31,12 @@
 	JSValueRef jsTransaction = [EJBindingIAPTransaction
 		createJSObjectWithContext:ctx scriptView:scriptView transaction:transaction];
 	
-	[scriptView invokeCallback:callback thisObject:jsObject
+	[self.scriptView invokeCallback:callback thisObject:self.jsObject
 		argc:2 argv:(JSValueRef[]){jsError, jsTransaction}];
 	
 	
 	JSValueUnprotect(scriptView.jsGlobalContext, callback);
-	JSValueUnprotect(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotect(scriptView.jsGlobalContext, self.jsObject);
 	callback = NULL;
 }
 
@@ -103,7 +103,7 @@ EJ_BIND_FUNCTION(purchase, ctx, argc, argv) {
 	
 	callback = JSValueToObject(ctx, argv[1], NULL);
 	JSValueProtect(ctx, callback);
-	JSValueProtect(ctx, jsObject);
+	JSValueProtect(ctx, self.jsObject);
 	return NULL;
 }
 

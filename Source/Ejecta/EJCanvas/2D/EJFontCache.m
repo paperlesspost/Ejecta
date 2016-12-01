@@ -15,7 +15,7 @@
 
 + (instancetype) keyWithDescriptor:(EJFontDescriptor *)descriptor lineWidth:(float)lineWidth contentScale:(float)contentScale;
 
-@property (readonly) int normalizedContentScale;
+@property (nonatomic, assign) int normalizedContentScale;
 
 @end
 

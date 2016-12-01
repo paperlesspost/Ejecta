@@ -45,7 +45,7 @@ typedef NS_ENUM(unsigned int, EJPathFillRule) {
 }
 
 @property (nonatomic,assign) CGAffineTransform transform;
-@property (readonly) EJPathFillRule fillRule;
+@property (assign) EJPathFillRule fillRule;
 
 - (void)push:(EJVector2)v;
 - (void)reset;

@@ -52,6 +52,7 @@
     
 	// Public for fast access in bound functions
 	@public JSValueRef jsUndefined;
+    BOOL pauseOnEnterBackground;
 }
 
 @property (nonatomic, retain) CADisplayLink *displayLink;
@@ -73,14 +74,13 @@
 @property (nonatomic, assign) CGSize oldSize;
 @property (nonatomic, copy) NSString *appFolder;
 
-@property (nonatomic, assign) BOOL pauseOnEnterBackground;
 @property (nonatomic, assign, getter = isPaused) BOOL paused; // Pauses drawing/updating of the JSView
 @property (nonatomic, assign) BOOL hasScreenCanvas;
 @property (nonatomic, assign) BOOL exitOnMenuPress;
-@property (nonatomic, readonly) NSTimeInterval startTime;
+@property (nonatomic, assign) NSTimeInterval startTime;
 
-@property (nonatomic, readonly) JSGlobalContextRef jsGlobalContext;
-@property (nonatomic, readonly) EJSharedOpenGLContext *openGLContext;
+@property (nonatomic, assign) JSGlobalContextRef jsGlobalContext;
+@property (nonatomic, retain) EJSharedOpenGLContext *openGLContext;
 
 //@property (nonatomic, retain) NSObject<EJWindowEventsDelegate> *windowEventsDelegate;
 //@property (nonatomic, retain) NSObject<EJTouchDelegate> *touchDelegate;
@@ -91,6 +91,9 @@
 //
 //@property (nonatomic, retain) NSOperationQueue *backgroundQueue;
 //@property (nonatomic, retain) EJClassLoader *classLoader;
+
+- (void)setPauseOnEnterBackground:(BOOL)pauses;
+- (BOOL)pauseOnEnterBackground;
 
 - (instancetype)initWithFrame:(CGRect)frame appFolder:(NSString *)folder;
 

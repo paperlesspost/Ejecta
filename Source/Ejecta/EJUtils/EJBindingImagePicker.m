@@ -78,7 +78,7 @@ EJ_BIND_FUNCTION(getPicture, ctx, argc, argv) {
 	
 	// Protect this picker object from garbage collection, as the callback function
 	// may be the only thing holding on to it
-	JSValueProtect(scriptView.jsGlobalContext, jsObject);
+	JSValueProtect(scriptView.jsGlobalContext, self.jsObject);
 	
 	// open it
 	[scriptView.window.rootViewController presentViewController:picker animated:YES completion:nil];
@@ -149,7 +149,7 @@ EJ_BIND_FUNCTION(isSourceTypeAvailable, ctx, argc, argv) {
 
 // success callback
 - (void)successCallback:(JSValueRef[])params {
-	[scriptView invokeCallback:callback thisObject:jsObject argc:2 argv:params];
+	[scriptView invokeCallback:callback thisObject:self.jsObject argc:2 argv:params];
 }
 
 
@@ -157,7 +157,7 @@ EJ_BIND_FUNCTION(isSourceTypeAvailable, ctx, argc, argv) {
 - (void)errorCallback:(NSString *)message {
 	JSContextRef ctx = scriptView.jsGlobalContext;
 	JSValueRef params[] = { NSStringToJSValue(ctx, message), NULL };
-	[scriptView invokeCallback:callback thisObject:jsObject argc:1 argv:params];
+	[scriptView invokeCallback:callback thisObject:self.jsObject argc:1 argv:params];
 }
 
 
@@ -170,7 +170,7 @@ EJ_BIND_FUNCTION(isSourceTypeAvailable, ctx, argc, argv) {
 	JSValueUnprotectSafe(ctx, callback);
 	[picker release];
 	NSLog(@"picker released");
-	JSValueUnprotect(scriptView.jsGlobalContext, jsObject);
+	JSValueUnprotect(scriptView.jsGlobalContext, self.jsObject);
 }
 
 

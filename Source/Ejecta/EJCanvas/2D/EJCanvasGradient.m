@@ -31,7 +31,7 @@
 }
 
 - (void)dealloc {
-	[texture release];
+	[_texture release];
 	[colorStops release];
 	[super dealloc];
 }
@@ -49,16 +49,16 @@
 	[colorStops addObject:[NSValue value:&stop withObjCType:@encode(EJCanvasGradientColorStop)]];
 	
 	// Release current texture; it's invalid now
-	[texture release];
-	texture = NULL;
+	[_texture release];
+	_texture = NULL;
 }
 
 - (EJTexture *)texture {
-	if( !texture ) {
+	if( !_texture ) {
 		[self rebuild];
 	}
 	
-	return texture;
+	return _texture;
 }
 
 - (void)rebuild {
@@ -75,11 +75,11 @@
 	NSData *pixels = [self getPixelsWithWidth:EJ_CANVAS_GRADIENT_WIDTH forSortedStops:sortedStops];
 	
 	// Create or update Texture
-	if( !texture ) {
-		texture = [[EJTexture alloc] initWithWidth:EJ_CANVAS_GRADIENT_WIDTH height:1 pixels:pixels];
+	if( !_texture ) {
+		_texture = [[EJTexture alloc] initWithWidth:EJ_CANVAS_GRADIENT_WIDTH height:1 pixels:pixels];
 	}
 	else {
-		[texture updateWithPixels:pixels atX:0 y:0 width:EJ_CANVAS_GRADIENT_WIDTH height:1];
+		[_texture updateWithPixels:pixels atX:0 y:0 width:EJ_CANVAS_GRADIENT_WIDTH height:1];
 	}
 }
 

@@ -239,11 +239,11 @@ EJ_BIND_FUNCTION(getContext, ctx, argc, argv) {
 	// Attach the canvas to the context and the context to the canvas. We do this directly with the js object's
 	// properties instead of using a JS_GET function, because we can't resolve the cyclic reference.
 	JSStringRef canvasName = JSStringCreateWithUTF8CString("canvas");
- 	JSObjectSetProperty(ctx, jsCanvasContext, canvasName, jsObject, kJSPropertyAttributeReadOnly, NULL);
+ 	JSObjectSetProperty(ctx, jsCanvasContext, canvasName, self.jsObject, kJSPropertyAttributeReadOnly, NULL);
  	JSStringRelease(canvasName);
 
 	JSStringRef contextName = JSStringCreateWithUTF8CString("__currentContext");
-	JSObjectSetProperty(ctx, jsObject, contextName, jsCanvasContext, kJSPropertyAttributeDontEnum, NULL);
+	JSObjectSetProperty(ctx, self.jsObject, contextName, jsCanvasContext, kJSPropertyAttributeDontEnum, NULL);
 	JSStringRelease(contextName);
 
 	return jsCanvasContext;

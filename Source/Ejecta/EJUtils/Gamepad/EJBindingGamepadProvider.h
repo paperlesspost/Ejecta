@@ -8,7 +8,9 @@
 
 #define EJ_GAMEPAD_NUM_DEVICES 4
 
-@interface EJBindingGamepadProvider : EJBindingEventedBase {
-	NSMutableArray *gamepadBindings;
-}
+@interface EJBindingGamepadProvider : EJBindingEventedBase
+
+@property (nonatomic, retain) NSMutableArray *gamepadBindings;
+
+
 @end

@@ -47,6 +47,6 @@ typedef NS_ENUM(unsigned int, EJCanvasImageRendering) {
 @property (nonatomic) float styleTop;
 @property (nonatomic) float styleWidth;
 @property (nonatomic) float styleHeight;
-@property (readonly, nonatomic) EJTexture *texture;
+@property (nonatomic, retain) EJTexture *texture;
 
 @end

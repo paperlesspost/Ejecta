@@ -8,15 +8,16 @@
 
 - (instancetype)initWithScriptView:(EJJavaScriptView *)scriptViewp width:(short)widthp height:(short)heightp {
 	if( self = [super init] ) {
-		scriptView = scriptViewp;
-		
+        
+        [self setScriptView:scriptViewp];
+        
 		// Flush the previous context - if any - before creating a new one
 		if( [EAGLContext currentContext] ) {
 			glFlush();
 		}
 		
 		self.glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2
-			sharegroup:scriptView.openGLContext.glSharegroup];
+			sharegroup:self.scriptView.openGLContext.glSharegroup];
 		
 		bufferWidth = self.width = widthp;
 		bufferHeight = self.height = heightp;

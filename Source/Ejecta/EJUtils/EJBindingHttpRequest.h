@@ -40,6 +40,6 @@ typedef NS_ENUM(unsigned int, EJHttpRequestState) {
 
 - (void)clearConnection;
 - (void)clearRequest;
-@property (NS_NONATOMIC_IOSONLY, getter=getResponseText, readonly, copy) NSString *responseText;
+@property (NS_NONATOMIC_IOSONLY, getter=getResponseText, copy) NSString *responseText;
 
 @end

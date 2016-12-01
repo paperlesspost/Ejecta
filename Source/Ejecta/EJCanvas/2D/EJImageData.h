@@ -4,16 +4,13 @@
 #import <Foundation/Foundation.h>
 #import "EJTexture.h"
 
-@interface EJImageData : NSObject {
-	int width, height;
-	NSMutableData *pixels;
-}
+@interface EJImageData : NSObject
 
 - (instancetype)initWithWidth:(int)width height:(int)height pixels:(NSMutableData *)pixels;
 
-@property (readonly, nonatomic) EJTexture *texture;
-@property (readonly, nonatomic) int width;
-@property (readonly, nonatomic) int height;
-@property (readonly, nonatomic) NSMutableData *pixels;
+@property (retain, nonatomic) EJTexture *texture;
+@property (assign, nonatomic) int width;
+@property (assign, nonatomic) int height;
+@property (retain, nonatomic) NSMutableData *pixels;
 
 @end

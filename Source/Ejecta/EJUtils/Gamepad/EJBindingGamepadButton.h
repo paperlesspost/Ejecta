@@ -21,8 +21,8 @@
 
 // The Protocl GCControllerButtonInput and our own ButtonInput class conform to
 @protocol EJControllerButtonInputProtocol
-@property (nonatomic, readonly) float value;
-@property (nonatomic, readonly, getter = isPressed) BOOL pressed;
+@property (nonatomic, assign) float value;
+@property (nonatomic, assign, getter = isPressed) BOOL pressed;
 @end
 
 
@@ -38,8 +38,8 @@
 	NSTimeInterval lastPressed;
 }
 - (instancetype)initWithController:(GCController *)controller;
-@property (nonatomic, readonly) float value;
-@property (nonatomic, readonly, getter = isPressed) BOOL pressed;
+@property (nonatomic, assign) float value;
+@property (nonatomic, getter = isPressed) BOOL pressed;
 @end
 
 

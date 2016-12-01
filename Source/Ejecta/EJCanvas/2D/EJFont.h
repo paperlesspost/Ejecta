@@ -52,8 +52,8 @@ typedef struct {
 }
 + (instancetype)descriptorWithName:(NSString *)name size:(float)size;
 
-@property (readonly, nonatomic) NSString *name;
-@property (readonly, nonatomic) float size;
+@property (copy, nonatomic) NSString *name;
+@property (assign, nonatomic) float size;
 
 @end
 
@@ -66,9 +66,9 @@ typedef struct {
 }
 
 - (instancetype)initWithGlyphLayout:(NSData *)layoutp glyphCount:(NSInteger)count metrics:(EJTextMetrics)metrics;
-@property (readonly, nonatomic) EJFontGlyphLayout *layout;
-@property (readonly, nonatomic) NSInteger glyphCount;
-@property (readonly, nonatomic) EJTextMetrics metrics;
+@property (assign, nonatomic) EJFontGlyphLayout *layout;
+@property (assign, nonatomic) NSInteger glyphCount;
+@property (assign, nonatomic) EJTextMetrics metrics;
 
 @end
 
