@@ -22,9 +22,10 @@ Pod::Spec.new do |s|
   s.subspec 'Library' do |os|
     os.source_files = 'Source/Ejecta/**/*.{h,m,mm}', 'Source/lib/SocketRocket/SRWebSocket.{h,m}'
 #    os.vendored_frameworks = 'Source/lib/JavaScriptCore.framework'
-    os.public_header_files = 'Source/Ejecta/**/*.h'
-    os.private_header_files = 'Source/Ejecta/EJCanvas/2D/EJCanvasShaders.h', 'Source/lib/SocketRocket/SRWebSocket.h'
+    os.public_header_files = 'Source/Ejecta/**/*.h', 'Source/lib/SocketRocket/SRWebSocket.h'
+    os.private_header_files = 'Source/Ejecta/EJCanvas/2D/EJCanvasShaders.h'
     os.library = 'stdc++', 'icucore'
+
     s.pod_target_xcconfig = {
       'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++98',
       'CLANG_CXX_LIBRARY' => 'libc++',
