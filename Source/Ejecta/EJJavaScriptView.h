@@ -1,3 +1,14 @@
+// The EJJavaScriptView is the main hub for everything that happens in Ejecta.
+// Its a subclass of UIView, receives all input (touch, motion) and other events
+// and distributes them to other classes.
+
+// The JavaScriptView hosts the JSContext that is shared by Canvases and other
+// objects running in that view. It provides the main functionality to execute
+// JavaScript source code and handles updating the "run loop".
+
+// In theory, it should be possible to run several of these views in parallel,
+// should your app require it - similar to having separate tabs in a browser. 
+
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -10,7 +21,7 @@
 #import "EJSharedOpenGLContext.h"
 #import "EJNonRetainingProxy.h"
 
-#define EJECTA_VERSION @"2.0"
+#define EJECTA_VERSION @"2.1"
 #define EJECTA_DEFAULT_APP_FOLDER @"App/"
 
 #define EJECTA_BOOT_JS @"../Ejecta.js"
@@ -20,7 +31,8 @@
 
 
 @protocol EJTouchDelegate
-- (void)triggerEvent:(NSString *)name all:(NSSet *)all changed:(NSSet *)changed remaining:(NSSet *)remaining;
+- (void)triggerEvent:(NSString *)name timestamp:(NSTimeInterval)timestamp
+	all:(NSSet *)all changed:(NSSet *)changed remaining:(NSSet *)remaining;
 @end
 
 @protocol EJDeviceMotionDelegate
@@ -52,7 +64,6 @@
 	EJClassLoader *classLoader;
 
 	EJTimerCollection *timers;
-	NSTimeInterval startTime;
 	
 	EJSharedOpenGLContext *openGLContext;
 	EJSharedTextureCache *textureCache;

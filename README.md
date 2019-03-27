@@ -1,13 +1,30 @@
 # Ejecta
 
-Ejecta is a fast, open source JavaScript, Canvas & Audio implementation for iOS. Think of it as a Browser that can only display a Canvas element.
+Ejecta is a fast, open source JavaScript, Canvas & Audio implementation for iOS (iPhone, iPod Touch, iPad) and tvOS (Apple TV). Think of it as a Browser that can only display a Canvas element.
 
 More info & Documentation: http://impactjs.com/ejecta
 
 Ejecta is published under the [MIT Open Source License](http://opensource.org/licenses/mit-license.php).
 
 
+## Quick Start
+
+1. Create a folder called `App` within this Xcode project
+2. Copy your canvas application into the `App` folder
+3. Ensure you have at least 1 file named `index.js`
+4. Build the Xcode project
+
+For an example application, copy `./index.js` into the `App` folder.
+
 ## Recent Breaking Changes
+
+### 2016-06-23 - Typed Arrays are fast again!
+
+The JSC version that comes with iOS 10 provides a new API to read and write Typed Arrays in native code. The workaround from previous versions is not needed anymore
+
+### 2016-06-23 - Removed iAds
+
+Apple will discontinue its own iAd Network on June 30. The iAd-Banner API has been removed from Ejecta.
 
 ### 2015-12-12 - Use OS provided JavaScriptCore library 
 
@@ -61,8 +78,7 @@ ctx.scale( window.devicePixelRatio, window.devicePixelRatio );
 
 ## WebGL Support
 
-Recently WebGL support has been merged into the main branch. A huge thanks goes to @vikerman - he did most of the grunt work of the WebGL implementation. To have the WebGL alongside Canvas2D, I modified the old 2D implementation to use OpenGL ES2 instead of ES1, just like WebGL itself. 
-
+Ejecta supports WebGL out of the box, alongside with Canvas2D. You can create WebGL textures from Canvas2D instances and also draw WebGL Canvases into 2D Contexts as images. Note that you can't change the "mode" (2D or WebGL) of a Context after it has been created.
 
 
 ## Three.js on iOS with Ejecta 
@@ -73,14 +89,6 @@ Ejecta always creates the screen Canvas element for you. You have to hand this C
 renderer = new THREE.WebGLRenderer( {canvas: document.getElementById('canvas')} );
 ```
 
-
-## How to use
-
-1. Create a folder called `App` within this XCode project
-2. Copy your canvas application into the `App` folder
-3. Ensure you have at least 1 file named `index.js`
-4. Build the XCode project
-
-For an example application, copy `./index.js` into the `App` folder. An example App folder with the Three.js [Walt CubeMap demo](http://mrdoob.github.com/three.js/examples/webgl_materials_cubemap.html) can be found here:
+An example App folder with the Three.js [Walt CubeMap demo](http://mrdoob.github.com/three.js/examples/webgl_materials_cubemap.html) can be found here:
 
 http://phoboslab.org/files/Ejecta-ThreeJS-CubeMap.zip

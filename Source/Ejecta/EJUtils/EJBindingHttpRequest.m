@@ -1,5 +1,4 @@
 #import "EJBindingHttpRequest.h"
-#import "EJConvertTypedArray.h"
 #import "EJJavaScriptView.h"
 
 @implementation EJBindingHttpRequest
@@ -268,9 +267,11 @@ EJ_BIND_FUNCTION(send, ctx, argc, argv) {
 	) {
 		if(
 			JSValueIsObject(ctx, argv[0]) &&
-			JSObjectGetTypedArrayType(ctx, (JSObjectRef)argv[0]) != kJSTypedArrayTypeNone
+			JSValueGetTypedArrayType(ctx, argv[0], NULL) != kJSTypedArrayTypeNone
 		) {
-			request.HTTPBody = JSObjectGetTypedArrayData(ctx, (JSObjectRef)argv[0]);
+			size_t length = 0;
+			void *data = JSValueGetTypedArrayPtr(ctx, argv[0], &length);
+			request.HTTPBody = [NSData dataWithBytes:data length:length];
 		}
 		else {
 			NSString *requestBody = JSValueToNSString( ctx, argv[0] );
@@ -281,22 +282,38 @@ EJ_BIND_FUNCTION(send, ctx, argc, argv) {
 	if( timeout ) {
 		NSTimeInterval timeoutSeconds = (float)timeout/1000.0f;
 		[request setTimeoutInterval:timeoutSeconds];
-	}	
+	}
 	
 	NSLog(@"XHR: %@ %@", method, url);
 	
-	if( !async ) {
-		NSLog(@"XHR: Warning, synchronous requests are not supported. The request will run asynchronously.");
+	[self triggerEvent:@"loadstart"];
+	state = kEJHttpRequestStateLoading;
+	
+	if( async ) {
+		session = [[NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration
+			delegate:self delegateQueue:NSOperationQueue.mainQueue] retain];
+		[[session dataTaskWithRequest:request] resume];
+	}
+	else {
+		// For synchronous requests use a semaphore to block the thread until the request is finished
+		dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+		
+		session = [NSURLSession.sharedSession retain];
+		NSURLSessionTask *task = [session dataTaskWithRequest:request
+			completionHandler:^(NSData *data, NSURLResponse *res, NSError *error) {
+				if (data) {
+					responseBody = [[NSMutableData alloc] initWithData:data];
+				}
+				dispatch_semaphore_signal(semaphore);
+			}];
+		[task resume];
+		
+		dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+		
+		
+		[self URLSession:session task:task didCompleteWithError:task.error];
 	}
 	
-	[self triggerEvent:@"loadstart"];
-	
-	state = kEJHttpRequestStateLoading;
-	NSURLSessionConfiguration *configuration = NSURLSessionConfiguration.defaultSessionConfiguration;
-	
-	session = [[NSURLSession sessionWithConfiguration:configuration
-		delegate:self delegateQueue:NSOperationQueue.mainQueue] retain];
-	[[session dataTaskWithRequest:request] resume];
 	[request release];
 	
 	// Protect this request object from garbage collection, as its callback functions
@@ -314,7 +331,9 @@ EJ_BIND_GET(response, ctx) {
 	if( !response || !responseBody ) { return JSValueMakeNull(ctx); }
 	
 	if( type == kEJHttpRequestTypeArrayBuffer ) {
-		return JSObjectMakeTypedArrayWithData(ctx, kJSTypedArrayTypeArrayBuffer, responseBody);
+		JSObjectRef array = JSObjectMakeTypedArray(ctx, kJSTypedArrayTypeUint8Array, responseBody.length, NULL);
+		memcpy(JSObjectGetTypedArrayBytesPtr(ctx, array, NULL), responseBody.bytes, responseBody.length);
+		return JSObjectGetTypedArrayBuffer(ctx, array, NULL);
 	}
 	
 	

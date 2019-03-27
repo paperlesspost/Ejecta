@@ -2,8 +2,8 @@
 #import "EJTimer.h"
 #import "EJBindingBase.h"
 #import "EJClassLoader.h"
-#import "EJConvertTypedArray.h"
 #import <objc/runtime.h>
+#import <AVFoundation/AVFoundation.h>
 
 
 // Block function callbacks
@@ -58,6 +58,7 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 }
 
 -(void)awakeFromNib {
+	[super awakeFromNib];
     [self setupWithAppFolder:EJECTA_DEFAULT_APP_FOLDER];
     [super awakeFromNib];
 }
@@ -83,12 +84,10 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
     backgroundQueue.maxConcurrentOperationCount = 1;
 
     timers = [[EJTimerCollection alloc] initWithScriptView:self];
-	startTime = NSDate.timeIntervalSinceReferenceDate;
-
+    
     displayLink = [[CADisplayLink displayLinkWithTarget:proxy selector:@selector(run:)] retain];
-    [displayLink setFrameInterval:1];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-
+    [displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+    
     // Create the global JS context in its own group, so it can be released properly
     jsGlobalContext = JSGlobalContextCreateInGroup(NULL, NULL);
     jsUndefined = JSValueMakeUndefined(jsGlobalContext);
@@ -96,17 +95,14 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 
     // Attach all native class constructors to 'Ejecta'
     classLoader = [[EJClassLoader alloc] initWithScriptView:self name:@"Ejecta"];
-
-	// Prepare Typed Array clusterfuck
-	JSContextPrepareTypedArrayAPI(jsGlobalContext);
-
-
+	
+    
     // Retain the caches here, so even if they're currently unused in JavaScript,
     // they will persist until the last scriptView is released
-    textureCache = [[EJSharedTextureCache instance] retain];
-    openALManager = [[EJSharedOpenALManager instance] retain];
-    openGLContext = [[EJSharedOpenGLContext instance] retain];
-
+    textureCache = [EJSharedTextureCache.instance retain];
+    openALManager = [EJSharedOpenALManager.instance retain];
+    openGLContext = [EJSharedOpenGLContext.instance retain];
+    
     // Create the OpenGL context for Canvas2D
     glCurrentContext = openGLContext.glContext2D;
     [EAGLContext setCurrentContext:glCurrentContext];
@@ -221,7 +217,7 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 - (NSString *)pathForResource:(NSString *)path {
 	char specialPathName[16];
 	if( sscanf(path.UTF8String, "${%15[^}]", specialPathName) ) {
-		NSString *searchPath;
+		NSString *searchPath = nil;
 		if( strcmp(specialPathName, "Documents") == 0 ) {
 			searchPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 		}
@@ -265,8 +261,8 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 
 	JSStringRef scriptJS = JSStringCreateWithCFString((CFStringRef)script);
 	JSStringRef sourceURLJS = NULL;
-
-	if( [sourceURL length] > 0 ) {
+    
+	if( sourceURL.length > 0 ) {
 		sourceURLJS = JSStringCreateWithCFString((CFStringRef)sourceURL);
 	}
 
@@ -375,13 +371,29 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 	return obj;
 }
 
+- (JSObjectRef)createFunctionWithBlock:(JSValueRef (^)(JSContextRef ctx, size_t argc, const JSValueRef argv[]))block {
+	if( !jsBlockFunctionClass ) {
+		JSClassDefinition blockFunctionClassDef = kJSClassDefinitionEmpty;
+		blockFunctionClassDef.callAsFunction = EJBlockFunctionCallAsFunction;
+		blockFunctionClassDef.finalize = EJBlockFunctionFinalize;
+		jsBlockFunctionClass = JSClassCreate(&blockFunctionClassDef);
+	}
+	
+	return JSObjectMake( jsGlobalContext, jsBlockFunctionClass, (void *)Block_copy(block) );
+}
+
 
 #pragma mark -
 #pragma mark Run loop
 
 - (void)run:(CADisplayLink *)sender {
 	if(isPaused) { return; }
-
+	
+	// Check for lost gl context before invoking any JS calls
+	if( glCurrentContext && EAGLContext.currentContext != glCurrentContext ) {
+		EAGLContext.currentContext = glCurrentContext;
+	}
+	
 	// We rather poll for device motion updates at the beginning of each frame instead of
 	// spamming out updates that will never be seen.
 	[deviceMotionDelegate triggerDeviceMotionEvents];
@@ -399,8 +411,12 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 	if( isPaused ) { return; }
 
 	[windowEventsDelegate pause];
-	[displayLink removeFromRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+	displayLink.paused = YES;
 	[screenRenderingContext finish];
+
+	[AVAudioSession.sharedInstance setActive:NO error:NULL];
+	[openALManager beginInterruption];
+	
 	isPaused = true;
 }
 
@@ -409,7 +425,11 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 
 	[windowEventsDelegate resume];
 	[EAGLContext setCurrentContext:glCurrentContext];
-	[displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+	displayLink.paused = NO;
+
+	[AVAudioSession.sharedInstance setActive:YES error:NULL];
+	[openALManager endInterruption];
+	
 	isPaused = false;
 }
 
@@ -443,14 +463,16 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 #pragma mark Touch handlers
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	[touchDelegate triggerEvent:@"touchstart" all:event.allTouches changed:touches remaining:event.allTouches];
+	[touchDelegate triggerEvent:@"touchstart" timestamp:event.timestamp
+		all:event.allTouches changed:touches remaining:event.allTouches];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	NSMutableSet *remaining = [event.allTouches mutableCopy];
 	[remaining minusSet:touches];
-
-	[touchDelegate triggerEvent:@"touchend" all:event.allTouches changed:touches remaining:remaining];
+	
+	[touchDelegate triggerEvent:@"touchend" timestamp:event.timestamp
+		all:event.allTouches changed:touches remaining:remaining];
 	[remaining release];
 }
 
@@ -459,7 +481,8 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-	[touchDelegate triggerEvent:@"touchmove" all:event.allTouches changed:touches remaining:event.allTouches];
+	[touchDelegate triggerEvent:@"touchmove" timestamp:event.timestamp
+		all:event.allTouches changed:touches remaining:event.allTouches];
 }
 
 -(void)pressesBegan:(NSSet*)presses withEvent:(UIPressesEvent *)event {
@@ -475,8 +498,7 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 }
 
 
-//TODO: Does this belong in this class?
-#pragma mark
+#pragma mark -
 #pragma mark Timers
 
 - (JSValueRef)createTimer:(JSContextRef)ctxp argc:(size_t)argc argv:(const JSValueRef [])argv repeat:(BOOL)repeat {
@@ -507,15 +529,5 @@ void EJBlockFunctionFinalize(JSObjectRef object) {
 	return NULL;
 }
 
-- (JSObjectRef)createFunctionWithBlock:(JSValueRef (^)(JSContextRef ctx, size_t argc, const JSValueRef argv[]))block {
-	if( !jsBlockFunctionClass ) {
-		JSClassDefinition blockFunctionClassDef = kJSClassDefinitionEmpty;
-		blockFunctionClassDef.callAsFunction = EJBlockFunctionCallAsFunction;
-		blockFunctionClassDef.finalize = EJBlockFunctionFinalize;
-		jsBlockFunctionClass = JSClassCreate(&blockFunctionClassDef);
-	}
-
-	return JSObjectMake( jsGlobalContext, jsBlockFunctionClass, (void *)Block_copy(block) );
-}
 
 @end

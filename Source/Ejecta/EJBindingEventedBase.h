@@ -1,7 +1,18 @@
+// EJBindingEventedBase sits on top of EJBindingBase and provides some functions
+// for classes that want to implement events and host event listeners.
+
+// Events can be attached and removed from instances of this class from
+// JavaScript with the addEventListener() and removeEventListener() methods
+// or through `.onsomeevent = callback;` properties.
+
+// The EJBindingEvent class provides an implementation of an Event object
+// itself which will be passed to the callback.
+
 #import "EJBindingBase.h"
 
 
-// ------------------------------------------------------------------------------------
+
+
 // Events; shorthand for EJ_BIND_GET/SET - use with EJ_BIND_EVENT( eventname );
 
 #define EJ_BIND_EVENT(NAME) \
@@ -30,6 +41,8 @@
 	__EJ_GET_POINTER_TO(_set_on##NAME)
 
 
+
+
 typedef struct {
 	const char *name;
 	JSValueRef value;
@@ -40,7 +53,7 @@ typedef struct {
 	NSMutableDictionary *onCallbacks; // for on* setters
 }
 
-- (JSObjectRef)getCallbackWithType:(NSString *)type ctx:(JSContextRef)ctx;
+- (JSValueRef)getCallbackWithType:(NSString *)type ctx:(JSContextRef)ctx;
 - (void)setCallbackWithType:(NSString *)type ctx:(JSContextRef)ctx callback:(JSValueRef)callback;
 - (void)triggerEvent:(NSString *)type argc:(int)argc argv:(JSValueRef[])argv;
 - (void)triggerEvent:(NSString *)type properties:(JSEventProperty[])properties;
@@ -49,9 +62,11 @@ typedef struct {
 @end
 
 
+
 @interface EJBindingEvent : EJBindingBase {
 	NSString *type;
 	JSObjectRef jsTarget;
+	JSValueRef jsTimestamp;
 }
 
 + (JSObjectRef)createJSObjectWithContext:(JSContextRef)ctx
