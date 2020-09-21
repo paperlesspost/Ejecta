@@ -28,7 +28,7 @@ JSValueRef NSStringToJSValue( JSContextRef ctx, NSString *string ) {
 // and is thus a lot slower.
 
 double JSValueToNumberFast(JSContextRef ctx, JSValueRef v) {
-    // The previous implementation does not work on iOS 14+. We use the Apple Provided implemenation now instead.
+    // The previous implementation does not work on iOS 14+. We use the Apple Provided implementation now instead.
     return JSValueToNumber(ctx, v, NULL);
 }
 
