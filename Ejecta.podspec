@@ -7,8 +7,8 @@ Pod::Spec.new do |s|
   s.author    = { 'Dominic Szablewski' => 'dominic.szablewski@gmail.com' }
   s.source    = { :git => 'https://github.com/paperlesspost/Ejecta.git', :tag => s.version.to_s }
 
-  s.platform = :ios, 7.0
-  s.ios.deployment_target = '8.0'
+  s.platform = :ios, 11.0
+  s.ios.deployment_target = '11.0'
 
   s.source_files = 'Source/Ejecta/**/*.{h,m,mm}', 'Source/lib/SocketRocket/SRWebSocket.{h,m}'
   s.public_header_files = 'Source/Ejecta/**/*.h'
@@ -21,9 +21,8 @@ Pod::Spec.new do |s|
 
   s.subspec 'Library' do |os|
     os.source_files = 'Source/Ejecta/**/*.{h,m,mm}', 'Source/lib/SocketRocket/SRWebSocket.{h,m}'
-#    os.vendored_frameworks = 'Source/lib/JavaScriptCore.framework'
-    os.public_header_files = 'Source/Ejecta/**/*.h'
-    os.private_header_files = 'Source/Ejecta/EJCanvas/2D/EJCanvasShaders.h', 'Source/lib/SocketRocket/SRWebSocket.h'
+    os.public_header_files = 'Source/Ejecta/**/*.h', 'Source/lib/SocketRocket/SRWebSocket.h'
+    os.private_header_files = 'Source/Ejecta/EJCanvas/2D/EJCanvasShaders.h'
     os.library = 'stdc++', 'icucore'
     s.pod_target_xcconfig = {
       'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++98',
